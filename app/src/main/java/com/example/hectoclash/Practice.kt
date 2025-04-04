@@ -124,7 +124,8 @@ class Practice : AppCompatActivity() {
         val result = evaluateExpression(currentExpression)
         if (result == 100.0) {
             textViewFeedback.text = "🎉 Correct! You Won!"
-            textViewFeedback.setTextColor("#4CAF50".toColorInt()) // Green
+            textViewFeedback.setTextColor("#4CAF50".toColorInt())
+            countdownTimer?.cancel()
         } else {
             textViewFeedback.text = "❌ Wrong! Try Again."
             textViewFeedback.setTextColor("#F44336".toColorInt()) // Red
