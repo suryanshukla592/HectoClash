@@ -222,8 +222,16 @@ class GameActivity : AppCompatActivity() {
                         "start" -> {
                             val puzzle = json.getString("content")
                             roomId = json.getString("room_id")
-                            val opponentID = json.getString("opponent")
+                            val opponentID1 = json.getString("opponent")
+                            val opponentID2 = json.getString("player")
                             Log.d("WebSocket", "🚀 Match found! Puzzle: $puzzle, Room ID: $roomId")
+                            var opponentID = opponentID1
+                            if(opponentID1==uid)
+                            {
+                                opponentID = opponentID2
+                            }else{
+                                opponentID = opponentID1
+                            }
 
                             // Handle game start logic
                             originalPuzzle = puzzle
