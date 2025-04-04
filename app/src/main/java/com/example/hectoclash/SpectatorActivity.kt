@@ -114,10 +114,6 @@ class SpectatorActivity : AppCompatActivity() {
                 webSocketClient.connect()
             }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        webSocketClient.close()
-    }
     override fun onBackPressed() {
         webSocketClient.close()
         disconnectWebSocket()

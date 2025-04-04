@@ -5,6 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class RoomListAdapter(
     private var roomList: List<RoomInfo>,
@@ -23,8 +27,24 @@ class RoomListAdapter(
 
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
         val room = roomList[position]
+        val db = Firebase.firestore
+        var name1 =""
+        var name2 =""
+        if (room.player1Uid != null||room.player2Uid != null) {
+            val userRef = db.collection("Users")
+            userRef.document(room.player1Uid).get().addOnSuccessListener { document ->
+                if (document.exists()) {
+                    name1 = document.getString("Username").toString()
+                }
+                userRef.document(room.player2Uid).get().addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        name2 = document.getString("Username").toString()
+                    }
+                }
+            }
+        }
         holder.roomNumberTextView.text = "Room: ${room.roomId}"
-        holder.playersTextView.text = "${room.player1Uid} vs ${room.player2Uid}"
+        holder.playersTextView.text = "${name1}\nVS\n${name2}"
 
         holder.itemView.setOnClickListener {
             onItemClick(room)
