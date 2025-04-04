@@ -193,11 +193,11 @@ class Practice : AppCompatActivity() {
         for (i in 0 until gridOperators.childCount) {
             val button = gridOperators.getChildAt(i) as Button
             if (button.text !in listOf("(", ")","-")) {
-                button.isEnabled = false
                 button.background = ContextCompat.getDrawable(this, R.drawable.custom_button2)
                 button.setTextColor(Color.WHITE)
                 button.typeface= ResourcesCompat.getFont(this, R.font.russo_one)
                 button.setTypeface(null, Typeface.BOLD)
+                button.isEnabled = false
             }
         }
         for (op in operators) {
@@ -243,6 +243,8 @@ class Practice : AppCompatActivity() {
                 }
             }
             gridOperators.addView(button)
+            disableOperatorsExceptBrackets()
+            enableMinus()
         }
     }
     private fun enableMinus() {
