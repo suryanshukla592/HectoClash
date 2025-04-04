@@ -70,7 +70,7 @@ class SpectatorActivity : AppCompatActivity() {
                             try {
                                 val json = JSONObject(message)
                                 if (json.getString("type") == "expressionUpdate") {
-                                    val expression = json.getString("expression")
+                                    val expression = json.getString("content")
                                     val playerUID = json.getString("opponent")
                                     runOnUiThread {
                                         if(player1UID == ""){
@@ -83,6 +83,17 @@ class SpectatorActivity : AppCompatActivity() {
                                             player1ExpressionTextView.text = expression
                                         } else if (playerUID == player2UID) {
                                             player2ExpressionTextView.text = expression
+                                        }
+                                    }
+                                }
+                                if (json.getString("type") == "playerMeta") {
+                                    val role = json.getString("role")
+                                    val uid = json.getString("uid")
+                                    runOnUiThread {
+                                        if (role == "Player1") {
+                                            player1UID = uid
+                                        } else if (role == "Player2") {
+                                            player2UID = uid
                                         }
                                     }
                                 }
