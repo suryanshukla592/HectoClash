@@ -140,6 +140,7 @@ class MainActivity : AppCompatActivity() {
 
         val buttonStartGame: Button = findViewById(R.id.buttonStartGame)
         val buttonLeaderboard: Button = findViewById(R.id.buttonLeaderboard)
+        val buttonPractice: Button = findViewById(R.id.buttonPractice)
         val buttonSpectate: Button = findViewById(R.id.buttonSpectate)
         val buttonHowToPlay: Button = findViewById(R.id.buttonHowToPlay)
         val buttonStats: Button = findViewById(R.id.buttonStats)
@@ -147,6 +148,11 @@ class MainActivity : AppCompatActivity() {
         // Navigate to the Game Activity
         buttonStartGame.setOnClickListener {
             val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
+        }
+
+        buttonPractice.setOnClickListener {
+            val intent = Intent(this, Practice::class.java)
             startActivity(intent)
         }
 

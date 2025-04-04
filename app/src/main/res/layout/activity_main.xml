@@ -49,7 +49,7 @@
         android:text="HectoClash"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:layout_marginTop="15sp"
+        android:layout_marginTop="5sp"
         android:fontFamily="@font/russo_one"
         app:layout_constraintTop_toTopOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="@id/toolbar"
@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="30sp"
         android:paddingHorizontal="80dp"
-        android:layout_marginTop="10sp"
+        android:layout_marginTop="15sp"
         android:src="@drawable/logoname"
         android:layout_gravity="center"
         android:id="@+id/logoname"
@@ -71,7 +71,7 @@
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="20sp"
+        android:layout_marginTop="10sp"
         android:src="@drawable/logo"/>
 
     <LinearLayout
@@ -93,6 +93,17 @@
             android:layout_marginBottom="15dp"/>
 
         <Button
+            android:id="@+id/buttonPractice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Practice"
+            android:textSize="20sp"
+            android:fontFamily="@font/russo_one"
+            android:backgroundTint="#FFD700"
+            android:textColor="@color/black"
+            android:layout_marginBottom="15dp"/>
+
+        <Button
             android:id="@+id/buttonLeaderboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,7 +118,7 @@
             android:id="@+id/buttonSpectate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hecto-Camp"
+            android:text="Hecto-Cams"
             android:textSize="20sp"
             android:fontFamily="@font/russo_one"
             android:backgroundTint="#FFD700"

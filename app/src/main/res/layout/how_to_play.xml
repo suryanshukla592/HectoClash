@@ -100,7 +100,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="2 × (49 + 3 – 8/4) = 100\n(2 × 4 – 9 + 3)^(8/4) = 100"
+                    android:text="2 × (49 + 3 – 8/4) = 100\n(2 - 4 + 9 + 3)^(8/4) = 100"
                     android:textSize="18sp"
                     android:textColor="#DDDDDD"
                     android:paddingBottom="16dp"
