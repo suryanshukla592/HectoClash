@@ -6,6 +6,7 @@ import android.content.ContentResolver
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         val userID = user?.uid
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        MusicManager.startMusic(this,R.raw.home_page_music)
         db.firestoreSettings = FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build()
         profileImageUrl= intent.getStringExtra("imgu")
         nameint = intent.getStringExtra("name") ?: ""
@@ -255,5 +257,24 @@ class MainActivity : AppCompatActivity() {
                     override fun onReschedule(requestId: String?, error: ErrorInfo?) {}
                 }).dispatch()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        MusicManager.stopMusic()
+    }
+    override fun onResume() {
+        super.onResume()
+        MusicManager.resumeMusic()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        MusicManager.pauseMusic()
+    }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        MusicManager.stopMusic()
+        finish()
     }
 }

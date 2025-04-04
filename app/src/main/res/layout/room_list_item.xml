@@ -2,22 +2,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:padding="12dp"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="16dp">
+    android:background="#D4AF37"
+    android:elevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
 
     <TextView
-        android:id="@+id/roomNumberTextView"
+        android:id="@+id/player1Name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:text="Player 1"
+        android:fontFamily="@font/russo_one"
+        android:textSize="20sp"
+        android:textColor="#000" />
 
     <TextView
-        android:id="@+id/playersTextView"
+        android:id="@+id/vsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="16sp" />
+        android:layout_marginHorizontal="12dp"
+        android:text="VS"
+        android:fontFamily="@font/noah_bold"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="#555" />
 
+    <TextView
+        android:id="@+id/player2Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Player 2"
+        android:fontFamily="@font/russo_one"
+        android:textSize="20sp"
+        android:textColor="#000" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/roomIdText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Room ID: 123456"
+        android:fontFamily="@font/noah_bold"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="#444"
+        android:layout_marginTop="8dp" />
 </LinearLayout>

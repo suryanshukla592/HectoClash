@@ -16,8 +16,9 @@ class RoomListAdapter(
 ) : RecyclerView.Adapter<RoomListAdapter.RoomViewHolder>() {
 
     inner class RoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val roomNumberTextView: TextView = itemView.findViewById(R.id.roomNumberTextView)
-        val playersTextView: TextView = itemView.findViewById(R.id.playersTextView)
+        val roomIdText: TextView = itemView.findViewById(R.id.roomIdText)
+        val player1Name: TextView = itemView.findViewById(R.id.player1Name)
+        val player2Name: TextView = itemView.findViewById(R.id.player2Name)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {

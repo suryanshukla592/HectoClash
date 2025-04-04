@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/roomsRecyclerView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#000000">
+
+    <!-- Live Matches Title -->
+    <TextView
+        android:id="@+id/liveMatchesTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🔥 Live Matches"
+        android:textSize="24sp"
+        android:fontFamily="@font/russo_one"
+        android:gravity="center"
+        android:textColor="#FFD700"
+        android:paddingBottom="12dp" />
+
+    <!-- RecyclerView to show live rooms -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/roomsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp" />
+</LinearLayout>
