@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="#000000"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SplashScreenCustom">
+        <ImageView
+            android:layout_width="120sp"
+            android:layout_height="120sp"
+            android:src="@drawable/logo"
+            android:layout_marginEnd="10sp"
+            android:layout_gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/logoname"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/logo">
+        </ImageView>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="50sp"
+            android:paddingHorizontal="80dp"
+            android:layout_marginTop="32sp"
+            android:src="@drawable/logoname"
+            android:layout_gravity="center"
+            android:id="@+id/logoname"
+            app:layout_constraintTop_toBottomOf="@+id/logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+        </ImageView>
+    <TextView
+        android:id="@+id/tagline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="The Ultimate Math Duel"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#C0FFC0"
+        android:fontFamily="@font/noah_bold"
+        app:layout_constraintTop_toBottomOf="@+id/logoname"
+        android:letterSpacing="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

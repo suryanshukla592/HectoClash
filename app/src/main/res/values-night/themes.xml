@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.HectoClash" parent="Theme.Material3.Dark.NoActionBar">
+
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
+    <style name="CustomCircularShape" parent="Widget.MaterialComponents.ShapeableImageView">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerSize">50%</item>
+    </style>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#000000</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.HectoClash</item>
+    </style>
+</resources>
