@@ -43,8 +43,9 @@ class RoomListAdapter(
                 }
             }
         }
-        holder.roomNumberTextView.text = "Room: ${room.roomId}"
-        holder.playersTextView.text = "${name1}\nVS\n${name2}"
+        holder.roomIdText.text = "Room ID: ${room.roomId}"
+        holder.players1Name.text = name1
+        holder.players2Name.text = name2
 
         holder.itemView.setOnClickListener {
             onItemClick(room)
