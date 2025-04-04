@@ -86,9 +86,9 @@ class LeaderboardActivity : AppCompatActivity() {
                 topPlayer?.let {
                     val profilefirst: ImageView = findViewById(R.id.firstRankProfile)
                     val namefirst: TextView = findViewById(R.id.namefirst)
-                    val ratingfirst: TextView = findViewById(R.id.ratingfirst)
+                    val ratingfirst: TextView = findViewById(R.id.ratingTextFirst)
                     namefirst.text= topPlayer!!.name
-                    ratingfirst.text= "Rating : "+topPlayer!!.rating.toString()
+                    ratingfirst.text= "⭐ "+topPlayer!!.rating.toString()
                     Glide.with(this).load(topPlayer!!.profileURL).placeholder(R.drawable.defaultdp).centerCrop().diskCacheStrategy(
                         DiskCacheStrategy.ALL)
                         .into(profilefirst)
