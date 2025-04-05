@@ -51,55 +51,83 @@ class SpectatorActivity : AppCompatActivity() {
     }
 
     private fun setupWebSocket() {
+        Log.d("SpectatorActivity", "Attempting to connect to WebSocket: ws://3.111.203.229:8080/ws")
         val serverUri = URI("ws://3.111.203.229:8080/ws") // Replace with your WebSocket server URL
 
         webSocketClient = object : WebSocketClient(serverUri) {
             override fun onOpen(handshakedata: ServerHandshake?) {
                 Log.d("SpectatorActivity", "WebSocket opened")
+                if (handshakedata != null) {
+                    Log.v("SpectatorActivity", "Handshake Status: ${handshakedata.httpStatus}")
+                    Log.v("SpectatorActivity", "Handshake Message: ${handshakedata.httpStatusMessage}")
+
+                    Log.v("SpectatorActivity", "Server Handshake Headers:")
+                    val headerIterator = handshakedata.iterateHttpFields()
+                    while (headerIterator.hasNext()) {
+                        val headerName = headerIterator.next()
+                    }
+                }
                 val uid = firebaseAuth.currentUser?.uid ?: ""
                 val json = JSONObject().apply {
                     put("type", "spectateRoom")
                     put("room_id", roomId)
                     put("uid", uid)
                 }
-                if (webSocketClient.isOpen) {
-                    send(json.toString())
-                } else {
-                    Log.w("SpectatorActivity", "WebSocket not open yet, cannot send spectateRoom request.")
-                    // Optionally, you could try sending again after a short delay
-                }
+                sendWebSocketMessage(json.toString())
             }
 
             override fun onMessage(message: String?) {
+                Log.v("SpectatorActivity", "Received WebSocket message: $message")
                 if (message != null) {
                     try {
                         val json = JSONObject(message)
-                        if (json.getString("type") == "expressionUpdate") {
-                            val expression = json.getString("expression")
-                            val playerUID = json.getString("opponent")
-
-                            runOnUiThread {
-                                when (playerUID) {
-                                    player1UID -> player1ExpressionTextView.text = expression
-                                    player2UID -> player2ExpressionTextView.text = expression
+                        when (json.getString("type")) {
+                            "expressionUpdate" -> {
+                                try {
+                                    val expression = json.getString("expression")
+                                    val playerUID = json.getString("opponent")
+                                    runOnUiThread {
+                                        when (playerUID) {
+                                            player1UID -> player1ExpressionTextView.text = expression
+                                            player2UID -> player2ExpressionTextView.text = expression
+                                        }
+                                    }
+                                } catch (e: JSONException) {
+                                    Log.e("SpectatorActivity", "Error parsing expressionUpdate: ${e.message}, Raw message: $message")
                                 }
                             }
-                        }
-
-                        if (json.getString("type") == "playerMeta") {
-                            val role = json.getString("role")
-                            val uid = json.getString("uid")
-                            runOnUiThread {
-                                if (role == "Player1") {
-                                    player1UID = uid
-                                } else if (role == "Player2") {
-                                    player2UID = uid
+                            "playerMeta" -> {
+                                try {
+                                    val role = json.getString("opponent") // Changed to "opponent" as per your Go server
+                                    val uid = json.getString("player")   // Changed to "player" as per your Go server
+                                    runOnUiThread {
+                                        if (role == "Player1") {
+                                            player1UID = uid
+                                        } else if (role == "Player2") {
+                                            player2UID = uid
+                                        }
+                                    }
+                                } catch (e: JSONException) {
+                                    Log.e("SpectatorActivity", "Error parsing playerMeta: ${e.message}, Raw message: $message")
                                 }
                             }
+                            "puzzle" -> {
+                                try {
+                                    val puzzle = json.getString("content")
+                                    runOnUiThread {
+                                        // You might want to display the puzzle somewhere in your UI
+                                        Log.d("SpectatorActivity", "Received puzzle: $puzzle")
+                                    }
+                                } catch (e: JSONException) {
+                                    Log.e("SpectatorActivity", "Error parsing puzzle: ${e.message}, Raw message: $message")
+                                }
+                            }
+                            else -> {
+                                Log.d("SpectatorActivity", "Received unknown message type: ${json.getString("type")}")
+                            }
                         }
-
                     } catch (e: JSONException) {
-                        Log.e("SpectatorActivity", "Error parsing message: ${e.message}")
+                        Log.e("SpectatorActivity", "Error parsing base JSON: ${e.message}, Raw message: $message")
                     }
                 }
             }
@@ -110,6 +138,7 @@ class SpectatorActivity : AppCompatActivity() {
 
             override fun onError(ex: Exception?) {
                 Log.e("SpectatorActivity", "WebSocket error: ${ex?.message}")
+                ex?.printStackTrace()
             }
         }
         webSocketClient.connect()
@@ -134,6 +163,15 @@ class SpectatorActivity : AppCompatActivity() {
             Log.d("SpectatorActivity", "WebSocket disconnected.")
         } else {
             Log.d("SpectatorActivity", "WebSocket is already disconnected or null.")
+        }
+    }
+
+    private fun sendWebSocketMessage(message: String) {
+        if (webSocketClient.isOpen) {
+            Log.d("SpectatorActivity", "Sending WebSocket message: $message")
+            webSocketClient.send(message)
+        } else {
+            Log.w("SpectatorActivity", "WebSocket is not open, cannot send message: $message")
         }
     }
 }
