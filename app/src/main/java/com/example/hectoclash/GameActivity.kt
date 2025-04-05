@@ -2,8 +2,10 @@ package com.example.hectoclash
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -36,6 +38,7 @@ import org.json.JSONObject
 import java.net.URI
 import androidx.core.graphics.toColorInt
 import com.bumptech.glide.Glide
+import com.lottiefiles.dotlottie.core.util.toColor
 
 class GameActivity : AppCompatActivity() {
 
@@ -132,6 +135,7 @@ class GameActivity : AppCompatActivity() {
                 sendExpressionUpdate(expression)
             }
         })
+        setButtonAppearance(buttonSubmit,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
 
         buttonSubmit.setOnClickListener { sendSolutionToServer() }
 
@@ -178,8 +182,26 @@ class GameActivity : AppCompatActivity() {
             }
         }.start()
     }
+    private fun setButtonAppearance(button: Button, normalColor: Int, disabledColor: Int, radius: Float) {
+        // Create ColorStateList for background tint
+        val states = arrayOf(
+            intArrayOf(android.R.attr.state_enabled),
+            intArrayOf(-android.R.attr.state_enabled),
+            intArrayOf()
+        )
+        val colors = intArrayOf(
+            normalColor,
+            disabledColor,
+            normalColor
+        )
+        val colorStateList = ColorStateList(states, colors)
+        button.backgroundTintList = colorStateList
 
-
+        val gradientDrawable = GradientDrawable()
+        gradientDrawable.shape = GradientDrawable.RECTANGLE
+        gradientDrawable.cornerRadius = radius
+        button.background = gradientDrawable
+    }
     private fun setupWebSocket() {
         val firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser

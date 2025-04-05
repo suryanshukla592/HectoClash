@@ -20,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Player 1"
+        android:textAlignment="textEnd"
         android:fontFamily="@font/russo_one"
         android:textSize="20sp"
         android:textColor="#000" />
@@ -30,10 +31,9 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
         android:text="VS"
-        android:fontFamily="@font/noah_bold"
-        android:textStyle="bold"
-        android:textSize="14sp"
-        android:textColor="#555" />
+        android:fontFamily="@font/russo_one"
+        android:textSize="20sp"
+        android:textColor="#CE0808" />
 
     <TextView
         android:id="@+id/player2Name"
@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:text="Player 2"
         android:fontFamily="@font/russo_one"
+        android:textAlignment="textStart"
         android:textSize="20sp"
         android:textColor="#000" />
     </LinearLayout>

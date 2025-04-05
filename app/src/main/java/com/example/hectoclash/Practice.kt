@@ -1,8 +1,10 @@
 package com.example.hectoclash
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -32,6 +34,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.lottiefiles.dotlottie.core.model.Config
 import com.lottiefiles.dotlottie.core.util.DotLottieSource
+import com.lottiefiles.dotlottie.core.util.toColor
 import com.lottiefiles.dotlottie.core.widget.DotLottieAnimation
 import net.objecthunter.exp4j.ExpressionBuilder
 import org.java_websocket.client.WebSocketClient
@@ -83,10 +86,12 @@ class Practice : AppCompatActivity() {
         gridOperators = findViewById(R.id.gridOperators)
 
         setupProblem()
+        setButtonAppearance(buttonSubmit,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
         buttonSubmit.setOnClickListener { validateSolution() }
 
         textViewTimer.text = "Time Left: 120s"
     }
+
     private fun startTimer() {
         gameStartTime = System.currentTimeMillis()
         countdownTimer = object : CountDownTimer(gameDurationSeconds * 1000, 1000) {
@@ -114,9 +119,9 @@ class Practice : AppCompatActivity() {
     private fun setupProblem() {
         val puzzle = (1..6).map { (1..9).random() }.joinToString("")
         originalPuzzle = puzzle
-            textViewPuzzle.text = "Solve: $originalPuzzle = 100"
-            setupButtons()
-            startTimer()
+        textViewPuzzle.text = "Solve: $originalPuzzle = 100"
+        setupButtons()
+        startTimer()
 
     }
 
@@ -143,7 +148,10 @@ class Practice : AppCompatActivity() {
             // Check if the expression contains exactly 6 digits
             val digitCount = expression.count { it.isDigit() }
             if (digitCount != 6) {
-                Log.w("WARNING", "Expression does not contain exactly 6 digits. Skipping evaluation.")
+                Log.w(
+                    "WARNING",
+                    "Expression does not contain exactly 6 digits. Skipping evaluation."
+                )
                 return Double.NaN
             }
 
@@ -155,6 +163,7 @@ class Practice : AppCompatActivity() {
             Double.NaN  // Return NaN if there's an error
         }
     }
+
     private fun setupButtons() {
         gridNumbers.removeAllViews()
         gridOperators.removeAllViews()
@@ -164,13 +173,14 @@ class Practice : AppCompatActivity() {
         addNumberButtons()
         addOperatorButtons()
     }
+
     private fun addNumberButtons() {
         gridNumbers.columnCount = 3
         for (i in originalPuzzle.indices) {
             val button = Button(this).apply {
                 background = ContextCompat.getDrawable(context, R.drawable.custom_button_real)
                 setTextColor(Color.BLACK)
-                typeface= ResourcesCompat.getFont(context, R.font.russo_one)
+                typeface = ResourcesCompat.getFont(context, R.font.russo_one)
                 setTypeface(null, Typeface.BOLD)
                 textSize = 18f
                 text = originalPuzzle[i].toString()
@@ -189,15 +199,16 @@ class Practice : AppCompatActivity() {
             gridNumbers.addView(button)
         }
     }
+
     private fun addOperatorButtons() {
-        val operators = listOf("+", "-", "*", "/", "(", ")", "^", "⬅\uFE0F","❌")
+        val operators = listOf("+", "-", "*", "/", "(", ")", "^", "⬅\uFE0F", "❌")
         gridOperators.columnCount = 3
         for (i in 0 until gridOperators.childCount) {
             val button = gridOperators.getChildAt(i) as Button
-            if (button.text !in listOf("(", ")","-")) {
+            if (button.text !in listOf("(", ")", "-")) {
                 button.background = ContextCompat.getDrawable(this, R.drawable.custom_button2)
                 button.setTextColor(Color.WHITE)
-                button.typeface= ResourcesCompat.getFont(this, R.font.russo_one)
+                button.typeface = ResourcesCompat.getFont(this, R.font.russo_one)
                 button.setTypeface(null, Typeface.BOLD)
                 button.isEnabled = false
             }
@@ -205,37 +216,34 @@ class Practice : AppCompatActivity() {
         for (op in operators) {
             val button = Button(this).apply {
                 text = op
-                if(text=="⬅\uFE0F")
-                {
+                if (text == "⬅\uFE0F") {
                     background = ContextCompat.getDrawable(context, R.drawable.custom_button_blue)
                     setTextColor(Color.WHITE)
-                    typeface= ResourcesCompat.getFont(context, R.font.russo_one)
+                    typeface = ResourcesCompat.getFont(context, R.font.russo_one)
                     setTypeface(null, Typeface.BOLD)
                     textSize = 18f
-                }else if(text=="❌"){
+                } else if (text == "❌") {
                     background = ContextCompat.getDrawable(context, R.drawable.custom_button2)
                     setTextColor(Color.WHITE)
-                    typeface= ResourcesCompat.getFont(context, R.font.russo_one)
+                    typeface = ResourcesCompat.getFont(context, R.font.russo_one)
                     setTypeface(null, Typeface.BOLD)
                     textSize = 18f
-                }else {
+                } else {
                     background = ContextCompat.getDrawable(context, R.drawable.custom_button_real)
                     setTextColor(Color.BLACK)
-                    typeface= ResourcesCompat.getFont(context, R.font.russo_one)
+                    typeface = ResourcesCompat.getFont(context, R.font.russo_one)
                     setTypeface(null, Typeface.BOLD)
                     textSize = 18f
                 }
                 setOnClickListener {
-                    if(text=="(")
-                    {
+                    if (text == "(") {
                         enableMinus()
                     }
-                    if(text=="⬅\uFE0F")
-                    {
+                    if (text == "⬅\uFE0F") {
                         undoLastAction()
-                    }else if(text=="❌"){
+                    } else if (text == "❌") {
                         clearExpression()
-                    }else {
+                    } else {
                         currentExpression += text
                         textViewExpression.text = currentExpression
                         if (op !in listOf("(", ")")) {
@@ -248,6 +256,26 @@ class Practice : AppCompatActivity() {
             disableOperatorsExceptBrackets()
             enableMinus()
         }
+    }
+    private fun setButtonAppearance(button: Button, normalColor: Int, disabledColor: Int, radius: Float) {
+        // Create ColorStateList for background tint
+        val states = arrayOf(
+            intArrayOf(android.R.attr.state_enabled),
+            intArrayOf(-android.R.attr.state_enabled),
+            intArrayOf()
+        )
+        val colors = intArrayOf(
+            normalColor,
+            disabledColor,
+            normalColor
+        )
+        val colorStateList = ColorStateList(states, colors)
+        button.backgroundTintList = colorStateList
+
+        val gradientDrawable = GradientDrawable()
+        gradientDrawable.shape = GradientDrawable.RECTANGLE
+        gradientDrawable.cornerRadius = radius
+        button.background = gradientDrawable
     }
     private fun enableMinus() {
         for (i in 0 until gridOperators.childCount) {
