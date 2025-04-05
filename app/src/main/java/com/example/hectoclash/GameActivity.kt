@@ -1,10 +1,13 @@
 package com.example.hectoclash
 
 import android.app.Activity
+import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -16,7 +19,10 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -324,6 +330,8 @@ class GameActivity : AppCompatActivity() {
                                 textViewFeedback.text = "$result"
                                 countdownTimer?.cancel() // Stop the timer when the game ends
                                 MusicManager.stopMusic()
+                                val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
+                                showPossibleSolutionsPopup(this@GameActivity, sol1, sol2, sol3)
                                 buttonSubmit.isEnabled = false // Disable submit after game over
                             }
                         }
@@ -351,6 +359,33 @@ class GameActivity : AppCompatActivity() {
         }
 
         webSocketClient?.connect()
+    }
+    fun showPossibleSolutionsPopup(context: Context,solution1: String? = null,solution2: String? = null,solution3: String? = null    ) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.possible_solutions)
+
+        val buttonClose = dialog.findViewById<ImageView>(R.id.buttonClosePopup)
+        val textSolution1 = dialog.findViewById<TextView>(R.id.textViewSolution1)
+        val textSolution2 = dialog.findViewById<TextView>(R.id.textViewSolution2)
+        val textSolution3 = dialog.findViewById<TextView>(R.id.textViewSolution3)
+
+        buttonClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        textSolution1.text = "Solution 1: ${solution1 ?: "N/A"}"
+        textSolution2.text = "Solution 2: ${solution2 ?: "N/A"}"
+        textSolution3.text = "Solution 3: ${solution3 ?: "N/A"}"
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val layoutParams = dialog.window?.attributes
+        layoutParams?.gravity = Gravity.CENTER
+        layoutParams?.width = ViewGroup.LayoutParams.MATCH_PARENT
+        layoutParams?.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        dialog.window?.attributes = layoutParams
+
+        dialog.show()
     }
     private fun sendSolutionToServer() {
         val firebaseAuth = FirebaseAuth.getInstance()
