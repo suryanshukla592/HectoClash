@@ -137,7 +137,8 @@ class GameActivity : AppCompatActivity() {
         })
         setButtonAppearance(buttonSubmit,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
 
-        buttonSubmit.setOnClickListener {val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+        buttonSubmit.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
             mediaPlayer.start()
 
             mediaPlayer.setOnCompletionListener {
@@ -480,6 +481,12 @@ class GameActivity : AppCompatActivity() {
                 text = originalPuzzle[i].toString()
                 isEnabled = i == 0  // Enable only the first number initially
                 setOnClickListener {
+                    val mediaPlayer = MediaPlayer.create(context, R.raw.button_sound)
+                    mediaPlayer.start()
+
+                    mediaPlayer.setOnCompletionListener {
+                        it.release()
+                    }
                     currentExpression += text
                     textViewExpression.text = currentExpression
                     isEnabled = false
@@ -531,6 +538,12 @@ class GameActivity : AppCompatActivity() {
                     textSize = 18f
                     }
                 setOnClickListener {
+                    val mediaPlayer = MediaPlayer.create(context, R.raw.button_sound)
+                    mediaPlayer.start()
+
+                    mediaPlayer.setOnCompletionListener {
+                        it.release()
+                    }
                     if(text=="(")
                     {
                         enableMinus()

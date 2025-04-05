@@ -102,6 +102,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.profile.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             binding.profile.animate()
                 .scaleX(0.95f)
                 .scaleY(0.95f)
@@ -120,6 +126,12 @@ class MainActivity : AppCompatActivity() {
                             val viewProfilePicture = dialog.findViewById<TextView>(R.id.view_profile_picture)
                             val changeProfilePicture = dialog.findViewById<TextView>(R.id.change_profile_picture)
                             viewProfilePicture.setOnClickListener {
+                                val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+                                mediaPlayer.start()
+
+                                mediaPlayer.setOnCompletionListener {
+                                    it.release()
+                                }
                                 dialog.dismiss()
                                 val viewdp = profileImageUrl?.let { it1 -> viewdp(it1) }
                                 if (viewdp != null) {
@@ -127,6 +139,12 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                             changeProfilePicture.setOnClickListener {
+                                val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+                                mediaPlayer.start()
+
+                                mediaPlayer.setOnCompletionListener {
+                                    it.release()
+                                }
                                 dialog.dismiss()
                                 checkPermOpenDialog()
                             }
@@ -138,6 +156,12 @@ class MainActivity : AppCompatActivity() {
                 .start()
         }
         binding.options.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             showPopupMenu()
         }
 
@@ -150,31 +174,67 @@ class MainActivity : AppCompatActivity() {
 
         // Navigate to the Game Activity
         buttonStartGame.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
         }
 
         buttonPractice.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             val intent = Intent(this, Practice::class.java)
             startActivity(intent)
         }
 
         // Navigate to the Leaderboard Activity
         buttonLeaderboard.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             val intent = Intent(this, LeaderboardActivity::class.java)
             startActivity(intent)
         }
         buttonStats.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             val intent = Intent(this, stats::class.java)
             startActivity(intent)
         }
         buttonHowToPlay.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             val intent = Intent(this, HowToPlay::class.java)
             startActivity(intent)
         }
 
 //         Navigate to the Spectator Mode Activity
         buttonSpectate.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             val intent = Intent(this, Spectator::class.java)
             startActivity(intent)
         }
@@ -209,6 +269,12 @@ class MainActivity : AppCompatActivity() {
 
         val firebaseAuth = FirebaseAuth.getInstance()
         popupMenu.setOnMenuItemClickListener { menuItem ->
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             when (menuItem.itemId) {
                 R.id.sign_out -> {
                     val googleSignInClient = GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -244,11 +310,23 @@ class MainActivity : AppCompatActivity() {
         val btnYes = dialogView.findViewById<Button>(R.id.btn_yes)
         val btnNo = dialogView.findViewById<Button>(R.id.btn_no)
         btnYes.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             deleteUserAccount(firebaseAuth)
             alertDialog.dismiss()
         }
 
         btnNo.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             alertDialog.dismiss()
         }
         alertDialog.show()

@@ -1,6 +1,7 @@
 package com.example.hectoclash
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -39,11 +40,23 @@ class SignUp : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         binding.logintext.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             val intent = Intent(this, Login::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
         }
-        binding.buttonSignup.setOnClickListener {
+        binding.buttonSignup.setOnClickListener{
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             val email = binding.Email1.text.toString()
             val pass = binding.Password1.text.toString()
             val confirmPass = binding.Password2.text.toString()
@@ -126,6 +139,12 @@ class SignUp : AppCompatActivity() {
             }
         }
         binding.google.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }

@@ -43,72 +43,72 @@ class SpectatorActivity : AppCompatActivity() {
             finish()
         }
 
-                player1ExpressionTextView = findViewById(R.id.player1ExpressionTextView)
-                player2ExpressionTextView = findViewById(R.id.player2ExpressionTextView)
+        player1ExpressionTextView = findViewById(R.id.player1ExpressionTextView)
+        player2ExpressionTextView = findViewById(R.id.player2ExpressionTextView)
 
-                roomId = intent.getStringExtra("roomId") ?: ""
-                setupWebSocket()
+        roomId = intent.getStringExtra("roomId") ?: ""
+        setupWebSocket()
+    }
+
+    private fun setupWebSocket() {
+        val user = firebaseAuth.currentUser // Trying to use firebaseAuth here BEFORE it's initialized at the class level
+        val uid = user?.uid
+        val serverUri = URI("ws://3.111.203.229:8080/ws") // Replace with your WebSocket server URL
+
+        webSocketClient = object : WebSocketClient(serverUri) {
+            override fun onOpen(handshakedata: ServerHandshake?) {val uid = firebaseAuth.currentUser?.uid ?: ""
+                val json = JSONObject().apply {
+                    put("type", "spectateRoom")
+                    put("room_id", roomId)
+                    put("uid", uid)
+                }
+                send(json.toString())
             }
 
-            private fun setupWebSocket() {
-                val user = firebaseAuth.currentUser // Trying to use firebaseAuth here BEFORE it's initialized at the class level
-                val uid = user?.uid
-                val serverUri = URI("ws://3.111.203.229:8080/ws") // Replace with your WebSocket server URL
+            override fun onMessage(message: String?) {
+                if (message != null) {
+                    try {
+                        val json = JSONObject(message)
+                        if (json.getString("type") == "expressionUpdate") {
+                            val expression = json.getString("expression")
+                            val playerUID = json.getString("opponent")
 
-                webSocketClient = object : WebSocketClient(serverUri) {
-                    override fun onOpen(handshakedata: ServerHandshake?) {val uid = firebaseAuth.currentUser?.uid ?: ""
-                        val json = JSONObject().apply {
-                            put("type", "spectateRoom")
-                            put("room_id", roomId)
-                            put("uid", uid)
-                        }
-                        send(json.toString())
-                    }
-
-                    override fun onMessage(message: String?) {
-                        if (message != null) {
-                            try {
-                                val json = JSONObject(message)
-                                if (json.getString("type") == "expressionUpdate") {
-                                    val expression = json.getString("expression")
-                                    val playerUID = json.getString("opponent")
-
-                                    runOnUiThread {
-                                        when (playerUID) {
-                                            player1UID -> player1ExpressionTextView.text = expression
-                                            player2UID -> player2ExpressionTextView.text = expression
-                                        }
-                                    }
+                            runOnUiThread {
+                                when (playerUID) {
+                                    player1UID -> player1ExpressionTextView.text = expression
+                                    player2UID -> player2ExpressionTextView.text = expression
                                 }
-
-                                if (json.getString("type") == "playerMeta") {
-                                    val role = json.getString("role")
-                                    val uid = json.getString("uid")
-                                    runOnUiThread {
-                                        if (role == "Player1") {
-                                            player1UID = uid
-                                        } else if (role == "Player2") {
-                                            player2UID = uid
-                                        }
-                                    }
-                                }
-
-                            } catch (e: JSONException) {
-                                Log.e("SpectatorActivity", "Error parsing message: ${e.message}")
                             }
                         }
-                    }
 
-                    override fun onClose(code: Int, reason: String?, remote: Boolean) {
-                        Log.d("SpectatorActivity", "WebSocket closed")
-                    }
+                        if (json.getString("type") == "playerMeta") {
+                            val role = json.getString("role")
+                            val uid = json.getString("uid")
+                            runOnUiThread {
+                                if (role == "Player1") {
+                                    player1UID = uid
+                                } else if (role == "Player2") {
+                                    player2UID = uid
+                                }
+                            }
+                        }
 
-                    override fun onError(ex: Exception?) {
-                        Log.e("SpectatorActivity", "WebSocket error: ${ex?.message}")
+                    } catch (e: JSONException) {
+                        Log.e("SpectatorActivity", "Error parsing message: ${e.message}")
                     }
                 }
-                webSocketClient.connect()
             }
+
+            override fun onClose(code: Int, reason: String?, remote: Boolean) {
+                Log.d("SpectatorActivity", "WebSocket closed")
+            }
+
+            override fun onError(ex: Exception?) {
+                Log.e("SpectatorActivity", "WebSocket error: ${ex?.message}")
+            }
+        }
+        webSocketClient.connect()
+    }
 
     override fun onBackPressed() {
         webSocketClient.close()
@@ -127,4 +127,4 @@ class SpectatorActivity : AppCompatActivity() {
             Log.d("GameActivity", "WebSocket is already disconnected or null.")
         }
     }
-        }
+}

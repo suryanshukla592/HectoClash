@@ -1,6 +1,7 @@
 package com.example.hectoclash
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -21,10 +22,22 @@ class opening : AppCompatActivity() {
         }
         val signInButton = findViewById<Button>(R.id.button_sign_in)
         signInButton.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             startActivity(Intent(this, Login::class.java))
         }
         val signUpButton = findViewById<TextView>(R.id.button_signup)
         signUpButton.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             startActivity(Intent(this, SignUp::class.java))
         }
     }

@@ -2,6 +2,7 @@ package com.example.hectoclash
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,12 @@ class viewdp(private val imageUrl: String) : DialogFragment() {
             context?.let { Glide.with(it).load(imageUrl).placeholder(R.drawable.defaultdp).into(photoView) }
 
             closeButton.setOnClickListener { dismiss() }
+            val mediaPlayer = MediaPlayer.create(context, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
         }
     }
 

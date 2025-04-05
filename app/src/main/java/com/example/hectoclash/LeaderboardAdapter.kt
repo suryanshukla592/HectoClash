@@ -1,5 +1,6 @@
 package com.example.hectoclash
 
+import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,6 +57,12 @@ class LeaderboardAdapter(private val players: List<Player>) :
 
         // Click to show full DP
         holder.image.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(holder.itemView.context, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             val context = it.context
             if (context is AppCompatActivity) {
                 val viewdp = viewdp(player.profileURL)
