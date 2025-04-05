@@ -330,9 +330,9 @@ class GameActivity : AppCompatActivity() {
                                 textViewFeedback.text = "$result"
                                 countdownTimer?.cancel() // Stop the timer when the game ends
                                 MusicManager.stopMusic()
+                                buttonSubmit.isEnabled = false // Disable submit after game over
                                 val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
                                 showPossibleSolutionsPopup(this@GameActivity, sol1, sol2, sol3)
-                                buttonSubmit.isEnabled = false // Disable submit after game over
                             }
                         }
 
