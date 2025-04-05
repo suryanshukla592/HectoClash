@@ -137,9 +137,7 @@ class GameActivity : AppCompatActivity() {
         setButtonAppearance(buttonSubmit,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
 
         buttonSubmit.setOnClickListener {
-            MusicManager.startMusic(this,R.raw.button_sound)
-            sendSolutionToServer()
-            MusicManager.stopMusic()
+
         }
 
         textViewTimer.text = "Time Left: 120s"
