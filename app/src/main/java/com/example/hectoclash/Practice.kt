@@ -125,6 +125,7 @@ class Practice : AppCompatActivity() {
         if (result == 100.0) {
             textViewFeedback.text = "🎉 Correct! You Won!"
             textViewFeedback.setTextColor("#4CAF50".toColorInt())
+            buttonSubmit.isEnabled = false
             countdownTimer?.cancel()
         } else {
             textViewFeedback.text = "❌ Wrong! Try Again."

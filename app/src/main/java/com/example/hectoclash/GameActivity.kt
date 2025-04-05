@@ -289,7 +289,7 @@ class GameActivity : AppCompatActivity() {
 
                             // Handle the game result here
                             runOnUiThread {
-                                textViewFeedback.text = "Game Over: $result"
+                                textViewFeedback.text = "$result"
                                 countdownTimer?.cancel() // Stop the timer when the game ends
                                 buttonSubmit.isEnabled = false // Disable submit after game over
                             }
