@@ -1,0 +1,73 @@
+body {
+  font-family: 'Russo One', sans-serif;
+  background-image: url('Signupbg.jpg');
+  background-size: cover;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.title {
+  font-size: 26px;
+  margin-top: 60px;
+}
+
+#textViewTimer {
+  color: #D49337;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+#textViewPuzzle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+#textViewExpression {
+  background: #222;
+  padding: 14px;
+  margin: 0 auto 20px;
+  width: 80%;
+  border-radius: 8px;
+  font-size: 22px;
+}
+
+.grid {
+  display: grid;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+#gridNumbers {
+  grid-template-columns: repeat(6, 50px);
+}
+
+#gridOperators {
+  grid-template-columns: repeat(3, 60px);
+}
+
+button {
+  padding: 10px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Russo One', sans-serif;
+}
+
+.submit-btn {
+  margin-top: 16px;
+  width: 80%;
+  background-color: #D4AF37;
+  color: black;
+  font-size: 22px;
+  padding: 10px;
+}
+
+#textViewFeedback {
+  margin-top: 20px;
+  font-size: 18px;
+}

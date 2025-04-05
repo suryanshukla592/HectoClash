@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="signuppg.css"> 
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    
+  
+      <div class="main">
+        <form id="contactForm">
+          <h2>SIGN UP</h2>
+        <div class="sub">
+          <p>Email</p>
+          <input id="Email" type="email" placeholder="Email" class="email" required>
+          <p>Username</p>
+          <input id="Username" type="text" placeholder="Username" class="username" required>
+          <p>Password</p>
+          <input id="Password" type="password" placeholder="Password" class="password" required>
+          <p>Confirm Password</p>
+          <input id="CPassword" type="password" placeholder="Confirm Password" class="cpassword" required>
+        </div> 
+        <input id="hidden" type="hidden">
+        <button type="submit" id="Button" class="button">Sign Up</button>
+        <a id ="retrace" href="login.html"><span style="color: white;">Already have an account?</span> <span class="retrace" > Login here</span></a>
+        </form>  
+      </div>
+      
+    
+    <script type="module" src="signuppg.js"></script>
+  </body>
+</html>

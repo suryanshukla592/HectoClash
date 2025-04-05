@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+body{
+  min-height: 83vh;
+  background-image:url("signupbg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: "Russo one",sans-serif;
+}
+
+.main{
+  margin: auto;
+  margin-top: 100px;
+  padding: 8px;
+  border: 1px rgba(255, 255, 255, 0.384) solid;
+  background-color: rgba(255, 255, 255, 0.0005);
+  width: 350px;
+  border-radius: 9px;
+}
+
+.login{
+  margin-top: 10px;
+  color: #e6ae1f;
+  margin-bottom: 15px;
+  text-align: center;
+  display: block;
+  font-size: 30px;
+  font-family: "Russo one",sans-serif;
+}
+
+p{
+  margin: 0px 3px;
+  font-size: 19px;
+  color: white;
+}
+
+input::placeholder{
+  color:rgba(255, 255, 255, 0.509);
+}
+
+.username,.password{
+  height: 30px;
+  width: 338px;
+  margin: 7px 0px 17px 0px;
+  color: white;
+  font-size: 14px;
+  padding-left: 6px;
+  border-radius: 9px;
+  background-color: transparent;
+  border: 1px rgb(255, 255, 255,0.792) solid;
+}
+
+.username:focus,.password:focus{
+  outline: none;
+}
+
+.button{
+  height: 45px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+button{
+  height: 40px;
+  background-color: #e6ae1ff1;
+  width: 200px;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-family: "Russo one",sans-serif;
+  color: black;
+}
+
+button:hover{
+  background-color: #e6ae1fdb;
+  cursor: pointer;
+  transition: 0.05s;
+  box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+button:active{
+  background-color: #e6ae1ff1;
+  cursor: pointer;
+  height: 38px;
+  transition: 0.1s;
+  box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.button:active{
+  height: 45px;
+}
+
+.Checkbox{
+  margin-left: -1px;
+}
+
+.sub{
+  margin-top: 15px;
+  display: flex;
+  font-size: 18px;
+  color: white;
+}
+
+.forgot{
+  padding-left: 30%;
+  color: rgb(2, 143, 231);
+  text-decoration: none;
+}
+
+.forgot:active,.forgot:hover{
+  text-decoration:underline;
+}
+
+.base{
+  display: flex;
+  margin: 7px 0;
+  font-size: 17px;
+  justify-content: center;
+  color: white;
+}
+
+.signup{
+  margin-left: 3px;
+  text-decoration: none;
+  color: #e6ae1fdb;
+}
+
+.signup:active,.signup:hover{
+  text-decoration: underline;
+}
+
+.forgot:active,.signup:active{
+  color: #e6ae1ff1;
+}

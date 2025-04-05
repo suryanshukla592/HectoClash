@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+body{
+  min-height:83vh;
+  background-image:url("Signupbg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.main{
+  margin: auto;
+  justify-content: center;
+  margin-top: 100px;
+  border: 1px rgb(255, 255, 255, 0.384) solid;
+  width: 350px;
+  background-color: rgba(255, 255, 255, 0.02);
+  text-align: center;
+  border-radius: 9px;
+  padding: 20px;
+  color: white;
+  font-family: "Russo One", sans-serif;
+}
+
+.toolbar{
+  display: flex;
+  justify-content: space-between;
+}
+
+h2{
+  color: white;
+  margin-bottom: 0px;
+}
+h1{
+  color: #e6ae1f;
+  margin-top: 10px;
+}
+.profile{
+  width: 40px;
+  border-radius: 50%;
+}
+
+.logoname{
+  width: 250px;
+}
+
+.logo{
+  width: 75px;
+}
+
+button{
+  height: 27px;
+  background-color: #e6ae1ff1;
+  width: 200px;
+  border: none;
+  font-family: "Russo One", sans-serif;
+  clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0% 50%);  font-size: 17px;
+  color: black;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+button:hover{
+  background-color: #e6ae1fdb;
+  cursor: pointer;
+  transition: 0.05s;
+}
+
+button:active{
+  background-color: #dfac2df1;
+  cursor: pointer;
+  transition: 0.1s;
+}

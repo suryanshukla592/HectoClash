@@ -1,0 +1,164 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: linear-gradient(to bottom, #0d0d0d, #1c1c1c);
+  color: white;
+  padding: 20px;
+  background-image:url("mathsbackground.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+
+#leaderboardTitle {
+  text-align: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.title{
+  text-align: center;
+}
+
+.top-player{
+  justify-content: center;
+  text-align: center;
+}
+.top-player-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin: 20px auto;
+}
+
+.top-player-profile {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: #EF8006;
+  padding: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-player-img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#namefirst {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #ffffff;
+}
+
+#ratingfirst {
+  font-size: 14px;
+  color: #cccccc;
+}
+
+
+#leaderboardList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+
+.card {
+  background-color: #1F1F1F;
+  border-radius: 16px;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s;
+}
+
+.card.highlight {
+  background-color: #ffffff;
+  color: #010101;
+}
+
+.card img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 12px;
+  cursor: pointer;
+}
+
+.card-content {
+  flex: 1;
+
+}
+
+.sub{
+  display: flex;
+}
+
+.player-img{
+  display: inline;
+}
+
+.player-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #EDDCDC;
+}
+
+.player-rating {
+  font-size: 14px;
+  color: #858484;
+}
+
+.player-rank {
+  font-size: 24px;
+  font-weight: bold;
+  
+  min-width: 36px;
+  text-align:right;
+}
+
+@media (max-width: 600px) {
+  .top-player-profile {
+    width: 120px;
+    height: 120px;
+  }
+
+  .card {
+    padding: 10px 12px;
+  }
+
+  .player-name {
+    font-size: 16px;
+  }
+
+  .player-rating {
+    font-size: 12px;
+  }
+
+  .rank {
+    font-size: 20px;
+  }
+}

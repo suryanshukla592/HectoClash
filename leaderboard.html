@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="leaderboard.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Leaderboard</h1>
+    <div class="top-player">
+      <div class="top-player-frame">
+        <img id="firstRankProfile" class="top-player-img" src="defaultdp[1].png" alt="Top Player"><br>
+      </div>
+      <p id="namefirst">Anonymous</p><br>
+      <p id="ratingfirst">Rating: 0</p><br>
+    </div>
+    <div id="leaderboardList" class="leaderboard-list"></div>
+  </div>
+  
+ <script type="module" src="leaderboard.js" defer></script>
+</body>
+</html>

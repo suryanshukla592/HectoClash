@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
+body{
+  min-height:83vh;
+  background-image:url("Signupbg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.main{
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+  border: 1px rgb(255, 255, 255, 0.384) solid;
+  width: 350px;
+  background-color: rgba(255, 255, 255, 0.0005);
+  text-align: center;
+  border-radius: 9px;
+  padding: 7px;
+  padding-bottom: 15px;
+  font-family: "Russo One", sans-serif; 
+}
+h2{
+  font-size: 30px;
+  margin: 15px;
+  color: #e6ae1f;
+}
+
+.sub{
+  font-size: 18px;
+  margin: 16px 6px;
+  text-align: start;
+  margin-bottom:20px
+}
+
+p{
+  margin-top: 15px;
+  margin-bottom: 6px;
+  margin-left: 2px;
+  color: rgb(255, 255, 255);
+}
+
+input{
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.792);
+}
+ 
+input::placeholder{
+  color:rgba(255, 255, 255, 0.509);
+}
+
+.username,.password,.email,.cpassword{
+  width: 330px;
+  height: 28px;
+  font-size: 15px;
+  padding-left: 6px;
+  border-radius: 9px;
+  border: 1px rgba(255, 255, 255, 0.767) solid;
+}
+
+.username:focus,.password:focus,.email:focus,.cpassword:focus{
+  outline: none;
+}
+
+.button{
+  height: 35px;
+  margin-top: 8px;
+  text-align: center;
+  font-family: "Russo one",sans-serif;
+}
+
+button{
+  height: 20px;
+  background-color: #e6ae1ff1;
+  width: 200px;
+  border: none;
+  border-radius: 20px;
+  font-size: 17px;
+  color: black;
+
+}
+
+button:hover{
+  background-color: #e6ae1fdb;
+  cursor: pointer;
+  transition: 0.05s;
+  box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+button:active{
+  background-color: #e6ae1ff1;
+  cursor: pointer;
+  transition: 0.1s;
+  box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.3);
+  width: 195px;
+  height: 20px;
+}
+
+.button:active{
+  height: 36px;
+  transition: transform 5s;
+}
+
+a{
+  margin-top: 15px;
+  color: #e6ae1f;
+  text-decoration: none;
+  font-size: 17px;
+  display: block;
+}
+
+.retrace:hover{
+  text-decoration: underline;
+}
+
+.retrace:active{
+  color: #e6ae1fea;
+  text-decoration: none;
+}
