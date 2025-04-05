@@ -111,6 +111,7 @@ class Practice : AppCompatActivity() {
                 // Change color to red in last 30 seconds
                 if (secondsRemaining <= 30) {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
+                    MusicManager.startMusic(this@Practice,R.raw.clock_ticking)
                 } else {
                     textViewTimer.setTextColor("#D49337".toColorInt())
                 }
@@ -118,6 +119,7 @@ class Practice : AppCompatActivity() {
 
             override fun onFinish() {
                 textViewTimer.text = "Time's Up!"
+                MusicManager.stopMusic()
                 textViewTimer.setTextColor("#FF5555".toColorInt()) // Ensure final message is red
                 buttonSubmit.isEnabled = false
             }
