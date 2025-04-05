@@ -178,6 +178,7 @@ class GameActivity : AppCompatActivity() {
                 // Change color to red in last 30 seconds
                 if (secondsRemaining <= 30) {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
+                    MusicManager.startMusic(this@GameActivity,R.raw.clock_ticking)
                 } else {
                     textViewTimer.setTextColor("#D49337".toColorInt())
                 }
@@ -185,6 +186,7 @@ class GameActivity : AppCompatActivity() {
 
             override fun onFinish() {
                 textViewTimer.text = "Time's Up!"
+                MusicManager.stopMusic()
                 textViewTimer.setTextColor("#FF5555".toColorInt()) // Ensure final message is red
                 buttonSubmit.isEnabled = false
                 sendResultToServer("Timeout") // Inform server about timeout

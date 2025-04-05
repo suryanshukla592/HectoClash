@@ -135,5 +135,5 @@ class SpectatorActivity : AppCompatActivity() {
         } else {
             Log.d("SpectatorActivity", "WebSocket is already disconnected or null.")
         }
+     }
     }
-}
