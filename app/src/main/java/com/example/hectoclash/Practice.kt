@@ -142,6 +142,7 @@ class Practice : AppCompatActivity() {
             textViewFeedback.text = "🎉 Correct! You Won!"
             textViewFeedback.setTextColor("#4CAF50".toColorInt())
             buttonSubmit.isEnabled = false
+            MusicManager.stopMusic()
             countdownTimer?.cancel()
         } else {
             textViewFeedback.text = "❌ Wrong! Try Again."

@@ -17,7 +17,7 @@
 
         <TextView
             android:text="Looking for a Match..."
-            android:textColor="#FFFFFF"
+            android:textColor="@color/golden_yellow"
             android:textSize="24sp"
             android:fontFamily="@font/russo_one"
             android:layout_marginBottom="16dp"
@@ -26,13 +26,12 @@
             android:layout_height="wrap_content" />
 
         <com.lottiefiles.dotlottie.core.widget.DotLottieAnimation
-            android:id="@+id/matchmakingAnimation"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/loading" />
-
+            android:id="@+id/lottie_view"
+            android:layout_width="160sp"
+            android:layout_height="160sp"
+            android:layout_margin="20sp"
+            app:dotLottie_speed="3"
+            app:dotLottie_src="assets/loading.json" />
         <TextView
             android:text="Hang tight!\nWe're pairing you with a worthy opponent."
             android:textColor="#FFFFFF"

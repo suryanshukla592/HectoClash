@@ -298,9 +298,10 @@ class GameActivity : AppCompatActivity() {
                                 textViewPuzzle.text = "Solve: $originalPuzzle = 100"
                                 setupButtons()  // Setup buttons based on the puzzle
                                 val match: LinearLayout = findViewById(R.id.match)
-                                val matchmaking: LinearLayout = findViewById(R.id.matchmaking)
-                                match.visibility = View.VISIBLE
+                                val matchmaking: LinearLayout = findViewById(R.id.matchmakingLayout)
+                                match.visibility=View.VISIBLE
                                 matchmaking.visibility = View.GONE
+
                                 startTimer()
                             }
                         }
@@ -322,6 +323,7 @@ class GameActivity : AppCompatActivity() {
                             runOnUiThread {
                                 textViewFeedback.text = "$result"
                                 countdownTimer?.cancel() // Stop the timer when the game ends
+                                MusicManager.stopMusic()
                                 buttonSubmit.isEnabled = false // Disable submit after game over
                             }
                         }
