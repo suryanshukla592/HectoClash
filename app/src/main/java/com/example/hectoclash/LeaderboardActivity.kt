@@ -1,6 +1,7 @@
 package com.example.hectoclash
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
@@ -49,6 +50,12 @@ class LeaderboardActivity : AppCompatActivity() {
 
         fetchLeaderboardData()
         profilefirst.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             profileFirst?.let { it1 -> viewdp(it1) }?.show(supportFragmentManager, "dp_popup")
         }
     }

@@ -1,5 +1,6 @@
 package com.example.hectoclash
 
+import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,12 @@ class RoomListAdapter(
         holder.roomIdText.text = "Room ID: $displayId"
 
         holder.itemView.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(holder.itemView.context, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
             onItemClick(room)
         }
     }
