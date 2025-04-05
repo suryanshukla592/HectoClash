@@ -43,7 +43,8 @@ class RoomListAdapter(
                 }
             }
         }
-        holder.roomIdText.text = "Room ID: ${room.roomId}"
+        val displayId = room.roomId.substringAfter("room-")
+        holder.roomIdText.text = "Room ID: $displayId"
 
         holder.itemView.setOnClickListener {
             onItemClick(room)

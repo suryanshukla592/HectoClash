@@ -56,11 +56,11 @@ class SpectatorActivity : AppCompatActivity() {
                 val serverUri = URI("ws://3.111.203.229:8080/ws") // Replace with your WebSocket server URL
 
                 webSocketClient = object : WebSocketClient(serverUri) {
-                    override fun onOpen(handshakedata: ServerHandshake?) {
+                    override fun onOpen(handshakedata: ServerHandshake?) {val uid = firebaseAuth.currentUser?.uid ?: ""
                         val json = JSONObject().apply {
                             put("type", "spectateRoom")
                             put("room_id", roomId)
-                            put("uid",uid)
+                            put("uid", uid)
                         }
                         send(json.toString())
                     }
@@ -70,22 +70,17 @@ class SpectatorActivity : AppCompatActivity() {
                             try {
                                 val json = JSONObject(message)
                                 if (json.getString("type") == "expressionUpdate") {
-                                    val expression = json.getString("content")
+                                    val expression = json.getString("expression")
                                     val playerUID = json.getString("opponent")
+
                                     runOnUiThread {
-                                        if(player1UID == ""){
-                                            player1UID = playerUID;
-                                        }
-                                        if(player2UID == ""){
-                                            player2UID = playerUID;
-                                        }
-                                        if (playerUID == player1UID) {
-                                            player1ExpressionTextView.text = expression
-                                        } else if (playerUID == player2UID) {
-                                            player2ExpressionTextView.text = expression
+                                        when (playerUID) {
+                                            player1UID -> player1ExpressionTextView.text = expression
+                                            player2UID -> player2ExpressionTextView.text = expression
                                         }
                                     }
                                 }
+
                                 if (json.getString("type") == "playerMeta") {
                                     val role = json.getString("role")
                                     val uid = json.getString("uid")
@@ -97,6 +92,7 @@ class SpectatorActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
+
                             } catch (e: JSONException) {
                                 Log.e("SpectatorActivity", "Error parsing message: ${e.message}")
                             }
