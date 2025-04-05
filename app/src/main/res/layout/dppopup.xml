@@ -5,8 +5,11 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="40dp"
     android:orientation="vertical"
-    android:background="@drawable/rounded_dialog_background"
-    android:padding="16dp">
+    android:background="@drawable/rounded_corners_dialogue"
+    android:backgroundTint="#C5E9E8"
+    android:padding="16dp"
+    android:elevation="8dp"
+    android:gravity="center_horizontal">
 
     <TextView
         android:id="@+id/view_profile_picture"
@@ -15,23 +18,29 @@
         android:text="View Profile Picture"
         android:clickable="true"
         android:textSize="16sp"
+        android:fontFamily="@font/russo_one"
+        android:textColor="@color/white"
         android:gravity="center"
         android:padding="12dp"
-        android:background="?attr/selectableItemBackground" />
+        android:background="?attr/selectableItemBackgroundBorderless" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
+        android:layout_marginHorizontal="10dp"
+        android:background="#D4AF37" />
 
     <TextView
         android:id="@+id/change_profile_picture"
         android:layout_width="match_parent"
-        android:clickable="true"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:text="Change Profile Picture"
         android:textSize="16sp"
+        android:fontFamily="@font/russo_one"
+        android:textColor="@color/white"
         android:gravity="center"
         android:padding="12dp"
-        android:background="?attr/selectableItemBackground"/>
+        android:background="?attr/selectableItemBackgroundBorderless" />
+
 </LinearLayout>

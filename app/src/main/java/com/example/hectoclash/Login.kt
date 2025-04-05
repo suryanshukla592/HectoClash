@@ -120,9 +120,9 @@ class Login : AppCompatActivity() {
             .setView(dialogView)
             .setCancelable(true)
         val alertDialog = builder.create()
-        val btnYes = dialogView.findViewById<Button>(R.id.btn)
+        val btnYes = dialogView.findViewById<Button>(R.id.btn_submit)
         btnYes.setOnClickListener {
-            val email = dialogView.findViewById<EditText>(R.id.dialog_message).text.toString().trim()
+            val email = dialogView.findViewById<EditText>(R.id.et_email).text.toString().trim()
             if (email.isNotEmpty()) {
                 firebaseAuth.sendPasswordResetEmail(email)
                     .addOnCompleteListener { task ->

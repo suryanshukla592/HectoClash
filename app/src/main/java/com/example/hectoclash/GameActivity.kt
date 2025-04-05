@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -136,8 +137,14 @@ class GameActivity : AppCompatActivity() {
         })
         setButtonAppearance(buttonSubmit,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
 
-        buttonSubmit.setOnClickListener {
+        buttonSubmit.setOnClickListener {val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
 
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
+
+            sendSolutionToServer()
         }
 
         textViewTimer.text = "Time Left: 120s"
