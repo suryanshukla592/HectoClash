@@ -1,43 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Player 1 Expression:"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/player1ExpressionTextView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="16sp" />
+        android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"/>
+        <!-- Puzzle -->
+        <TextView
+            android:id="@+id/textViewFinalPuzzle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Puzzle: 123456 = 100"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:padding="12dp"
+            android:background="#222222"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Player 2 Expression:"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        <!-- Player 1 Section -->
+        <TextView
+            android:id="@+id/player1NameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player 1:"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/player2ExpressionTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="16sp" />
+        <TextView
+            android:id="@+id/player1ExpressionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="16sp"
+            android:textColor="#444444" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/player1FeedbackTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Feedback"
+            android:textSize="14sp"
+            android:textColor="#008000" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Player 2 Section -->
+        <TextView
+            android:id="@+id/player2NameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player 2:"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/player2ExpressionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="16sp"
+            android:textColor="#444444" />
+
+        <TextView
+            android:id="@+id/player2FeedbackTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Feedback"
+            android:textSize="14sp"
+            android:textColor="#E53935" />
+
+    </LinearLayout>
+</ScrollView>
