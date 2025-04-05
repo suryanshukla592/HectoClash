@@ -83,17 +83,17 @@ class SpectatorActivity : AppCompatActivity() {
                         val json = JSONObject(message)
                         when (json.getString("type")) {
                             "expressionUpdate" -> {
-                                try {
-                                    val expression = json.getString("expression")
-                                    val playerUID = json.getString("opponent")
+                                val expression = json.optString("expression", json.optString("content", "")) // Try "expression", then fallback to "content"
+                                val playerUID = json.getString("opponent")
+                                if (expression.isNotEmpty()) {
                                     runOnUiThread {
                                         when (playerUID) {
                                             player1UID -> player1ExpressionTextView.text = expression
                                             player2UID -> player2ExpressionTextView.text = expression
                                         }
                                     }
-                                } catch (e: JSONException) {
-                                    Log.e("SpectatorActivity", "Error parsing expressionUpdate: ${e.message}, Raw message: $message")
+                                } else {
+                                    Log.w("SpectatorActivity", "Expression is empty in both 'expression' and 'content' for: $message")
                                 }
                             }
                             "playerMeta" -> {
