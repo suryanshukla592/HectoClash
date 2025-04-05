@@ -350,7 +350,6 @@ class GameActivity : AppCompatActivity() {
 
         webSocketClient?.connect()
     }
-
     private fun sendSolutionToServer() {
         val firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser
@@ -411,7 +410,6 @@ class GameActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun sendResultToServer(result: String) { // For sending timeout
         val firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser
@@ -627,6 +625,93 @@ class GameActivity : AppCompatActivity() {
         countdownTimer?.cancel()
         finish()
         super.onBackPressed()
+    }
+    private fun evaluate(expression: String): Double? {
+        return try {
+            val exp = ExpressionBuilder(expression).build()
+            exp.evaluate()
+        } catch (e: Exception) {
+            null
+        }
+    }
+    private fun getDigitSplits(s: String): List<List<String>> {
+        val results = mutableListOf<List<String>>()
+        val n = s.length
+
+        fun backtrack(index: Int, path: MutableList<String>) {
+            if (index == n) {
+                results.add(ArrayList(path))
+                return
+            }
+            for (i in index + 1..n) {
+                val part = s.substring(index, i)
+                path.add(part)
+                backtrack(i, path)
+                path.removeAt(path.size - 1)
+            }
+        }
+
+        backtrack(0, mutableListOf())
+        return results
+    }
+    private fun generateExpressions(digits: String, operators: List<String>): Sequence<String> = sequence {
+        val splits = getDigitSplits(digits)
+        for (group in splits) {
+            val opsCombos = cartesianProduct(operators, group.size - 1)
+            for (ops in opsCombos) {
+                yieldAll(applyOperators(group, ops))
+            }
+        }
+    }
+    private fun applyOperators(nums: List<String>, opsSeq: List<String>): Sequence<String> = sequence {
+        if (nums.size == 1) {
+            yield(nums[0])
+            return@sequence
+        }
+        for (i in opsSeq.indices) {
+            val leftNums = nums.subList(0, i + 1)
+            val rightNums = nums.subList(i + 1, nums.size)
+            val leftOps = opsSeq.subList(0, i)
+            val rightOps = opsSeq.subList(i + 1, opsSeq.size)
+
+            for (left in applyOperators(leftNums, leftOps)) {
+                for (right in applyOperators(rightNums, rightOps)) {
+                    yield("($left${opsSeq[i]}$right)")
+                }
+            }
+        }
+    }
+    private fun cartesianProduct(list: List<String>, length: Int): Sequence<List<String>> = sequence {
+        if (length == 0) {
+            yield(emptyList())
+        } else {
+            for (item in list) {
+                for (rest in cartesianProduct(list, length - 1)) {
+                    yield(listOf(item) + rest)
+                }
+            }
+        }
+    }
+    private fun solveHectocTop3(digitStr: String): Triple<String?, String?, String?> {
+        val operators = listOf("+", "-", "*", "/")
+        val seen = mutableSetOf<String>()
+        val solutions = mutableListOf<String>()
+
+        for (expr in generateExpressions(digitStr, operators)) {
+            if (expr in seen) continue
+            seen.add(expr)
+            val result = evaluate(expr)
+            if (result != null && Math.abs(result - 100.0) < 1e-9) {
+                solutions.add("$expr = 100")
+                if (solutions.size == 3) break
+            }
+        }
+
+        val string1 = solutions.getOrNull(0)
+        val string2 = solutions.getOrNull(1)
+        val string3 = solutions.getOrNull(2)
+
+        return Triple(string1, string2,string3)
     }
     private fun disconnectWebSocket() {
         Log.d("GameActivity", "Disconnecting WebSocket...")
