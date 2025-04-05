@@ -44,9 +44,9 @@ class stats : AppCompatActivity() {private lateinit var firebaseAuth: FirebaseAu
                 if (document.exists()) {
                     val name = document.getString("Username") ?: "Unknown"
                     val url = document.getString("Profile Picture URL")
-                    val rating = document.getDouble("Rating") ?: 0.0
-                    val avgTime = document.getDouble("Time") ?: 0.0
-                    val accuracy = document.getDouble("Accuracy") ?: 0.0
+                    val rating = document.getDouble("Rating")?.toInt() ?:0
+                    val avgTime = document.getDouble("Time")?.toInt() ?:0
+                    val accuracy = document.getDouble("Accuracy")?.toInt() ?:0
                     val matchesPlayed = document.getLong("Played") ?: 0
                     val matchesWon = document.getLong("Won") ?: 0
 

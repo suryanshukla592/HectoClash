@@ -87,7 +87,8 @@ class Practice : AppCompatActivity() {
 
         setupProblem()
         setButtonAppearance(buttonSubmit,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
-        buttonSubmit.setOnClickListener { validateSolution() }
+        buttonSubmit.setOnClickListener {
+            validateSolution() }
 
         textViewTimer.text = "Time Left: 120s"
     }

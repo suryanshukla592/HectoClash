@@ -76,26 +76,25 @@ class GameActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
         val profilePicture: ImageView = findViewById(R.id.imageViewPlayerProfile)
         val nameText: TextView = findViewById(R.id.textViewPlayerName)
         val ratingText: TextView = findViewById(R.id.textViewPlayerRating)
+        val avgTimeText: TextView = findViewById(R.id.textViewPlayerAvgTime)
+        val accuracyText: TextView = findViewById(R.id.textViewPlayerAccuracy)
         if (userID != null) {
             db.collection("Users").document(userID).get().addOnSuccessListener { document ->
                 if (document.exists()) {
                     val name = document.getString("Username") ?: "Unknown"
                     val url = document.getString("Profile Picture URL")
-                    val rating = document.getDouble("Rating") ?: 0.0
-//                    val avgTime = document.getDouble("Average Time") ?: 0.0
-//                    val accuracy = document.getDouble("Accuracy") ?: 0.0
-//                    val matchesPlayed = document.getLong("Matches Played") ?: 0
-//                    val matchesLost = document.getLong("Matches Lost") ?: 0
+                    val rating = document.getDouble("Rating")?.toInt() ?:0
+                    val avgTime = document.getDouble("Time")?.toInt() ?:0
+                    val accuracy = document.getDouble("Accuracy")?.toInt() ?:0
 
                     nameText.text = name
                     ratingText.text = "Rating: $rating"
-//                    avgTimeText.text = "⏱ Average Time: ${avgTime}s"
-//                    accuracyText.text = "🎯 Accuracy: ${accuracy}%"
-//                    matchesPlayedText.text = "🎮 Matches Played: $matchesPlayed"
-//                    matchesLostText.text = "❌ Matches Lost: $matchesLost"
+                    avgTimeText.text = "⏱ : ${avgTime}s"
+                    accuracyText.text = "🎯 : ${accuracy}%"
 
                     if (!url.isNullOrEmpty()) {
                         Glide.with(this).load(url).placeholder(R.drawable.defaultdp)
@@ -137,7 +136,11 @@ class GameActivity : AppCompatActivity() {
         })
         setButtonAppearance(buttonSubmit,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
 
-        buttonSubmit.setOnClickListener { sendSolutionToServer() }
+        buttonSubmit.setOnClickListener {
+            MusicManager.startMusic(this,R.raw.button_sound)
+            sendSolutionToServer()
+            MusicManager.stopMusic()
+        }
 
         textViewTimer.text = "Time Left: 120s"
     }
@@ -261,23 +264,21 @@ class GameActivity : AppCompatActivity() {
                                 val profilePicture2: ImageView = findViewById(R.id.imageViewOpponentProfile)
                                 val nameText2: TextView = findViewById(R.id.textViewOpponentName)
                                 val ratingText2: TextView = findViewById(R.id.textViewOpponentRating)
+                                val avgTimeText2: TextView = findViewById(R.id.textViewOpponentAvgTime)
+                                val accuracyText2: TextView = findViewById(R.id.textViewOpponentAccuracy)
                                 if (opponentID != null) {
                                     db.collection("Users").document(opponentID).get().addOnSuccessListener { document ->
                                         if (document.exists()) {
                                             val name = document.getString("Username") ?: "Unknown"
                                             val url = document.getString("Profile Picture URL")
-                                            val rating = document.getDouble("Rating") ?: 0.0
-                        //                    val avgTime = document.getDouble("Average Time") ?: 0.0
-                        //                    val accuracy = document.getDouble("Accuracy") ?: 0.0
-                        //                    val matchesPlayed = document.getLong("Matches Played") ?: 0
-                        //                    val matchesLost = document.getLong("Matches Lost") ?: 0
-
+                                            val rating = document.getDouble("Rating")?.toInt() ?:0
+                                            val avgTime = document.getDouble("Time")?.toInt() ?:0
+                                            val accuracy = document.getDouble("Accuracy")?.toInt() ?:0
                                             nameText2.text = name
                                             ratingText2.text = "Rating: $rating"
-                        //                    avgTimeText.text = "⏱ Average Time: ${avgTime}s"
-                        //                    accuracyText.text = "🎯 Accuracy: ${accuracy}%"
-                        //                    matchesPlayedText.text = "🎮 Matches Played: $matchesPlayed"
-                        //                    matchesLostText.text = "❌ Matches Lost: $matchesLost"
+                                            ratingText2.text = "Rating: $rating"
+                                            avgTimeText2.text = "⏱ : ${avgTime}s"
+                                            accuracyText2.text = "🎯 : ${accuracy}%"
 
                                             if (!url.isNullOrEmpty()) {
                                                 Glide.with(profilePicture2.context).load(url).placeholder(R.drawable.defaultdp)
