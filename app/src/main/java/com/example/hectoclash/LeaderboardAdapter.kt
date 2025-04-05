@@ -23,6 +23,8 @@ class LeaderboardAdapter(private val players: List<Player>) :
         val playerName: TextView = view.findViewById(R.id.playerName)
         val scoreText: TextView = view.findViewById(R.id.ratingText)
         val image: ImageView = view.findViewById(R.id.image)
+        val acc: TextView = view.findViewById(R.id.accuracyText)
+        val time: TextView = view.findViewById(R.id.timeText)
         val medalImage: ImageView = view.findViewById(R.id.medalImage)
     }
 
@@ -49,6 +51,8 @@ class LeaderboardAdapter(private val players: List<Player>) :
         // Set player name & score
         holder.playerName.text = player.name
         holder.scoreText.text = "⭐ ${player.rating}"
+        holder.acc.text = "🎯 ${player.accuracy}%"
+        holder.time.text = "⏱ ${player.time}s"
 
         // Click to show full DP
         holder.image.setOnClickListener {

@@ -8,6 +8,8 @@ package com.example.hectoclash
 data class Player(
     val name: String,  // Player's name
     val rating: Int,
+    val accuracy: Int,
+    val time: Int,
     val uid: String,
     val profileURL: String
 )

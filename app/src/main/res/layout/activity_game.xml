@@ -160,7 +160,7 @@
 
                     <TextView
                         android:id="@+id/textViewOpponentRating"
-                        android:text="Rating: 1472"
+                        android:text="Rating: "
                         android:textSize="14sp"
                         android:textColor="#CCCCCC"
                         android:textAlignment="center"
@@ -169,7 +169,7 @@
 
                     <TextView
                         android:id="@+id/textViewOpponentAvgTime"
-                        android:text="Avg Time: 10s"
+                        android:text="Avg Time: "
                         android:textSize="14sp"
                         android:textColor="#CCCCCC"
                         android:textAlignment="center"

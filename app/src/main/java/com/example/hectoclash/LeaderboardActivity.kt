@@ -65,9 +65,11 @@ class LeaderboardActivity : AppCompatActivity() {
                 for (document in documents) {
                     val uid = document.id
                     val rating = document.getLong("Rating")?.toInt() ?: 0
+                    val accuracy = document.getDouble("Accuracy")?.toInt() ?: 0
+                    val time = document.getDouble("Time")?.toInt() ?: 0
                     val playerName = document.getString("Username") ?: "Anonymous"
                     val profileURL = document.getString("Profile Picture URL") ?: ""
-                    val player = Player(name = playerName, rating = rating, uid = uid, profileURL = profileURL)
+                    val player = Player(name = playerName, rating = rating, uid = uid, accuracy = accuracy, time = time, profileURL = profileURL)
                     allPlayers.add(player)
                 }
 
@@ -87,8 +89,12 @@ class LeaderboardActivity : AppCompatActivity() {
                     val profilefirst: ImageView = findViewById(R.id.firstRankProfile)
                     val namefirst: TextView = findViewById(R.id.namefirst)
                     val ratingfirst: TextView = findViewById(R.id.ratingTextFirst)
+                    val accFirst: TextView = findViewById(R.id.accuracyTextFirst)
+                    val timeFirst: TextView = findViewById(R.id.timeTextFirst)
                     namefirst.text= topPlayer!!.name
                     ratingfirst.text= "⭐ "+topPlayer!!.rating.toString()
+                    accFirst.text= "🎯 "+topPlayer!!.accuracy.toString()+"%"
+                    timeFirst.text= "⏱ "+topPlayer!!.time.toString()+"s"
                     Glide.with(this).load(topPlayer!!.profileURL).placeholder(R.drawable.defaultdp).centerCrop().diskCacheStrategy(
                         DiskCacheStrategy.ALL)
                         .into(profilefirst)

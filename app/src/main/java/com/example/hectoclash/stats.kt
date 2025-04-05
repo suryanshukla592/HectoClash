@@ -34,10 +34,10 @@ class stats : AppCompatActivity() {private lateinit var firebaseAuth: FirebaseAu
         val profilePicture: ImageView = findViewById(R.id.profile_picture)
         val nameText: TextView = findViewById(R.id.name)
         val ratingText: TextView = findViewById(R.id.rating)
-//        val avgTimeText: TextView = findViewById(R.id.avg_time)
-//        val accuracyText: TextView = findViewById(R.id.accuracy)
-//        val matchesPlayedText: TextView = findViewById(R.id.matches_played)
-//        val matchesLostText: TextView = findViewById(R.id.matches_lost)
+        val avgTimeText: TextView = findViewById(R.id.avg_time)
+        val accuracyText: TextView = findViewById(R.id.accuracy)
+        val matchesPlayedText: TextView = findViewById(R.id.matches_played)
+        val matchesWonText: TextView = findViewById(R.id.matches_won)
 
         if (userID != null) {
             db.collection("Users").document(userID).get().addOnSuccessListener { document ->
@@ -45,17 +45,17 @@ class stats : AppCompatActivity() {private lateinit var firebaseAuth: FirebaseAu
                     val name = document.getString("Username") ?: "Unknown"
                     val url = document.getString("Profile Picture URL")
                     val rating = document.getDouble("Rating") ?: 0.0
-//                    val avgTime = document.getDouble("Average Time") ?: 0.0
-//                    val accuracy = document.getDouble("Accuracy") ?: 0.0
-//                    val matchesPlayed = document.getLong("Matches Played") ?: 0
-//                    val matchesLost = document.getLong("Matches Lost") ?: 0
+                    val avgTime = document.getDouble("Time") ?: 0.0
+                    val accuracy = document.getDouble("Accuracy") ?: 0.0
+                    val matchesPlayed = document.getLong("Played") ?: 0
+                    val matchesWon = document.getLong("Won") ?: 0
 
                     nameText.text = name
                     ratingText.text = "⭐ Rating: $rating"
-//                    avgTimeText.text = "⏱ Average Time: ${avgTime}s"
-//                    accuracyText.text = "🎯 Accuracy: ${accuracy}%"
-//                    matchesPlayedText.text = "🎮 Matches Played: $matchesPlayed"
-//                    matchesLostText.text = "❌ Matches Lost: $matchesLost"
+                    avgTimeText.text = "⏱ Average Time: ${avgTime}s"
+                    accuracyText.text = "🎯 Accuracy: ${accuracy}%"
+                    matchesPlayedText.text = "🎮 Matches Played: $matchesPlayed"
+                    matchesWonText.text = "🏆 Matches Won: $matchesWon"
 
                     if (!url.isNullOrEmpty()) {
                         Glide.with(this).load(url).placeholder(R.drawable.defaultdp)
