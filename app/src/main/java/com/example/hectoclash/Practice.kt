@@ -1,9 +1,12 @@
 package com.example.hectoclash
 
+import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -13,7 +16,10 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.GridLayout
@@ -122,6 +128,8 @@ class Practice : AppCompatActivity() {
                 MusicManager.stopMusic()
                 textViewTimer.setTextColor("#FF5555".toColorInt()) // Ensure final message is red
                 buttonSubmit.isEnabled = false
+                val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
+                showPossibleSolutionsPopup(this@Practice, sol1, sol2, sol3)
             }
         }.start()
     }
@@ -135,6 +143,34 @@ class Practice : AppCompatActivity() {
         startTimer()
 
     }
+    fun showPossibleSolutionsPopup(context: Context, solution1: String? = null, solution2: String? = null, solution3: String? = null    ) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.possible_solutions)
+
+        val buttonClose = dialog.findViewById<ImageView>(R.id.buttonClosePopup)
+        val textSolution1 = dialog.findViewById<TextView>(R.id.textViewSolution1)
+        val textSolution2 = dialog.findViewById<TextView>(R.id.textViewSolution2)
+        val textSolution3 = dialog.findViewById<TextView>(R.id.textViewSolution3)
+
+        buttonClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        textSolution1.text = "Solution 1: ${solution1 ?: "N/A"}"
+        textSolution2.text = "Solution 2: ${solution2 ?: "N/A"}"
+        textSolution3.text = "Solution 3: ${solution3 ?: "N/A"}"
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val layoutParams = dialog.window?.attributes
+        layoutParams?.gravity = Gravity.CENTER
+        layoutParams?.width = ViewGroup.LayoutParams.MATCH_PARENT
+        layoutParams?.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        dialog.window?.attributes = layoutParams
+
+        dialog.show()
+    }
+
 
     private fun validateSolution() {
         val result = evaluateExpression(currentExpression)
@@ -144,10 +180,99 @@ class Practice : AppCompatActivity() {
             buttonSubmit.isEnabled = false
             MusicManager.stopMusic()
             countdownTimer?.cancel()
+            val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
+            showPossibleSolutionsPopup(this@Practice, sol1, sol2, sol3)
         } else {
             textViewFeedback.text = "❌ Wrong! Try Again."
             textViewFeedback.setTextColor("#F44336".toColorInt()) // Red
         }
+    }
+    private fun evaluate(expression: String): Double? {
+        return try {
+            val exp = ExpressionBuilder(expression).build()
+            exp.evaluate()
+        } catch (e: Exception) {
+            null
+        }
+    }
+    private fun getDigitSplits(s: String): List<List<String>> {
+        val results = mutableListOf<List<String>>()
+        val n = s.length
+
+        fun backtrack(index: Int, path: MutableList<String>) {
+            if (index == n) {
+                results.add(ArrayList(path))
+                return
+            }
+            for (i in index + 1..n) {
+                val part = s.substring(index, i)
+                path.add(part)
+                backtrack(i, path)
+                path.removeAt(path.size - 1)
+            }
+        }
+
+        backtrack(0, mutableListOf())
+        return results
+    }
+    private fun generateExpressions(digits: String, operators: List<String>): Sequence<String> = sequence {
+        val splits = getDigitSplits(digits)
+        for (group in splits) {
+            val opsCombos = cartesianProduct(operators, group.size - 1)
+            for (ops in opsCombos) {
+                yieldAll(applyOperators(group, ops))
+            }
+        }
+    }
+    private fun applyOperators(nums: List<String>, opsSeq: List<String>): Sequence<String> = sequence {
+        if (nums.size == 1) {
+            yield(nums[0])
+            return@sequence
+        }
+        for (i in opsSeq.indices) {
+            val leftNums = nums.subList(0, i + 1)
+            val rightNums = nums.subList(i + 1, nums.size)
+            val leftOps = opsSeq.subList(0, i)
+            val rightOps = opsSeq.subList(i + 1, opsSeq.size)
+
+            for (left in applyOperators(leftNums, leftOps)) {
+                for (right in applyOperators(rightNums, rightOps)) {
+                    yield("($left${opsSeq[i]}$right)")
+                }
+            }
+        }
+    }
+    private fun cartesianProduct(list: List<String>, length: Int): Sequence<List<String>> = sequence {
+        if (length == 0) {
+            yield(emptyList())
+        } else {
+            for (item in list) {
+                for (rest in cartesianProduct(list, length - 1)) {
+                    yield(listOf(item) + rest)
+                }
+            }
+        }
+    }
+    private fun solveHectocTop3(digitStr: String): Triple<String?, String?, String?> {
+        val operators = listOf("+", "-", "*", "/")
+        val seen = mutableSetOf<String>()
+        val solutions = mutableListOf<String>()
+
+        for (expr in generateExpressions(digitStr, operators)) {
+            if (expr in seen) continue
+            seen.add(expr)
+            val result = evaluate(expr)
+            if (result != null && Math.abs(result - 100.0) < 1e-9) {
+                solutions.add("$expr = 100")
+                if (solutions.size == 3) break
+            }
+        }
+
+        val string1 = solutions.getOrNull(0)
+        val string2 = solutions.getOrNull(1)
+        val string3 = solutions.getOrNull(2)
+
+        return Triple(string1, string2,string3)
     }
 
     private fun evaluateExpression(expression: String): Double {
@@ -198,6 +323,12 @@ class Practice : AppCompatActivity() {
                 text = originalPuzzle[i].toString()
                 isEnabled = i == 0  // Enable only the first number initially
                 setOnClickListener {
+                    val mediaPlayer = MediaPlayer.create(context, R.raw.button_sound)
+                    mediaPlayer.start()
+
+                    mediaPlayer.setOnCompletionListener {
+                        it.release()
+                    }
                     currentExpression += text
                     textViewExpression.text = currentExpression
                     isEnabled = false
@@ -248,6 +379,12 @@ class Practice : AppCompatActivity() {
                     textSize = 18f
                 }
                 setOnClickListener {
+                    val mediaPlayer = MediaPlayer.create(context, R.raw.button_sound)
+                    mediaPlayer.start()
+
+                    mediaPlayer.setOnCompletionListener {
+                        it.release()
+                    }
                     if (text == "(") {
                         enableMinus()
                     }

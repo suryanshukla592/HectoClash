@@ -55,6 +55,7 @@ class SpectatorActivity : AppCompatActivity() {
         puzzleTextView = findViewById(R.id.textViewFinalPuzzle)
         player1ExpressionTextView = findViewById(R.id.player1ExpressionTextView)
         player2ExpressionTextView = findViewById(R.id.player2ExpressionTextView)
+
         player1FeedbackTextView = findViewById(R.id.player1FeedbackTextView)
         player2FeedbackTextView = findViewById(R.id.player2FeedbackTextView)
         player1NameTextView = findViewById(R.id.player1NameTextView)
@@ -88,12 +89,14 @@ class SpectatorActivity : AppCompatActivity() {
                             "expressionUpdate" -> {
                                 val expression = json.getString("expression")
                                 val playerUID = json.getString("opponent")
+                                if (expression!="Your Answer"){
                                 runOnUiThread {
                                     if (playerUID == player1UID) {
                                         player1ExpressionTextView.text = expression
                                     } else if (playerUID == player2UID) {
                                         player2ExpressionTextView.text = expression
                                     }
+                                }
                                 }
                             }
 

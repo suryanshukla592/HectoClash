@@ -1,5 +1,6 @@
 package com.example.hectoclash
 
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.View
@@ -54,6 +55,9 @@ class LeaderboardAdapter(private val players: List<Player>) :
         holder.scoreText.text = "⭐ ${player.rating}"
         holder.acc.text = "🎯 ${player.accuracy}%"
         holder.time.text = "⏱ ${player.time}s"
+        holder.cardView.setCardBackgroundColor("#1F1F1F".toColorInt()) // or your default bg
+        holder.playerName.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
+        holder.rankText.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
 
         // Click to show full DP
         holder.image.setOnClickListener {
