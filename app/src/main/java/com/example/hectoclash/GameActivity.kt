@@ -59,6 +59,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var gridOperators: GridLayout
 
     private var originalPuzzle: String = ""
+    private var matchDoc: String = ""
     private var countdownTimer: CountDownTimer? = null
     private var webSocketClient: WebSocketClient? = null
     private var currentExpression = ""
