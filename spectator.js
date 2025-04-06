@@ -36,6 +36,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebas
     let selectedRoomId = '';
     let isConnected = false;
     const pingInterval = 30000;
+    
 
     function connectWebSocket() {
       const uid = localStorage.getItem('uid') || 'guest';
@@ -48,31 +49,18 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebas
         startPing();
       };
 
-      //       async function getNameFromUID(uid) {
-      //   try {
-      //     const doc = await db.collection("users").doc(uid).get();
-      //     if (doc.exists && doc.data().name) {
-      //       return doc.data().name;
-      //     }
-      //   } catch (e) {
-      //     console.error("Error getting user data:", e);
-      //   }
-      //   return uid; // fallback to UID
-      // }
-      async function getNameFromUID(uid) {
+            async function getNameFromUID(uid) {
         try {
-          const docRef = collection(db, "users");
-          const snapshot = await getDocs(query(docRef));
-          for (const doc of snapshot.docs) {
-            if (doc.id === uid && doc.data().name) {
-              return doc.data().name;
-            }
+          const doc = await db.collection("users").doc(uid).get();
+          if (doc.exists && doc.data().name) {
+            return doc.data().name;
           }
         } catch (e) {
           console.error("Error getting user data:", e);
         }
-        return uid;
+        return uid; // fallback to UID
       }
+      
       
 
       ws.onmessage = (event) => {
@@ -89,14 +77,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebas
             break;
 
           case 'playerMeta':
-            if (message.opponent === 'Player1') {
-              player1UID = message.player;
-              getNameFromUID(message.player).then(name => {
+            if (message.role === 'Player1') {
+              player1UID = message.uid;
+              getNameFromUID(message.uid).then(name => {
                 player1Name.textContent = 'Player 1: ' + name;
+                console.log
               });
-            } else if (message.opponent === 'Player2') {
-              player2UID = message.player;
-              getNameFromUID(message.player).then(name => {
+            } else if (message.role === 'Player2') {
+              player2UID = message.uid;
+              getNameFromUID(message.uid).then(name => {
                 player2Name.textContent = 'Player 2: ' + name;
               });
             }
