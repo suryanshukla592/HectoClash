@@ -12,6 +12,19 @@ const firebaseConfig = {
   measurementId: "G-3ZZHRLSZK4"
 };
 
+import { DotLottie } from 'https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web/+esm';
+
+let dotLottie;
+
+
+dotLottie = new DotLottie({
+  autoplay: true,
+  loop: true,
+  canvas: document.getElementById("matchmakingAnimation"),
+  src: "loading.json",
+});
+
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -65,6 +78,11 @@ function setupWebSocket() {
         roomId = msg.room_id;
         puzzle = msg.content;
         const opponentId = (msg.opponent === uid) ? msg.player : msg.opponent;
+
+        if (dotLottie) {
+          dotLottie.stop(); // stop animation
+          document.getElementById("matchmakingAnimation").remove(); // optional cleanup
+        }
 
         document.getElementById("puzzle").textContent = "Solve: " + puzzle + " = 100";
         document.getElementById("match").style.display = "block";

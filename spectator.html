@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HectoClash Spectator Mode</title>
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Russo One', sans-serif;
+      background-color: #111;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    h1, h2 {
+      color: #D4AF37;
+    }
+    .room-list, .spectator-view {
+      margin-top: 30px;
+    }
+    .room-item {
+      padding: 12px;
+      margin: 10px;
+      border: 2px solid #D4AF37;
+      border-radius: 12px;
+      cursor: pointer;
+      background-color: #1e1e1e;
+      transition: background-color 0.2s;
+    }
+    .room-item:hover {
+      background-color: #333;
+    }
+    .hidden {
+      display: none;
+    }
+    .names, .expression, .feedback {
+      margin: 15px 0;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Spectator Mode</h1>
+
+  <div id="roomList" class="room-list"></div>
+
+  <div id="spectatorView" class="spectator-view hidden">
+    <h2 id="puzzleText">Puzzle: </h2>
+    <div class="names">
+      <div id="player1Name">Player 1: </div>
+      <div id="player2Name">Player 2: </div>
+    </div>
+    <div class="expression">
+      <div id="player1Expression">Player 1 Answer: </div>
+      <div id="player2Expression">Player 2 Answer: </div>
+    </div>
+    <div class="feedback">
+      <div id="player1Feedback">Player 1 Feedback: </div>
+      <div id="player2Feedback">Player 2 Feedback: </div>
+    </div>
+  </div>
+
+  <script type="module" src="spectator.js" defer></script>
+</body>
+</html>

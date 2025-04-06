@@ -14,7 +14,7 @@ body{
   margin-top: 100px;
   border: 1px rgb(255, 255, 255, 0.384) solid;
   width: 350px;
-  background-color: rgba(255, 255, 255, 0.0005);
+  background-color: rgba(255, 255, 255, 0.05);
   text-align: center;
   border-radius: 9px;
   padding: 7px;

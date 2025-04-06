@@ -6,11 +6,27 @@
   <title>HectoClash - Game</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
   <link rel="stylesheet" href="findmatch.css">
+  <style>
+    #matchmaking {
+      text-align: center;
+      padding-top: 80px;
+    }
+    canvas {
+      width: 150px;
+      height: 150px;
+      margin: 20px auto;
+      display: block;
+    }
+  </style>
 </head>
 <body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+
   <div id="matchmaking">
     <h2>Looking for a Match...</h2>
-    <p>Hang tight! We're pairing you with a worthy opponent.</p>
+    <canvas id="matchmakingAnimation" width="150" height="150"></canvas>
+    
+    <p class="waiting">Hang tight! We're pairing you with a worthy opponent.</p>
   </div>
 
   <div id="match">
@@ -42,6 +58,19 @@
     <div id="feedback"></div>
   </div>
 
+  <canvas id="dotlottie-canvas" style="width: 300px; height: 300px;"></canvas>
+  <script type="module">
+    import { DotLottie } from "https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web/+esm";
+
+    new DotLottie({
+      autoplay: true,
+      loop: true,
+      canvas: document.getElementById("matchmakingAnimation"),
+      src: "loading.json"
+    });
+  </script>
+
+  
   <script type="module" src="game.js" defer></script>
 </body>
 </html>
