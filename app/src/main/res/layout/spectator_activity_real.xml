@@ -89,9 +89,8 @@
                 android:id="@+id/player1ResultTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:background="@drawable/result_box_background"
                 android:gravity="center"
-                android:text="?"
+                android:text="="
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:fontFamily="@font/russo_one" />
@@ -101,6 +100,7 @@
             android:id="@+id/player1FeedbackTextView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:visibility="gone"
             android:layout_weight="2"
             android:fontFamily="@font/noah_bold"
             android:gravity="center"
@@ -163,9 +163,8 @@
                 android:id="@+id/player2ResultTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:background="@drawable/result_box_background"
                 android:gravity="center"
-                android:text="?"
+                android:text="="
                 android:textColor="#FFFFFF" android:textSize="18sp"
                 android:fontFamily="@font/russo_one"/>
         </LinearLayout>
@@ -174,6 +173,7 @@
             android:id="@+id/player2FeedbackTextView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:visibility="gone"
             android:layout_weight="2"
             android:fontFamily="@font/noah_bold"
             android:gravity="center"
