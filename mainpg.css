@@ -38,6 +38,19 @@ h1{
   border-radius: 50%;
 }
 
+a{
+  color: #e6ae1f;
+  text-decoration: none;
+}
+
+a:hover{
+  text-decoration: underline;
+}
+
+a:active{
+  color: #e6ae1fd3;
+}
+
 .logoname{
   width: 250px;
 }

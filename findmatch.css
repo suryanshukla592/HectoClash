@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
+body {
+  font-family: 'Russo One', sans-serif;
+  background-image: url('Signupbg.jpg');
+  background-size: cover;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+.hidden { display: none; }
+.profile-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.profile {
+  text-align: center;
+}
+.profile img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+.grid {
+  display: grid;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.grid button {
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 8px;
+  height: 50px;
+  width: 50px;
+  border: none;
+  cursor: pointer;
+  background: white;
+  color: black;
+}
+
+#gridNumbers {
+  grid-template-columns: repeat(6, 50px);
+}
+
+#gridOperators {
+  grid-template-columns: repeat(3, 60px);
+}
+
+#gridOperators button{
+  width: 60px;
+  height: 50px;
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid button:disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+#matchmaking { text-align: center; }
+#match { display: none; }
+#submit {
+  padding: 10px 20px;
+  font-size: 18px;
+  margin-top: 10px;
+  background: #D49337;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#submit:disabled {
+  background: gray;
+}
+#timer {
+  font-size: 24px;
+  margin: 10px 0;
+}
+#expressionDisplay {
+  background: #222;
+  padding: 14px;
+  margin: 0 auto 20px;
+  width: 80%;
+  border-radius: 8px;
+  font-size: 22px;
+}
+
+button{
+  padding: 10px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Russo One', sans-serif;
+}
+
+#submit {
+  margin-top: 16px;
+  width: 80%;
+  background-color: #D4AF37;
+  color: black;
+  font-size: 22px;
+  padding: 10px;
+}

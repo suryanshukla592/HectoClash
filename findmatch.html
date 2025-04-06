@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HectoClash - Game</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+  <link rel="stylesheet" href="findmatch.css">
+</head>
+<body>
+  <div id="matchmaking">
+    <h2>Looking for a Match...</h2>
+    <p>Hang tight! We're pairing you with a worthy opponent.</p>
+  </div>
+
+  <div id="match">
+    <div class="profile-section">
+      <div class="profile">
+        <img id="playerProfile" src="" alt="Player" />
+        <div id="playerName"></div>
+        <div id="playerRating"></div>
+        <div id="playerAvgTime"></div>
+        <div id="playerAccuracy"></div>
+      </div>
+
+      <div id="timer">Time Left: 120s</div>
+
+      <div class="profile">
+        <img id="opponentProfile" src="" alt="Opponent" />
+        <div id="opponentName"></div>
+        <div id="opponentRating"></div>
+        <div id="opponentAvgTime"></div>
+        <div id="opponentAccuracy"></div>
+      </div>
+    </div>
+
+    <h3 id="puzzle">Puzzle will appear here</h3>
+    <div id="expressionDisplay">Your Answer</div>
+    <div id="gridNumbers" class="grid"></div>
+    <div id="gridOperators" class="grid"></div>
+    <button id="submit" class="submit">Submit</button>
+    <div id="feedback"></div>
+  </div>
+
+  <script type="module" src="game.js" defer></script>
+</body>
+</html>

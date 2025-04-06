@@ -20,8 +20,9 @@
 // const db = getFirestore(app);
 // const auth = getAuth(app);
 
-document.getElementById("buttonStartGame").addEventListener("click", () => {
-  alert("Matchmaking will be implemented soon.");
+document.getElementById("buttonStartGame").addEventListener("click", (e) => {
+  e.preventDefault();
+  window.location.href = "findmatch.html"
 });
 
 document.getElementById("buttonPractice").addEventListener("click", (e) => {

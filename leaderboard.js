@@ -40,16 +40,19 @@ async function fetchLeaderboard() {
       uid: doc.id,
       name: data.Username || 'Anonymous',
       rating: data.Rating || 0,
+      accuracy: data.Accuracy,
+      time: data.Time,
       profileURL: data["Profile Picture URL"] || 'defaultdp[1].png'
     });
   });
-
+  
   if (players.length > 0) {
     const topPlayer = players[0];
     document.getElementById("firstRankProfile").src = topPlayer.profileURL;
     document.getElementById("namefirst").textContent = topPlayer.name;
-    document.getElementById("ratingfirst").textContent = `Rating: ${topPlayer.rating}`;
-
+    document.getElementById("ratingfirst").textContent = `⭐ Rating: ${topPlayer.rating}`;
+    document.getElementById("accufirst").textContent = `🎯 Accuracy:  ${Math.floor(topPlayer.accuracy)}`
+    document.getElementById("avgfst").textContent = `⏱ Average Time:  ${topPlayer.time}s`
     // Remaining players
     players.slice(1, 30).forEach((player, index) => renderPlayerCard(player, index));
   }
@@ -64,7 +67,11 @@ function renderPlayerCard(player, index) {
       <img class="player-img" src="${player.profileURL}" alt="Profile Picture">
       <div class="player-info">
         <p class="player-name">${player.name}</p>
-        <p class="player-rating">Rating: ${player.rating}</p>
+        <div class="player-details"
+        <p class="player-rating">⭐ Rating: ${player.rating}</p>
+        <p class="player-rating">🎯 Accuracy:  ${Math.floor(player.accuracy)}</p>
+        <p class="player-rating">⏱ Average Time:  ${player.time}s</p>
+        </div>
       </div>
     </div>
     <div class="player-rank">${index + 2}</div>

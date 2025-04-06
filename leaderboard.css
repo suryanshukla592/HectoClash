@@ -1,4 +1,3 @@
-/* Reset and Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -10,11 +9,14 @@ body {
   background: linear-gradient(to bottom, #0d0d0d, #1c1c1c);
   color: white;
   padding: 20px;
-  background-image:url("mathsbackground.png");
+  background: black;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
+p{
+  color: #e6ae1f;
+}
 
 #leaderboardTitle {
   text-align: center;
@@ -22,17 +24,18 @@ body {
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 10px;
-  color: #ffffff;
 }
 
 .title{
   text-align: center;
+  color: #e6ae1f;
 }
 
 .top-player{
   justify-content: center;
   text-align: center;
 }
+
 .top-player-container {
   display: flex;
   flex-direction: column;
@@ -66,12 +69,16 @@ body {
   font-size: 18px;
   font-weight: bold;
   margin-top: 10px;
-  color: #ffffff;
+  color: #e6ae1f;
 }
 
+.player-details{
+  display: flex;
+  justify-content: space-between;
+}
 #ratingfirst {
   font-size: 14px;
-  color: #cccccc;
+  color: #e6ae1f;
 }
 
 

@@ -40,7 +40,7 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("username").textContent = username;
       document.getElementById("rating").textContent = rating;
       document.getElementById("wins").textContent = won;
-      document.getElementById("accuracy").textContent = accuracy;
+      document.getElementById("accuracy").textContent = Math.floor(accuracy);
       document.getElementById("played").textContent = played;
       document.getElementById("time").textContent = time;
     } 
