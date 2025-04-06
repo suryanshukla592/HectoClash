@@ -5,10 +5,10 @@
     android:layout_width="360dp"
     android:layout_height="wrap_content"
     android:padding="20dp"
+    android:layout_gravity="center"
     android:background="@drawable/rounded_corners_dialogue"
     android:elevation="12dp">
 
-    <!-- Close Button -->
     <ImageView
         android:id="@+id/buttonClosePopup"
         android:layout_width="32dp"
@@ -21,7 +21,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Title -->
     <TextView
         android:id="@+id/textViewPopupTitle"
         android:layout_width="wrap_content"
@@ -35,7 +34,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Solution 1 -->
     <TextView
         android:id="@+id/textViewSolution1"
         android:layout_width="0dp"
@@ -51,7 +49,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Solution 2 -->
     <TextView
         android:id="@+id/textViewSolution2"
         android:layout_width="0dp"
@@ -67,7 +64,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Solution 3 -->
     <TextView
         android:id="@+id/textViewSolution3"
         android:layout_width="0dp"

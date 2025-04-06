@@ -110,5 +110,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
-
+    <TextView
+    android:id="@+id/btn_match_history"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="📜   Match History"
+    android:textSize="18sp"
+    android:fontFamily="@font/russo_one"
+    android:textColor="@android:color/black"
+    android:backgroundTint="@color/my_primary"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+        android:clickable="true"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:background="@drawable/button_bg"
+    app:layout_constraintTop_toBottomOf="@id/matches_won"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="40dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

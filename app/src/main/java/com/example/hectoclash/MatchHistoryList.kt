@@ -8,10 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class MatchHistoryList : AppCompatActivity() {private lateinit var matchHistoryRecyclerView: RecyclerView
+class MatchHistoryList : AppCompatActivity() {
+    private lateinit var matchHistoryRecyclerView: RecyclerView
     private lateinit var matchHistoryAdapter: MatchHistoryAdapter
     private lateinit var firebaseAuth: FirebaseAuth
     private val matchHistoryList = mutableListOf<MatchHistoryEntry>()

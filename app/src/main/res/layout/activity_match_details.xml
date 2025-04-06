@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/futuristicbg"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/textViewMatchHistoryTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MATCH HISTORY"
+        android:textSize="26sp"
+        android:layout_marginTop="30sp"
+        android:textStyle="bold"
+        android:textColor="#FFD700"
+        android:fontFamily="@font/russo_one"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Player Image -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageViewPlayerProfile"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/defaultdp"
+        android:background="@drawable/circle_mask"
+        android:clipToOutline="true"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMatchHistoryTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textViewVs"
+        app:layout_constraintHorizontal_bias="0.3"
+        android:layout_marginTop="20dp" />
+
+    <!-- Opponent Image -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageViewOpponentProfile"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/defaultdp"
+        android:background="@drawable/circle_mask"
+        android:clipToOutline="true"
+        app:layout_constraintTop_toTopOf="@+id/imageViewPlayerProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewVs"
+        app:layout_constraintHorizontal_bias="0.7" />
+
+    <!-- VS -->
+    <TextView
+        android:id="@+id/textViewVs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VS"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:fontFamily="@font/russo_one"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@+id/imageViewPlayerProfile"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewPlayerProfile"
+        app:layout_constraintStart_toEndOf="@+id/imageViewPlayerProfile"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewOpponentProfile" />
+
+    <!-- Player Stats -->
+    <!-- Player Stats -->
+    <LinearLayout
+        android:id="@+id/playerStats"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewPlayerProfile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textViewVs"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp">
+
+        <TextView
+            android:id="@+id/textViewPlayerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You"
+            android:textSize="16sp"
+            android:textColor="#2C91E6"
+            android:fontFamily="@font/russo_one" />
+
+        <TextView
+            android:id="@+id/textViewPlayerRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rating: 1450"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"
+            android:fontFamily="@font/noah_bold" />
+
+        <TextView
+            android:id="@+id/textViewPlayerAvgTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⏱ : 10.5s"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"
+            android:fontFamily="@font/noah_bold" />
+
+        <TextView
+            android:id="@+id/textViewPlayerAccuracy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎯 : 90%"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"
+            android:fontFamily="@font/noah_bold" />
+    </LinearLayout>
+
+    <!-- Opponent Stats -->
+    <LinearLayout
+        android:id="@+id/opponentStats"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewOpponentProfile"
+        app:layout_constraintStart_toEndOf="@+id/textViewVs"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/textViewOpponentName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Opponent"
+            android:textSize="16sp"
+            android:textColor="#E62C2C"
+            android:fontFamily="@font/russo_one" />
+
+        <TextView
+            android:id="@+id/textViewOpponentRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rating: 1480"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"
+            android:fontFamily="@font/noah_bold" />
+
+        <TextView
+            android:id="@+id/textViewOpponentAvgTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⏱ : 11.2s"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"
+            android:fontFamily="@font/noah_bold" />
+
+        <TextView
+            android:id="@+id/textViewOpponentAccuracy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎯 : 85%"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"
+            android:fontFamily="@font/noah_bold" />
+    </LinearLayout>
+
+    <!-- Timestamp -->
+    <TextView
+        android:id="@+id/textViewMatchTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Played: 5 mins ago"
+        android:textSize="14sp"
+        android:textColor="#AAAAAA"
+        android:fontFamily="@font/noah_bold"
+        app:layout_constraintTop_toBottomOf="@+id/playerStats"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Puzzle Info -->
+    <TextView
+        android:id="@+id/textViewPuzzle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Puzzle: 123456 = 100"
+        android:textSize="28sp"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/russo_one"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMatchTimestamp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Feedback -->
+    <TextView
+        android:id="@+id/textViewFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Feedback: Well done!"
+        android:textSize="20sp"
+        android:textColor="#FFD700"
+        android:textStyle="bold"
+        android:fontFamily="@font/noah_bold"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPuzzle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp" />
+
+    <!-- Solutions -->
+    <TextView
+        android:id="@+id/textViewSolutionsHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Possible Solutions:"
+        android:textSize="20sp"
+        android:textColor="#D49337"
+        android:fontFamily="@font/russo_one"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFeedback"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp" />
+
+    <LinearLayout
+        android:id="@+id/solutionContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/textViewSolutionsHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/textViewSolution1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. 1+2+3+4+5+85 = 100"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/noah_bold"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/textViewSolution2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2. 123-45-67+89 = 100"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/noah_bold"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/textViewSolution3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3. (1+2+3+4+5)*6+70 = 100"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/noah_bold" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

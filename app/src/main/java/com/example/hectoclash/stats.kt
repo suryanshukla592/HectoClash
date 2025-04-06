@@ -1,6 +1,7 @@
 package com.example.hectoclash
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.ImageView
@@ -38,7 +39,18 @@ class stats : AppCompatActivity() {private lateinit var firebaseAuth: FirebaseAu
         val accuracyText: TextView = findViewById(R.id.accuracy)
         val matchesPlayedText: TextView = findViewById(R.id.matches_played)
         val matchesWonText: TextView = findViewById(R.id.matches_won)
+        val button:TextView = findViewById(R.id.btn_match_history)
+        button.setOnClickListener{
+            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
+            mediaPlayer.start()
 
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
+            val intent = Intent(this, MatchHistoryList::class.java)
+            startActivity(intent)
+            finish()
+        }
         if (userID != null) {
             db.collection("Users").document(userID).get().addOnSuccessListener { document ->
                 if (document.exists()) {

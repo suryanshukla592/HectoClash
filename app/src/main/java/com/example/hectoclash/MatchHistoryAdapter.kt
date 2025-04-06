@@ -1,6 +1,8 @@
 package com.example.hectoclash
 
+import android.content.Intent
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -40,13 +42,26 @@ class MatchHistoryAdapter(private val matchHistoryList: List<MatchHistoryEntry>)
 
         // Background color by result
         when (match.result.lowercase()) {
-            "win" -> holder.itemView.setBackgroundColor(Color.parseColor("#193d26"))
-            "lose" -> holder.itemView.setBackgroundColor(Color.parseColor("#3d1d1d"))
-            "draw" -> holder.itemView.setBackgroundColor(Color.parseColor("#2b2b2b"))
+            "won" -> holder.itemView.setBackgroundColor(Color.parseColor("#2ECC71")) // Bright Green
+            "lose" -> holder.itemView.setBackgroundColor(Color.parseColor("#FF3B3B")) // Bright Red
+            "draw" -> holder.itemView.setBackgroundColor(Color.parseColor("#B0B0B0")) // Bright Grey
         }
 
         // Show opponent name using cache or fetch
         val opponentUID = match.opponentUID
+        holder.itemView.setOnClickListener {
+            val mediaPlayer = MediaPlayer.create(holder.itemView.context, R.raw.button_sound)
+            mediaPlayer.start()
+
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
+            val context = holder.itemView.context
+            val intent = Intent(context, MatchDetailsActivity::class.java)
+            intent.putExtra("match_data", match)
+            context.startActivity(intent)
+        }
+
         if (usernameCache.containsKey(opponentUID)) {
             holder.opponentName.text = "Opponent: ${usernameCache[opponentUID]}"
         } else {

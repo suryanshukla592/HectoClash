@@ -26,8 +26,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".MatchHistoryList"
+            android:name=".MatchDetailsActivity"
             android:exported="false" />
+        <activity
+            android:name=".MatchHistoryList"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AboutUs"
             android:exported="false"
