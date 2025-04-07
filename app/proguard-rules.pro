@@ -22,5 +22,10 @@
 -keep class com.hectoclash.** { *; }
 -keep class androidx.** { *; }
 -keepattributes *Annotation*
+-dontwarn java.awt.Component
+-dontwarn java.awt.GraphicsEnvironment
+-dontwarn java.awt.HeadlessException
+-dontwarn java.awt.Window
+-dontwarn org.slf4j.impl.StaticLoggerBinder
 -keep class com.google.firebase.** { *; }
 -keep class com.google.android.gms.** { *; }
