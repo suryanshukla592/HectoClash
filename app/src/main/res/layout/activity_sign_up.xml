@@ -27,7 +27,7 @@
         android:src="@drawable/logoname"
         app:layout_constraintBottom_toTopOf="@+id/Username"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />+
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/Email1"
@@ -161,7 +161,6 @@
         android:layout_marginBottom="15dp"
         app:layout_constraintBottom_toBottomOf="parent">
         <TextView
-            android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18sp"

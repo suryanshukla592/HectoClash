@@ -20,7 +20,6 @@ class LeaderboardActivity : AppCompatActivity() {
 
     private lateinit var leaderboardRecyclerView: RecyclerView
     private lateinit var leaderboardAdapter: LeaderboardAdapter
-    private lateinit var firebaseAuth: FirebaseAuth
     var profileFirst:String ?=""
     private val firestore = FirebaseFirestore.getInstance()
     private val usersCollection = firestore.collection("Users")
@@ -34,7 +33,6 @@ class LeaderboardActivity : AppCompatActivity() {
         setContentView(R.layout.activity_leaderboard)
         val firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser
-        val userID = user?.uid
         if (user == null) {
             val intent = Intent(this, opening::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

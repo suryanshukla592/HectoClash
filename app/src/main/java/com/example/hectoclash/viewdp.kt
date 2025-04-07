@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.github.chrisbanes.photoview.PhotoView
+import androidx.core.graphics.drawable.toDrawable
 
 
 class viewdp(private val imageUrl: String) : DialogFragment() {
@@ -38,7 +39,7 @@ class viewdp(private val imageUrl: String) : DialogFragment() {
         super.onStart()
         dialog?.window?.apply {
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         }
     }
 }

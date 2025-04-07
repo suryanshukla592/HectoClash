@@ -4,16 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import org.json.JSONException
@@ -23,7 +18,6 @@ import java.net.URI
 class Spectator : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RoomListAdapter
-    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var webSocketClient: WebSocketClient
     private val roomList = mutableListOf<RoomInfo>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,9 +26,7 @@ class Spectator : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         setContentView(R.layout.activity_spectator)
         val firebaseAuth = FirebaseAuth.getInstance()
-        val db = Firebase.firestore
         val user = firebaseAuth.currentUser
-        val uid = user?.uid
         if (user == null) {
             val intent = Intent(this, opening::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -108,6 +100,7 @@ class Spectator : AppCompatActivity() {
         super.onDestroy()
         webSocketClient.close()
     }
+    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
         webSocketClient.close()
         disconnectWebSocket()
@@ -116,14 +109,10 @@ class Spectator : AppCompatActivity() {
     }
     private fun disconnectWebSocket() {
         Log.d("GameActivity", "Disconnecting WebSocket...")
-        if (webSocketClient != null) {
-            if(webSocketClient.isOpen){
-                webSocketClient.close()
-            }
-            Log.d("GameActivity", "WebSocket disconnected.")
-        }else{
-            Log.d("GameActivity", "WebSocket is already disconnected or null.")
+        if(webSocketClient.isOpen){
+            webSocketClient.close()
         }
+        Log.d("GameActivity", "WebSocket disconnected.")
     }
 
     }

@@ -47,10 +47,8 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var firebaseAuth: FirebaseAuth
     private var profileImageUrl: String? = null
     private var selectedImageUri: Uri? = null
-    private var uploadedUrl: String? = null
     private val IMAGE_PICK_CODE = 104
     private val PERMISSION_CODE = 105
     private var nameint=""

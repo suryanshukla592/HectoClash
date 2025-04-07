@@ -117,7 +117,6 @@
 
     <!-- Opponent Stats -->
     <LinearLayout
-        android:id="@+id/opponentStats"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -222,7 +221,6 @@
         android:layout_marginTop="20dp" />
 
     <LinearLayout
-        android:id="@+id/solutionContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"

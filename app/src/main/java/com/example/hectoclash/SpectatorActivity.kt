@@ -12,8 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import net.objecthunter.exp4j.ExpressionBuilder
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
@@ -43,7 +41,7 @@ class SpectatorActivity : AppCompatActivity() {
     private var timerStarted = false
     private var player2UID: String = ""
     private val handler = Handler()
-    private val pingInterval = 30000L // 30 seconds
+    private val pingInterval = 30000L
     private var isConnected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {

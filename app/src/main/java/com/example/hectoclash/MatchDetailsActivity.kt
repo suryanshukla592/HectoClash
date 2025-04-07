@@ -3,10 +3,7 @@ package com.example.hectoclash
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.hectoclash.databinding.ActivityMatchDetailsBinding
 import com.google.firebase.firestore.FirebaseFirestore

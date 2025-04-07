@@ -1,6 +1,5 @@
 package com.example.hectoclash
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -50,7 +49,6 @@ import com.lottiefiles.dotlottie.core.util.toColor
 class GameActivity : AppCompatActivity() {
 
     private lateinit var textViewTimer: TextView
-    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var textViewPuzzle: TextView
     private lateinit var textViewExpression: TextView
     private lateinit var buttonSubmit: Button
@@ -59,7 +57,6 @@ class GameActivity : AppCompatActivity() {
     private lateinit var gridOperators: GridLayout
 
     private var originalPuzzle: String = ""
-    private var matchDoc: String = ""
     private var countdownTimer: CountDownTimer? = null
     private var webSocketClient: WebSocketClient? = null
     private var currentExpression = ""
@@ -265,7 +262,7 @@ class GameActivity : AppCompatActivity() {
                             val opponentID1 = json.getString("opponent")
                             val opponentID2 = json.getString("player")
                             Log.d("WebSocket", "🚀 Match found! Puzzle: $puzzle, Room ID: $roomId")
-                            var opponentID = opponentID1
+                            var opponentID: String
                             if(opponentID1==uid)
                             {
                                 opponentID = opponentID2
@@ -281,24 +278,22 @@ class GameActivity : AppCompatActivity() {
                                 val ratingText2: TextView = findViewById(R.id.textViewOpponentRating)
                                 val avgTimeText2: TextView = findViewById(R.id.textViewOpponentAvgTime)
                                 val accuracyText2: TextView = findViewById(R.id.textViewOpponentAccuracy)
-                                if (opponentID != null) {
-                                    db.collection("Users").document(opponentID).get().addOnSuccessListener { document ->
-                                        if (document.exists()) {
-                                            val name = document.getString("Username") ?: "Unknown"
-                                            val url = document.getString("Profile Picture URL")
-                                            val rating = document.getDouble("Rating")?.toInt() ?:0
-                                            val avgTime = document.getDouble("Time")?.toInt() ?:0
-                                            val accuracy = document.getDouble("Accuracy")?.toInt() ?:0
-                                            nameText2.text = name
-                                            ratingText2.text = "Rating: $rating"
-                                            ratingText2.text = "Rating: $rating"
-                                            avgTimeText2.text = "⏱ : ${avgTime}s"
-                                            accuracyText2.text = "🎯 : ${accuracy}%"
+                                db.collection("Users").document(opponentID).get().addOnSuccessListener { document ->
+                                    if (document.exists()) {
+                                        val name = document.getString("Username") ?: "Unknown"
+                                        val url = document.getString("Profile Picture URL")
+                                        val rating = document.getDouble("Rating")?.toInt() ?:0
+                                        val avgTime = document.getDouble("Time")?.toInt() ?:0
+                                        val accuracy = document.getDouble("Accuracy")?.toInt() ?:0
+                                        nameText2.text = name
+                                        ratingText2.text = "Rating: $rating"
+                                        ratingText2.text = "Rating: $rating"
+                                        avgTimeText2.text = "⏱ : ${avgTime}s"
+                                        accuracyText2.text = "🎯 : ${accuracy}%"
 
-                                            if (!url.isNullOrEmpty()) {
-                                                Glide.with(profilePicture2.context).load(url).placeholder(R.drawable.defaultdp)
-                                                    .centerCrop().into(profilePicture2)
-                                            }
+                                        if (!url.isNullOrEmpty()) {
+                                            Glide.with(profilePicture2.context).load(url).placeholder(R.drawable.defaultdp)
+                                                .centerCrop().into(profilePicture2)
                                         }
                                     }
                                 }

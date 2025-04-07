@@ -35,7 +35,6 @@ cloudinary-android = { module = "com.cloudinary:cloudinary-android", version.ref
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 dotlottie-android = { module = "com.github.LottieFiles:dotlottie-android", version.ref = "dotlottieAndroid" }
 exp4j = { module = "net.objecthunter:exp4j", version.ref = "exp4j" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
