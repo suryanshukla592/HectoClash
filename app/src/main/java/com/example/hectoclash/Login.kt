@@ -194,6 +194,11 @@ class Login : AppCompatActivity() {
                                 "UserID" to userID,
                                 "Username" to user.displayName,
                                 "Email" to user.email,
+                                "Rating" to 0,
+                                "Time" to 0,
+                                "Accuracy" to 0,
+                                "Played" to 0,
+                                "Won" to 0,
                                 "Profile Picture URL" to user.photoUrl.toString()
                             )
                             usersRef.set(userMap).addOnSuccessListener {
