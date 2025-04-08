@@ -1,7 +1,6 @@
 package com.example.hectoclash
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
