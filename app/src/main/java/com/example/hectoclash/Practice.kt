@@ -25,8 +25,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.toColorInt
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.lottiefiles.dotlottie.core.util.toColor
 import net.objecthunter.exp4j.ExpressionBuilder
 
@@ -53,9 +51,7 @@ class Practice : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         setContentView(R.layout.activity_practice)
         val firebaseAuth = FirebaseAuth.getInstance()
-        val db = Firebase.firestore
         val user = firebaseAuth.currentUser
-        val userID = user?.uid
 
         if (user == null) {
             val intent = Intent(this, opening::class.java)
@@ -459,6 +455,10 @@ class Practice : AppCompatActivity() {
     }
     override fun onBackPressed() {
         countdownTimer?.cancel()
+        MusicManager.stopMusic()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()
         super.onBackPressed()
     }

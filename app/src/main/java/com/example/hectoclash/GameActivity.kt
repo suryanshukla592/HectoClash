@@ -52,6 +52,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var textViewPuzzle: TextView
     private lateinit var textViewExpression: TextView
     private lateinit var buttonSubmit: Button
+    private lateinit var Rematch: Button
     private lateinit var textViewFeedback: TextView
     private lateinit var gridNumbers: GridLayout
     private lateinit var gridOperators: GridLayout
@@ -111,21 +112,11 @@ class GameActivity : AppCompatActivity() {
         val dotLottieAnimationView = findViewById<DotLottieAnimation>(R.id.lottie_view)
 
 
-        val config = Config.Builder()
-            .autoplay(true)
-            .speed(1f)
-            .loop(true)
-            .source(DotLottieSource.Asset("loading.json"))
-            .useFrameInterpolation(true)
-            .playMode(Mode.FORWARD)
-            .build()
-        dotLottieAnimationView.load(config)
-
-
         textViewTimer = findViewById(R.id.textViewTimer)
         textViewPuzzle = findViewById(R.id.textViewPuzzle)
         textViewExpression = findViewById(R.id.textViewExpression)
         buttonSubmit = findViewById(R.id.buttonSubmit)
+        Rematch = findViewById(R.id.Rematch)
         textViewFeedback = findViewById(R.id.textViewFeedback)
         gridNumbers = findViewById(R.id.gridNumbers)
         gridOperators = findViewById(R.id.gridOperators)
@@ -140,6 +131,7 @@ class GameActivity : AppCompatActivity() {
             }
         })
         setButtonAppearance(buttonSubmit,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
+        setButtonAppearance(Rematch,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
 
         buttonSubmit.setOnClickListener {
             val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
@@ -151,8 +143,31 @@ class GameActivity : AppCompatActivity() {
 
             sendSolutionToServer()
         }
+        Rematch.setOnClickListener {
+            MusicManager.stopMusic()
+            dotLottieAnimationView.pause()
+            dotLottieAnimationView.clearAnimation()
+            countdownTimer?.cancel()
+            val intent = Intent(this, GameActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            finish()
+            overridePendingTransition(0, 0) // No animation on finish
+            startActivity(intent)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+
+        }
 
         textViewTimer.text = "Time Left: 120s"
+        val config = Config.Builder()
+            .autoplay(true)
+            .speed(1f)
+            .loop(true)
+            .source(DotLottieSource.Asset("loading.json"))
+            .useFrameInterpolation(true)
+            .playMode(Mode.FORWARD)
+            .build()
+        dotLottieAnimationView.load(config)
+        dotLottieAnimationView.play()
     }
     private fun sendExpressionUpdate(expression: String) {
         val firebaseAuth = FirebaseAuth.getInstance()
@@ -272,6 +287,7 @@ class GameActivity : AppCompatActivity() {
 
                             // Handle game start logic
                             originalPuzzle = puzzle
+
                             runOnUiThread {
                                 val profilePicture2: ImageView = findViewById(R.id.imageViewOpponentProfile)
                                 val nameText2: TextView = findViewById(R.id.textViewOpponentName)
@@ -303,7 +319,9 @@ class GameActivity : AppCompatActivity() {
                                 val matchmaking: LinearLayout = findViewById(R.id.matchmakingLayout)
                                 match.visibility=View.VISIBLE
                                 matchmaking.visibility = View.GONE
-
+                                val dotLottieAnimationView = findViewById<DotLottieAnimation>(R.id.lottie_view)
+                                dotLottieAnimationView.pause()
+                                dotLottieAnimationView.clearAnimation()
                                 startTimer()
                             }
                         }
@@ -329,6 +347,11 @@ class GameActivity : AppCompatActivity() {
                                 buttonSubmit.isEnabled = false // Disable submit after game over
                                 val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
                                 showPossibleSolutionsPopup(this@GameActivity, sol1, sol2, sol3)
+                                Rematch.visibility=View.VISIBLE
+                                gridNumbers.visibility=View.GONE
+                                gridOperators.visibility=View.GONE
+
+
                             }
                         }
 
@@ -655,7 +678,11 @@ class GameActivity : AppCompatActivity() {
         Log.d("GameActivity", "onBackPressed() called")
         webSocketClient?.close()
         disconnectWebSocket()
+        MusicManager.stopMusic()
         countdownTimer?.cancel()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()
         super.onBackPressed()
     }

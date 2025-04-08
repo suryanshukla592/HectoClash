@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.widget.PopupMenu
 import android.media.MediaPlayer
-import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
@@ -180,6 +179,7 @@ class MainActivity : AppCompatActivity() {
             }
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         buttonPractice.setOnClickListener {
@@ -191,6 +191,7 @@ class MainActivity : AppCompatActivity() {
             }
             val intent = Intent(this, Practice::class.java)
             startActivity(intent)
+            finish()
         }
 
         // Navigate to the Leaderboard Activity
