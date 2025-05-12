@@ -530,12 +530,7 @@ class GameActivity : AppCompatActivity() {
                 text = originalPuzzle[i].toString()
                 isEnabled = i == 0  // Enable only the first number initially
                 setOnClickListener {
-                    val mediaPlayer = MediaPlayer.create(context, R.raw.button_sound)
-                    mediaPlayer.start()
-
-                    mediaPlayer.setOnCompletionListener {
-                        it.release()
-                    }
+                    SfxManager.playSfx(context, R.raw.button_sound)
                     currentExpression += text
                     textViewExpression.text = currentExpression
                     isEnabled = false
@@ -587,12 +582,7 @@ class GameActivity : AppCompatActivity() {
                     textSize = 18f
                     }
                 setOnClickListener {
-                    val mediaPlayer = MediaPlayer.create(context, R.raw.button_sound)
-                    mediaPlayer.start()
-
-                    mediaPlayer.setOnCompletionListener {
-                        it.release()
-                    }
+                    SfxManager.playSfx(context, R.raw.button_sound)
                     if(text=="(")
                     {
                         enableMinus()
