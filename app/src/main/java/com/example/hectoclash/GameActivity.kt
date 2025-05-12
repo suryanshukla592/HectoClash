@@ -134,27 +134,18 @@ class GameActivity : AppCompatActivity() {
         setButtonAppearance(Rematch,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
 
         buttonSubmit.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
-
+            SfxManager.playSfx(this, R.raw.button_sound)
             sendSolutionToServer()
         }
         Rematch.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
             MusicManager.stopMusic()
             dotLottieAnimationView.pause()
             dotLottieAnimationView.clearAnimation()
             countdownTimer?.cancel()
             val intent = Intent(this, GameActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            finish()
-            overridePendingTransition(0, 0) // No animation on finish
             startActivity(intent)
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-
+            finish()
         }
 
         textViewTimer.text = "Time Left: 120s"
@@ -198,6 +189,7 @@ class GameActivity : AppCompatActivity() {
                 if (secondsRemaining <= 30) {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
                     MusicManager.startMusic(this@GameActivity,R.raw.clock_ticking)
+                    MusicManager.setMusicVolume(this@GameActivity)
                 } else {
                     textViewTimer.setTextColor("#D49337".toColorInt())
                 }
@@ -349,6 +341,7 @@ class GameActivity : AppCompatActivity() {
                                 showPossibleSolutionsPopup(this@GameActivity, sol1, sol2, sol3)
                                 Rematch.visibility=View.VISIBLE
                                 gridNumbers.visibility=View.GONE
+                                buttonSubmit.visibility = View.GONE
                                 gridOperators.visibility=View.GONE
 
 
@@ -368,7 +361,7 @@ class GameActivity : AppCompatActivity() {
                 Log.d("WebSocket", "❌ WebSocket closed. Code: $code, Reason: $reason, Remote: $remote")
                 mainHandler.post {
                     Toast.makeText(this@GameActivity, "Disconnected from server.", Toast.LENGTH_SHORT).show()
-                    finish() // Or start a new intent
+                    finish()
                 }
             }
 
@@ -681,6 +674,7 @@ class GameActivity : AppCompatActivity() {
         MusicManager.stopMusic()
         countdownTimer?.cancel()
         val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()
