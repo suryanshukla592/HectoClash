@@ -38,12 +38,7 @@ class stats : AppCompatActivity() {
         val matchesWonText: TextView = findViewById(R.id.matches_won)
         val button:TextView = findViewById(R.id.btn_match_history)
         button.setOnClickListener{
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val intent = Intent(this, MatchHistoryList::class.java)
             startActivity(intent)
             finish()

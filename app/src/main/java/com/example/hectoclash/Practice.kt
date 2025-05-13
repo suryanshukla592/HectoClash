@@ -70,13 +70,8 @@ class Practice : AppCompatActivity() {
 
         setupProblem()
         setButtonAppearance(buttonSubmit,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
-        buttonSubmit.setOnClickListener {val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
-
+        buttonSubmit.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
            validateSolution()
         }
 
@@ -94,6 +89,7 @@ class Practice : AppCompatActivity() {
                 if (secondsRemaining <= 30) {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
                     MusicManager.startMusic(this@Practice,R.raw.clock_ticking)
+                    MusicManager.setMusicVolume(this@Practice)
                 } else {
                     textViewTimer.setTextColor("#D49337".toColorInt())
                 }
@@ -299,12 +295,7 @@ class Practice : AppCompatActivity() {
                 text = originalPuzzle[i].toString()
                 isEnabled = i == 0  // Enable only the first number initially
                 setOnClickListener {
-                    val mediaPlayer = MediaPlayer.create(context, R.raw.button_sound)
-                    mediaPlayer.start()
-
-                    mediaPlayer.setOnCompletionListener {
-                        it.release()
-                    }
+                    SfxManager.playSfx(context, R.raw.button_sound)
                     currentExpression += text
                     textViewExpression.text = currentExpression
                     isEnabled = false
@@ -355,12 +346,7 @@ class Practice : AppCompatActivity() {
                     textSize = 18f
                 }
                 setOnClickListener {
-                    val mediaPlayer = MediaPlayer.create(context, R.raw.button_sound)
-                    mediaPlayer.start()
-
-                    mediaPlayer.setOnCompletionListener {
-                        it.release()
-                    }
+                    SfxManager.playSfx(context, R.raw.button_sound)
                     if (text == "(") {
                         enableMinus()
                     }
@@ -456,9 +442,8 @@ class Practice : AppCompatActivity() {
     override fun onBackPressed() {
         countdownTimer?.cancel()
         MusicManager.stopMusic()
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        MusicManager.startMusic(this,R.raw.home_page_music)
+        MusicManager.setMusicVolume(this)
         finish()
         super.onBackPressed()
     }

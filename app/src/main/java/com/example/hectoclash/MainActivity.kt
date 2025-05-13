@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         MusicManager.startMusic(this,R.raw.home_page_music)
+        MusicManager.setMusicVolume(this)
         db.firestoreSettings = FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build()
         profileImageUrl= intent.getStringExtra("imgu")
         nameint = intent.getStringExtra("name") ?: ""
@@ -98,13 +99,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.profile.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
+        updateSoundIcon(SoundManager.getSoundState(this))
 
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+        binding.soundToggle.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
+            val newState = SoundManager.cycleSoundState(this)
+            updateSoundIcon(newState)
+        }
+        binding.profile.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
             binding.profile.animate()
                 .scaleX(0.95f)
                 .scaleY(0.95f)
@@ -118,17 +121,18 @@ class MainActivity : AppCompatActivity() {
                             val dialog = Dialog(this)
                             dialog.setContentView(R.layout.dppopup)
                             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                            dialog.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                            dialog.window?.setLayout(
+                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT
+                            )
 
-                            val viewProfilePicture = dialog.findViewById<TextView>(R.id.view_profile_picture)
-                            val changeProfilePicture = dialog.findViewById<TextView>(R.id.change_profile_picture)
+                            val viewProfilePicture =
+                                dialog.findViewById<TextView>(R.id.view_profile_picture)
+                            val changeProfilePicture =
+                                dialog.findViewById<TextView>(R.id.change_profile_picture)
+                            val yourStats = dialog.findViewById<TextView>(R.id.your_stats)
                             viewProfilePicture.setOnClickListener {
-                                val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-                                mediaPlayer.start()
-
-                                mediaPlayer.setOnCompletionListener {
-                                    it.release()
-                                }
+                                SfxManager.playSfx(this, R.raw.button_sound)
                                 dialog.dismiss()
                                 val viewdp = profileImageUrl?.let { it1 -> viewdp(it1) }
                                 if (viewdp != null) {
@@ -136,15 +140,17 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                             changeProfilePicture.setOnClickListener {
-                                val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-                                mediaPlayer.start()
-
-                                mediaPlayer.setOnCompletionListener {
-                                    it.release()
-                                }
+                                SfxManager.playSfx(this, R.raw.button_sound)
                                 dialog.dismiss()
                                 checkPermOpenDialog()
                             }
+                            yourStats.setOnClickListener {
+                                SfxManager.playSfx(this, R.raw.button_sound)
+                                val intent = Intent(this, stats::class.java)
+                                dialog.dismiss()
+                                startActivity(intent)
+                        }
+
 
                             dialog.show()
                         }
@@ -153,12 +159,7 @@ class MainActivity : AppCompatActivity() {
                 .start()
         }
         binding.options.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             showPopupMenu()
         }
 
@@ -167,75 +168,49 @@ class MainActivity : AppCompatActivity() {
         val buttonPractice: Button = findViewById(R.id.buttonPractice)
         val buttonSpectate: Button = findViewById(R.id.buttonSpectate)
         val buttonHowToPlay: Button = findViewById(R.id.buttonHowToPlay)
-        val buttonStats: Button = findViewById(R.id.buttonStats)
+        val buttonChallenge: Button = findViewById(R.id.buttonChallenge)
 
         // Navigate to the Game Activity
         buttonStartGame.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
-            finish()
         }
-
+        buttonChallenge.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
+            val intent = Intent(this, Challenge::class.java)
+            startActivity(intent)
+        }
         buttonPractice.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val intent = Intent(this, Practice::class.java)
             startActivity(intent)
-            finish()
         }
 
         // Navigate to the Leaderboard Activity
         buttonLeaderboard.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val intent = Intent(this, LeaderboardActivity::class.java)
             startActivity(intent)
         }
-        buttonStats.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
-            val intent = Intent(this, stats::class.java)
-            startActivity(intent)
-        }
         buttonHowToPlay.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val intent = Intent(this, HowToPlay::class.java)
             startActivity(intent)
         }
 
 //         Navigate to the Spectator Mode Activity
         buttonSpectate.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val intent = Intent(this, Spectator::class.java)
             startActivity(intent)
+        }
+    }
+    fun updateSoundIcon(state: SoundState) {
+        when (state) {
+            SoundState.ON -> binding.soundToggle.setImageResource(R.drawable.on)
+            SoundState.HALF -> binding.soundToggle.setImageResource(R.drawable.down)
+            SoundState.OFF -> binding.soundToggle.setImageResource(R.drawable.off)
         }
     }
     private fun showPopupMenu() {
@@ -268,12 +243,7 @@ class MainActivity : AppCompatActivity() {
 
         val firebaseAuth = FirebaseAuth.getInstance()
         popupMenu.setOnMenuItemClickListener { menuItem ->
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             when (menuItem.itemId) {
                 R.id.sign_out -> {
                     val googleSignInClient = GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -309,23 +279,13 @@ class MainActivity : AppCompatActivity() {
         val btnYes = dialogView.findViewById<Button>(R.id.btn_yes)
         val btnNo = dialogView.findViewById<Button>(R.id.btn_no)
         btnYes.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             deleteUserAccount(firebaseAuth)
             alertDialog.dismiss()
         }
 
         btnNo.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             alertDialog.dismiss()
         }
         alertDialog.show()

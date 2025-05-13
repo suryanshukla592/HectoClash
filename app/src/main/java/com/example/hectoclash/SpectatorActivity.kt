@@ -89,6 +89,7 @@ class SpectatorActivity : AppCompatActivity() {
                 if (secondsRemaining <= 30) {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
                     MusicManager.startMusic(this@SpectatorActivity,R.raw.clock_ticking)
+                    MusicManager.setMusicVolume(this@SpectatorActivity)
                 } else {
                     textViewTimer.setTextColor("#D49337".toColorInt())
                 }

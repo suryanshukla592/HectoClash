@@ -663,10 +663,8 @@ class GameActivity : AppCompatActivity() {
         disconnectWebSocket()
         MusicManager.stopMusic()
         countdownTimer?.cancel()
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        MusicManager.startMusic(this,R.raw.home_page_music)
+        MusicManager.setMusicVolume(this)
         finish()
         super.onBackPressed()
     }

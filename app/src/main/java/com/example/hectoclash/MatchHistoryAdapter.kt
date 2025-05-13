@@ -49,12 +49,7 @@ class MatchHistoryAdapter(private val matchHistoryList: List<MatchHistoryEntry>)
         // Show opponent name using cache or fetch
         val opponentUID = match.opponentUID
         holder.itemView.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(holder.itemView.context, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(holder.itemView.context, R.raw.button_sound)
             val context = holder.itemView.context
             val intent = Intent(context, MatchDetailsActivity::class.java)
             intent.putExtra("match_data", match)

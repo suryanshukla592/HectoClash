@@ -41,34 +41,19 @@ class Login : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         binding.google.setOnClickListener{
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
         binding.signuptext.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val intent = Intent(this, SignUp::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
         }
         binding.buttonLogin.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val email = binding.Email.text.toString()
             val pass = binding.Password.text.toString()
 
@@ -128,12 +113,7 @@ class Login : AppCompatActivity() {
             }
         }
         binding.forgotpassword.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             showResetEmailDialog()
         }
 
@@ -147,12 +127,7 @@ class Login : AppCompatActivity() {
         val alertDialog = builder.create()
         val btnYes = dialogView.findViewById<Button>(R.id.btn_submit)
         btnYes.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val email = dialogView.findViewById<EditText>(R.id.et_email).text.toString().trim()
             if (email.isNotEmpty()) {
                 firebaseAuth.sendPasswordResetEmail(email)

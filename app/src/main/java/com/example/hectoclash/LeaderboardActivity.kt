@@ -48,12 +48,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
         fetchLeaderboardData()
         profilefirst.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             profileFirst?.let { it1 -> viewdp(it1) }?.show(supportFragmentManager, "dp_popup")
         }
     }

@@ -47,4 +47,12 @@ object MusicManager {
         currentMusicResId = null
         isPaused = false
     }
+    fun setMusicVolume(context: Context) {
+        val volume = SoundManager.getVolumeMultiplier(context)
+        mediaPlayer?.setVolume(volume, volume)
+    }
+
+    fun updateVolumeAll(context: Context) {
+        setMusicVolume(context) // add more if needed (like SFX manager)
+    }
 }

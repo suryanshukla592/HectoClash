@@ -38,12 +38,7 @@ class MatchDetailsActivity : AppCompatActivity() {
         binding.textViewSolution2.text=sol2
         binding.textViewSolution3.text=sol3
         binding.imageViewPlayerProfile.setOnClickListener { it ->
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val context = it.context
             if (context is AppCompatActivity) {
                 val viewdp = viewdp(playerImage)
@@ -51,12 +46,7 @@ class MatchDetailsActivity : AppCompatActivity() {
             }
         }
         binding.imageViewOpponentProfile.setOnClickListener { it ->
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             val context = it.context
             if (context is AppCompatActivity) {
                 val viewdp = viewdp(opponentImage)

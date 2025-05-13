@@ -46,12 +46,7 @@ class RoomListAdapter(
         holder.roomIdText.text = "Room ID: $displayId"
 
         holder.itemView.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(holder.itemView.context, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(holder.itemView.context, R.raw.button_sound)
             onItemClick(room)
         }
     }

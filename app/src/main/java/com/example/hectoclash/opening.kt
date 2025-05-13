@@ -20,24 +20,15 @@ class opening : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        MusicManager.updateVolumeAll(this)
         val signInButton = findViewById<Button>(R.id.button_sign_in)
         signInButton.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             startActivity(Intent(this, Login::class.java))
         }
         val signUpButton = findViewById<TextView>(R.id.button_signup)
         signUpButton.setOnClickListener {
-            val mediaPlayer = MediaPlayer.create(this, R.raw.button_sound)
-            mediaPlayer.start()
-
-            mediaPlayer.setOnCompletionListener {
-                it.release()
-            }
+            SfxManager.playSfx(this, R.raw.button_sound)
             startActivity(Intent(this, SignUp::class.java))
         }
     }
