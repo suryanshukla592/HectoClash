@@ -7,41 +7,108 @@
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".GameActivity">
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/matchmakingLayout"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:visibility="visible">
 
-        <TextView
-            android:text="Looking for a Match..."
-            android:textColor="@color/golden_yellow"
-            android:textSize="24sp"
-            android:fontFamily="@font/russo_one"
-            android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:id="@+id/mainContentSection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="30sp"
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <com.lottiefiles.dotlottie.core.widget.DotLottieAnimation
-            android:id="@+id/lottie_view"
-            android:layout_width="160sp"
-            android:layout_height="160sp"
-            android:layout_margin="20sp"
-            app:dotLottie_speed="3"
-            app:dotLottie_src="assets/loading.json" />
-        <TextView
-            android:text="Hang tight!\nWe're pairing you with a worthy opponent."
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:fontFamily="@font/russo_one"
-            android:layout_marginTop="10dp"
+            <TextView
+                android:text="Looking for a Match..."
+                android:textColor="@color/golden_yellow"
+                android:textSize="24sp"
+                android:fontFamily="@font/russo_one"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.lottiefiles.dotlottie.core.widget.DotLottieAnimation
+                android:id="@+id/lottie_view"
+                android:layout_width="160sp"
+                android:layout_height="160sp"
+                android:layout_margin="20sp"
+                app:dotLottie_speed="3"
+                app:dotLottie_src="assets/loading.json" />
+
+            <TextView
+                android:text="Hang tight!\nWe're pairing you with a worthy opponent."
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:fontFamily="@font/russo_one"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/gameCodeDisplaySection"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Game Code"
+                android:textColor="@color/golden_yellow"
+                android:textSize="18sp"
+                android:fontFamily="@font/russo_one"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/textViewDisplayedGameCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00000000"
+                android:textColor="#FFFFFF"
+                android:textSize="28sp"
+                android:fontFamily="@font/noah_bold"
+                android:layout_marginBottom="6dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageButton
+                    android:id="@+id/buttonShareDisplayedCode"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/share"
+                    android:layout_marginEnd="16dp"
+                    android:clickable="true"
+                    android:contentDescription="Share Displayed Code"
+                    app:tint="@color/golden_yellow" />
+
+                <ImageButton
+                    android:id="@+id/buttonCopyDisplayedCode"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:clickable="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/copy"
+                    android:contentDescription="Copy Displayed Code"
+                    app:tint="@color/golden_yellow" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/match"
@@ -289,8 +356,8 @@
             android:visibility="gone"
             android:layout_marginHorizontal="30dp"
             android:textColor="#000000"
-            android:background="@drawable/custom_button"
-            android:backgroundTint="@color/golden_yellow"
+            android:background="@drawable/ripple_button"
+            app:backgroundTint="@null"
             android:paddingVertical="10dp"
             android:textAlignment="center"
             android:fontFamily="@font/russo_one"
@@ -306,6 +373,7 @@
             android:layout_marginHorizontal="30dp"
             android:textColor="#000000"
             android:background="@drawable/custom_button_real"
+            app:backgroundTint="@null"
             android:paddingVertical="10dp"
             android:textAlignment="center"
             android:fontFamily="@font/russo_one"

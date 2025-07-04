@@ -23,8 +23,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -65,6 +67,7 @@ class GameActivity : AppCompatActivity() {
     private var gameStartTime: Long = 0
     private var gameDurationSeconds: Long = 120
     private var roomId: String = ""
+    private var code: String = "default"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +78,7 @@ class GameActivity : AppCompatActivity() {
         val db = Firebase.firestore
         val user = firebaseAuth.currentUser
         val userID = user?.uid
+        code = intent.getStringExtra("code") ?: "default"
 
         if (user == null) {
             val intent = Intent(this, opening::class.java)
@@ -88,6 +92,10 @@ class GameActivity : AppCompatActivity() {
         val ratingText: TextView = findViewById(R.id.textViewPlayerRating)
         val avgTimeText: TextView = findViewById(R.id.textViewPlayerAvgTime)
         val accuracyText: TextView = findViewById(R.id.textViewPlayerAccuracy)
+        val gameCodeDisplay: TextView = findViewById(R.id.textViewDisplayedGameCode)
+        val gameCodeCopy: ImageButton = findViewById(R.id.buttonCopyDisplayedCode)
+        val gameCodeShare: ImageButton = findViewById(R.id.buttonShareDisplayedCode)
+        val gameCodeLayout: LinearLayout = findViewById(R.id.gameCodeDisplaySection)
         if (userID != null) {
             db.collection("Users").document(userID).get().addOnSuccessListener { document ->
                 if (document.exists()) {
@@ -110,6 +118,33 @@ class GameActivity : AppCompatActivity() {
             }
         }
         val dotLottieAnimationView = findViewById<DotLottieAnimation>(R.id.lottie_view)
+        if (code!="default" && code!="")
+        {
+            gameCodeLayout.visibility=View.VISIBLE
+            gameCodeDisplay.text = code
+        }
+        gameCodeShare.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
+            code.let { roomId ->
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_SUBJECT, "Join my HectoClash game!")
+                    putExtra(Intent.EXTRA_TEXT, "Use this code to join my game: $roomId")
+                }
+                startActivity(Intent.createChooser(shareIntent, "Share via"))
+            }
+        }
+
+        gameCodeCopy.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
+            val code = code
+            if (code.isNotEmpty()) {
+                val clipboard = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                val clip = android.content.ClipData.newPlainText("Game Code", code)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(this, "Copied code: $code", Toast.LENGTH_SHORT).show()
+            }
+        }
 
 
         textViewTimer = findViewById(R.id.textViewTimer)
@@ -130,9 +165,6 @@ class GameActivity : AppCompatActivity() {
                 sendExpressionUpdate(expression)
             }
         })
-        setButtonAppearance(buttonSubmit,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
-        setButtonAppearance(Rematch,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
-
         buttonSubmit.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
             sendSolutionToServer()
@@ -249,6 +281,7 @@ class GameActivity : AppCompatActivity() {
                 // Creating matchmaking request
                 val request = JSONObject()
                 request.put("uid", uid)
+                request.put("code", code)
                 send(request.toString())
                 mainHandler.post {
                     Log.d("WebSocket", "📤 Sent matchmaking request with UID: $uid")
@@ -308,7 +341,7 @@ class GameActivity : AppCompatActivity() {
                                 textViewPuzzle.text = "Solve: $originalPuzzle = 100"
                                 setupButtons()  // Setup buttons based on the puzzle
                                 val match: LinearLayout = findViewById(R.id.match)
-                                val matchmaking: LinearLayout = findViewById(R.id.matchmakingLayout)
+                                val matchmaking: RelativeLayout = findViewById(R.id.matchmakingLayout)
                                 match.visibility=View.VISIBLE
                                 matchmaking.visibility = View.GONE
                                 val dotLottieAnimationView = findViewById<DotLottieAnimation>(R.id.lottie_view)

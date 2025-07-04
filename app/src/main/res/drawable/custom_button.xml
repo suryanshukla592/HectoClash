@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Disabled state: semi-transparent golden_yellow and semi-transparent stroke -->
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <!-- Semi-transparent golden_yellow. '80' is the alpha value (e.g., 50% transparency) -->
+            <solid android:color="#80FDCA52"/>
+            <corners android:radius="12dp"/>
+            <padding android:left="10dp" android:right="10dp" android:top="5dp" android:bottom="5dp"/>
+            <stroke android:width="2sp" android:color="#00E6A50C"/>
+        </shape>
+    </item>
+
+    <!-- Enabled state: opaque golden_yellow and opaque stroke (your original style) -->
+    <item android:state_enabled="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#D4AF37"/>
+            <corners android:radius="12dp"/>
+            <padding android:left="10dp" android:right="10dp" android:top="5dp" android:bottom="5dp"/>
+            <stroke android:width="2sp" android:color="#00E6A50C"/>
+        </shape>
+    </item>
+
+    <!-- Default state (if no other state matches, e.g., pressed, focused) -->
+    <!-- It's good practice to have a general item without state attributes at the end -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/golden_yellow"/>  <!-- Yellow background -->
-            <corners android:radius="8dp"/>
-            <stroke android:width="2sp" android:color="#00E6A50C"/>
+            <solid android:color="#D4AF37"/>
             <padding android:left="10dp" android:right="10dp" android:top="5dp" android:bottom="5dp"/>
+            <corners android:radius="12dp"/>
+            <stroke android:width="2sp" android:color="#00E6A50C"/>
         </shape>
     </item>
 </selector>

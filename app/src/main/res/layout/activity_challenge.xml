@@ -1,78 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
+    android:background="@drawable/gradient_bg2"
+    android:gravity="top"
     android:padding="24dp">
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_marginTop="80sp"
+    android:layout_height="wrap_content" android:orientation="vertical"
+    android:gravity="center_horizontal">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Friendly Game"
-        android:textSize="24sp"
+        android:textSize="34sp"
+        android:textColor="@color/golden_yellow"
         android:fontFamily="@font/russo_one"
-        android:layout_marginBottom="32dp" />
+        android:layout_marginBottom="80dp" />
+        <Button
+            android:id="@+id/buttonCreateGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Game"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:fontFamily="@font/russo_one"
+            android:background="@drawable/ripple_button"
+            android:layout_marginBottom="24dp" android:paddingVertical="12dp"
+            app:backgroundTint="@null"/>
 
-    <Button
-        android:id="@+id/buttonCreateGame"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create Game"
-        android:layout_marginBottom="16dp"
-        android:paddingVertical="12dp"
-        android:fontFamily="@font/russo_one"
-        android:textSize="18sp" />
-
-    <LinearLayout
+        android:layout_height="2dp" android:background="@color/golden_yellow" android:layout_marginHorizontal="32dp" android:layout_marginBottom="24dp" /> <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="20dp">
 
-        <EditText
-            android:id="@+id/editTextJoinCode"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Enter Game Code"
-            android:padding="12dp"
-            android:fontFamily="@font/noah_bold"
-            android:textSize="18sp"
-            android:background="@drawable/rounded_corners" />
-
-        <Button
-            android:id="@+id/buttonJoinGame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Join"
-            android:layout_marginStart="8dp"
-            android:paddingVertical="12dp"
-            android:paddingHorizontal="16dp"
-            android:fontFamily="@font/russo_one"
-            android:textSize="18sp" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textViewGameCode"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/editTextGameCode"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="20sp"
+        android:hint="Game Code"
+        android:enabled="true"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#4DFFFFFF"
         android:fontFamily="@font/noah_bold"
-        android:layout_marginTop="24dp" />
+        android:textSize="18sp"
+        android:padding="12dp"
+        android:background="@drawable/rounded_corners" />
+
+    <ImageButton
+        android:id="@+id/buttonShareCode"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/share"
+        android:layout_marginStart="8dp"
+        android:contentDescription="Share Code"
+        app:tint="@color/golden_yellow" />
+
+    <ImageButton
+        android:id="@+id/buttonCopyCode"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/copy"
+        android:layout_marginStart="8dp"
+        android:contentDescription="Copy Code"
+        app:tint="@color/golden_yellow" />
+</LinearLayout>
 
     <Button
-        android:id="@+id/buttonShareCode"
-        android:layout_width="wrap_content"
+        android:id="@+id/buttonJoinGame"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Share Code"
-        android:layout_marginTop="16dp"
-        android:paddingVertical="12dp"
-        android:paddingHorizontal="24dp"
+        android:text="Join Game"
+        android:enabled="false"
+        android:textSize="20sp"
+        android:textColor="#000000"
         android:fontFamily="@font/russo_one"
-        android:textSize="18sp" />
-
+        android:background="@drawable/ripple_button"
+        android:paddingVertical="12dp"
+        app:backgroundTint="@null" />
+</LinearLayout>
 </LinearLayout>

@@ -69,7 +69,6 @@ class Practice : AppCompatActivity() {
         gridOperators = findViewById(R.id.gridOperators)
 
         setupProblem()
-        setButtonAppearance(buttonSubmit,("#D4AF37".toColor()), "#FFFFFF".toColor(), 80f)
         buttonSubmit.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
            validateSolution()

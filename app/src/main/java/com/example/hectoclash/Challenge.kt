@@ -1,23 +1,31 @@
 package com.example.hectoclash
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import java.util.UUID
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.*
 
 class Challenge : AppCompatActivity() {
 
     private lateinit var createGameButton: Button
     private lateinit var joinGameButton: Button
-    private lateinit var joinCodeEditText: EditText
-    private lateinit var gameCodeTextView: TextView
-    private lateinit var shareCodeButton: Button
+    private lateinit var gameCodeEditText: EditText
+    private lateinit var shareCodeButton: ImageButton
+    private lateinit var copyCodeButton: ImageButton
     private var generatedRoomId: String? = null
+
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,32 +33,96 @@ class Challenge : AppCompatActivity() {
 
         createGameButton = findViewById(R.id.buttonCreateGame)
         joinGameButton = findViewById(R.id.buttonJoinGame)
-        joinCodeEditText = findViewById(R.id.editTextJoinCode)
-        gameCodeTextView = findViewById(R.id.textViewGameCode)
+        gameCodeEditText = findViewById(R.id.editTextGameCode)
         shareCodeButton = findViewById(R.id.buttonShareCode)
-        shareCodeButton.visibility = View.GONE // Initially hide the share button
+        copyCodeButton = findViewById(R.id.buttonCopyCode)
+        val russoOneTypeface: Typeface? = ResourcesCompat.getFont(this, R.font.russo_one)
+        russoOneTypeface?.let {
+            createGameButton.typeface = it
+        }
+        createGameButton.textSize = 20f
+        russoOneTypeface?.let {
+            joinGameButton.typeface = it
+        }
+        joinGameButton.textSize = 20f
+        shareCodeButton.visibility = View.GONE
+        copyCodeButton.visibility = View.GONE
+        gameCodeEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                joinGameButton.isEnabled = s.isNullOrEmpty().not()
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
         createGameButton.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
             generatedRoomId = generateRoomId()
-            gameCodeTextView.text = "Game Code: $generatedRoomId"
-            shareCodeButton.visibility = View.VISIBLE
-            // TODO: Send "createPrivateRoom" message to the server with your UID and the generatedRoomId
-            Toast.makeText(this, "Game code generated: $generatedRoomId", Toast.LENGTH_SHORT).show()
+            val roomId = generatedRoomId!!
+            val roomData = hashMapOf("createdAt" to System.currentTimeMillis(), "status" to "created")
+
+            db.collection("Private").document(roomId)
+                .set(roomData)
+                .addOnSuccessListener {
+                    gameCodeEditText.setText(roomId)
+                    gameCodeEditText.isEnabled = false
+                    shareCodeButton.visibility = View.VISIBLE
+                    copyCodeButton.visibility = View.VISIBLE
+                    createGameButton.isEnabled = false
+                    joinGameButton.isEnabled = true
+                    Toast.makeText(this, "Game code generated: $roomId", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Failed to create room", Toast.LENGTH_SHORT).show()
+                }
         }
 
         joinGameButton.setOnClickListener {
-            val joinCode = joinCodeEditText.text.toString().trim()
+            SfxManager.playSfx(this, R.raw.button_sound)
+            val joinCode = gameCodeEditText.text.toString().trim().uppercase()
             if (joinCode.isNotEmpty()) {
-                // TODO: Send "joinPrivateRoom" message to the server with your UID and the joinCode
-                val gameIntent = Intent(this, GameActivity::class.java)
-                gameIntent.putExtra("room_id", joinCode)
-                startActivity(gameIntent)
+                val roomRef = db.collection("Private").document(joinCode)
+                roomRef.get()
+                    .addOnSuccessListener { document ->
+                        if (document.exists()) {
+                            val currentStatus = document.getString("status")
+
+                            when (currentStatus) {
+                                "created" -> {
+                                    roomRef.update("status", "waiting")
+                                        .addOnSuccessListener {
+                                            Toast.makeText(this, "Waiting for opponent to join with code: $joinCode", Toast.LENGTH_SHORT).show()
+                                            startGame(joinCode)
+                                        }
+                                }
+                                "waiting" -> {
+                                    roomRef.update("status", "ongoing")
+                                        .addOnSuccessListener {
+                                            startGame(joinCode)
+                                        }
+                                }
+                                "ongoing" -> {
+                                    Toast.makeText(this, "Room already full or game already started!", Toast.LENGTH_SHORT).show()
+                                }
+                                else -> {
+                                    Toast.makeText(this, "Invalid room status. Please try again.", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } else {
+                            Toast.makeText(this, "No room found. Please create a room first.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Failed to check room", Toast.LENGTH_SHORT).show()
+                    }
             } else {
                 Toast.makeText(this, "Please enter a game code", Toast.LENGTH_SHORT).show()
             }
         }
 
         shareCodeButton.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
             generatedRoomId?.let { roomId ->
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
@@ -58,14 +130,28 @@ class Challenge : AppCompatActivity() {
                     putExtra(Intent.EXTRA_TEXT, "Use this code to join my game: $roomId")
                 }
                 startActivity(Intent.createChooser(shareIntent, "Share via"))
-            } ?: run {
-                Toast.makeText(this, "No game code to share yet", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        copyCodeButton.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
+            val code = generatedRoomId
+            if (!code.isNullOrEmpty()) {
+                val clipboard = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                val clip = android.content.ClipData.newPlainText("Game Code", code)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(this, "Copied code: $code", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    private fun startGame(code: String) {
+        val gameIntent = Intent(this, GameActivity::class.java)
+        gameIntent.putExtra("code", code)
+        startActivity(gameIntent)
+    }
+
     private fun generateRoomId(): String {
-        // Simple unique ID generation - consider a more robust method on the server
-        return UUID.randomUUID().toString().substring(0, 8).toUpperCase()
+        return UUID.randomUUID().toString().substring(0, 8).uppercase()
     }
 }
