@@ -88,35 +88,39 @@ class Challenge : AppCompatActivity() {
                         if (document.exists()) {
                             val currentStatus = document.getString("status")
 
-                            when (currentStatus) {
-                                "created" -> {
-                                    roomRef.update("status", "waiting")
-                                        .addOnSuccessListener {
-                                            Toast.makeText(this, "Waiting for opponent to join with code: $joinCode", Toast.LENGTH_SHORT).show()
-                                            startGame(joinCode)
-                                        }
-                                }
-                                "waiting" -> {
-                                    roomRef.update("status", "ongoing")
-                                        .addOnSuccessListener {
-                                            startGame(joinCode)
-                                        }
-                                }
-                                "ongoing" -> {
-                                    Toast.makeText(this, "Room already full or game already started!", Toast.LENGTH_SHORT).show()
-                                }
-                                else -> {
-                                    Toast.makeText(this, "Invalid room status. Please try again.", Toast.LENGTH_SHORT).show()
-                                }
+                            if (currentStatus == "created") {
+                                roomRef.update("status", "waiting")
+                                    .addOnSuccessListener {
+                                        Toast.makeText(this, "Waiting for opponent to join with code: $joinCode", Toast.LENGTH_SHORT).show()
+                                        startGame(joinCode)
+                                    }
+                            } else if (currentStatus == "waiting") {
+                                roomRef.delete()
+                                    .addOnSuccessListener {
+                                        startGame(joinCode)
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(this, "Failed to delete invalid room.", Toast.LENGTH_SHORT).show()
+                                    }
+                            }else
+                             {
+                                roomRef.delete()
+                                    .addOnSuccessListener {
+                                        Toast.makeText(this, "Room Code Invalid !!", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(this, "Failed to delete invalid room.", Toast.LENGTH_SHORT).show()
+                                    }
                             }
+
                         } else {
-                            Toast.makeText(this, "No room found. Please create a room first.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Invalid Room Code", Toast.LENGTH_SHORT).show()
                         }
                     }
                     .addOnFailureListener {
                         Toast.makeText(this, "Failed to check room", Toast.LENGTH_SHORT).show()
                     }
-            } else {
+            } else{
                 Toast.makeText(this, "Please enter a game code", Toast.LENGTH_SHORT).show()
             }
         }

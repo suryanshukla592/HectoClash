@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
@@ -71,7 +72,13 @@ class Practice : AppCompatActivity() {
         setupProblem()
         buttonSubmit.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
-           validateSolution()
+            if (buttonSubmit.text == "Submit Solution") {
+                validateSolution()
+            }else{
+                val intent = Intent(this, Practice::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
 
         textViewTimer.text = "Time Left: 120s"
@@ -97,10 +104,15 @@ class Practice : AppCompatActivity() {
             override fun onFinish() {
                 textViewTimer.text = "Time's Up!"
                 MusicManager.stopMusic()
-                textViewTimer.setTextColor("#FF5555".toColorInt()) // Ensure final message is red
-                buttonSubmit.isEnabled = false
+                textViewTimer.setTextColor("#FF5555".toColorInt())
                 val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
                 showPossibleSolutionsPopup(this@Practice, sol1, sol2, sol3)
+                if(textViewExpression.text=="Your Answer"){
+                    textViewExpression.text = "No Answer Submitted"
+                }
+                buttonSubmit.isEnabled = false
+                gridNumbers.visibility= View.GONE
+                gridOperators.visibility= View.GONE
             }
         }.start()
     }
@@ -125,6 +137,8 @@ class Practice : AppCompatActivity() {
         val textSolution3 = dialog.findViewById<TextView>(R.id.textViewSolution3)
 
         buttonClose.setOnClickListener {
+            buttonSubmit.text = "Play Again"
+            buttonSubmit.isEnabled = true
             dialog.dismiss()
         }
 
@@ -148,11 +162,16 @@ class Practice : AppCompatActivity() {
         if (result == 100.0) {
             textViewFeedback.text = "🎉 Correct! You Won!"
             textViewFeedback.setTextColor("#4CAF50".toColorInt())
-            buttonSubmit.isEnabled = false
             MusicManager.stopMusic()
             countdownTimer?.cancel()
             val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
             showPossibleSolutionsPopup(this@Practice, sol1, sol2, sol3)
+            if(textViewExpression.text=="Your Answer"){
+                textViewExpression.text = "No Answer Submitted"
+            }
+            buttonSubmit.isEnabled = false
+            gridNumbers.visibility= View.GONE
+            gridOperators.visibility= View.GONE
         } else {
             textViewFeedback.text = "❌ Wrong! Try Again."
             textViewFeedback.setTextColor("#F44336".toColorInt()) // Red
@@ -366,26 +385,6 @@ class Practice : AppCompatActivity() {
             disableOperatorsExceptBrackets()
             enableMinus()
         }
-    }
-    private fun setButtonAppearance(button: Button, normalColor: Int, disabledColor: Int, radius: Float) {
-        // Create ColorStateList for background tint
-        val states = arrayOf(
-            intArrayOf(android.R.attr.state_enabled),
-            intArrayOf(-android.R.attr.state_enabled),
-            intArrayOf()
-        )
-        val colors = intArrayOf(
-            normalColor,
-            disabledColor,
-            normalColor
-        )
-        val colorStateList = ColorStateList(states, colors)
-        button.backgroundTintList = colorStateList
-
-        val gradientDrawable = GradientDrawable()
-        gradientDrawable.shape = GradientDrawable.RECTANGLE
-        gradientDrawable.cornerRadius = radius
-        button.background = gradientDrawable
     }
     private fun enableMinus() {
         for (i in 0 until gridOperators.childCount) {

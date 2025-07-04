@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
+import com.lottiefiles.dotlottie.core.model.Config
+import com.lottiefiles.dotlottie.core.widget.DotLottieAnimation
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -33,14 +35,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.dotlottie.dlplayer.Mode
-import com.lottiefiles.dotlottie.core.model.Config
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.lottiefiles.dotlottie.core.util.DotLottieSource
 import net.objecthunter.exp4j.ExpressionBuilder
 import org.java_websocket.client.WebSocketClient
-import com.lottiefiles.dotlottie.core.widget.DotLottieAnimation
 import org.java_websocket.handshake.ServerHandshake
 import org.json.JSONObject
 import java.net.URI
@@ -58,6 +58,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var textViewFeedback: TextView
     private lateinit var gridNumbers: GridLayout
     private lateinit var gridOperators: GridLayout
+    private lateinit var dotLottieAnimationView: DotLottieAnimation
 
     private var originalPuzzle: String = ""
     private var countdownTimer: CountDownTimer? = null
@@ -86,6 +87,7 @@ class GameActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        dotLottieAnimationView = findViewById<DotLottieAnimation>(R.id.lottie_view)
 
         val profilePicture: ImageView = findViewById(R.id.imageViewPlayerProfile)
         val nameText: TextView = findViewById(R.id.textViewPlayerName)
@@ -117,7 +119,7 @@ class GameActivity : AppCompatActivity() {
                 }
             }
         }
-        val dotLottieAnimationView = findViewById<DotLottieAnimation>(R.id.lottie_view)
+       dotLottieAnimationView = findViewById<DotLottieAnimation>(R.id.lottie_view)
         if (code!="default" && code!="")
         {
             gameCodeLayout.visibility=View.VISIBLE
@@ -172,15 +174,57 @@ class GameActivity : AppCompatActivity() {
         Rematch.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
             MusicManager.stopMusic()
-            dotLottieAnimationView.pause()
-            dotLottieAnimationView.clearAnimation()
             countdownTimer?.cancel()
-            val intent = Intent(this, GameActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+            if (code.isNotEmpty() && code != "default") {
+                val roomRef = db.collection("Private").document(code)
+                roomRef.get()
+                    .addOnSuccessListener { document ->
+                        if (document.exists() && document.getString("status") == "waiting") {
+                            roomRef.delete()
+                                .addOnSuccessListener {
+                                    val gameIntent = Intent(this, GameActivity::class.java)
+                                    gameIntent.putExtra("code", code)
+                                    startActivity(gameIntent)
+                                    finish()
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(this, "Failed to delete old room", Toast.LENGTH_SHORT).show()
+                                    finish()
+                                }
+                        } else {
+                            val roomData = hashMapOf("createdAt" to System.currentTimeMillis(), "status" to "waiting")
 
+                            db.collection("Private").document(code)
+                                .set(roomData)
+                                .addOnSuccessListener {
+                                    val gameIntent = Intent(this, GameActivity::class.java)
+                                    gameIntent.putExtra("code", code)
+                                    startActivity(gameIntent)
+                                    finish()
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(this, "Failed to create new room", Toast.LENGTH_SHORT).show()
+                                    finish()
+                                }
+                        }
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Failed to access room info", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                val gameIntent = Intent(this, GameActivity::class.java)
+                startActivity(gameIntent)
+                finish()
+            }
+        }
         textViewTimer.text = "Time Left: 120s"
+        setupLottieAnimation()
+    }
+    override fun onResume() {
+        super.onResume()
+        dotLottieAnimationView.play()
+    }
+    private fun setupLottieAnimation() {
         val config = Config.Builder()
             .autoplay(true)
             .speed(1f)
@@ -189,9 +233,13 @@ class GameActivity : AppCompatActivity() {
             .useFrameInterpolation(true)
             .playMode(Mode.FORWARD)
             .build()
+
         dotLottieAnimationView.load(config)
-        dotLottieAnimationView.play()
+        Handler(Looper.getMainLooper()).postDelayed({
+            dotLottieAnimationView.play()
+        }, 300)
     }
+
     private fun sendExpressionUpdate(expression: String) {
         val firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser
@@ -235,26 +283,6 @@ class GameActivity : AppCompatActivity() {
                 sendResultToServer("Timeout") // Inform server about timeout
             }
         }.start()
-    }
-    private fun setButtonAppearance(button: Button, normalColor: Int, disabledColor: Int, radius: Float) {
-        // Create ColorStateList for background tint
-        val states = arrayOf(
-            intArrayOf(android.R.attr.state_enabled),
-            intArrayOf(-android.R.attr.state_enabled),
-            intArrayOf()
-        )
-        val colors = intArrayOf(
-            normalColor,
-            disabledColor,
-            normalColor
-        )
-        val colorStateList = ColorStateList(states, colors)
-        button.backgroundTintList = colorStateList
-
-        val gradientDrawable = GradientDrawable()
-        gradientDrawable.shape = GradientDrawable.RECTANGLE
-        gradientDrawable.cornerRadius = radius
-        button.background = gradientDrawable
     }
     private fun setupWebSocket() {
         val firebaseAuth = FirebaseAuth.getInstance()
@@ -344,9 +372,6 @@ class GameActivity : AppCompatActivity() {
                                 val matchmaking: RelativeLayout = findViewById(R.id.matchmakingLayout)
                                 match.visibility=View.VISIBLE
                                 matchmaking.visibility = View.GONE
-                                val dotLottieAnimationView = findViewById<DotLottieAnimation>(R.id.lottie_view)
-                                dotLottieAnimationView.pause()
-                                dotLottieAnimationView.clearAnimation()
                                 startTimer()
                             }
                         }
@@ -372,6 +397,9 @@ class GameActivity : AppCompatActivity() {
                                 buttonSubmit.isEnabled = false // Disable submit after game over
                                 val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
                                 showPossibleSolutionsPopup(this@GameActivity, sol1, sol2, sol3)
+                                if(textViewExpression.text=="Your Answer"){
+                                    textViewExpression.text = "No Answer Submitted"
+                                }
                                 Rematch.visibility=View.VISIBLE
                                 gridNumbers.visibility=View.GONE
                                 buttonSubmit.visibility = View.GONE
@@ -392,6 +420,27 @@ class GameActivity : AppCompatActivity() {
 
             override fun onClose(code: Int, reason: String?, remote: Boolean) {
                 Log.d("WebSocket", "❌ WebSocket closed. Code: $code, Reason: $reason, Remote: $remote")
+                val roomId = intent.getStringExtra("code") ?: return
+                val db = Firebase.firestore
+                val roomRef = db.collection("Private").document(roomId)
+                roomRef.get()
+                    .addOnSuccessListener { document ->
+                        if (document.exists()) {
+                            val status = document.getString("status")
+                            if (status == "waiting") {
+                                roomRef.delete()
+                                    .addOnSuccessListener {
+                                        Log.d("WebSocket", "🧹 Deleted waiting room: $roomId")
+                                    }
+                                    .addOnFailureListener {
+                                        Log.e("WebSocket", "⚠️ Failed to delete room: $roomId", it)
+                                    }
+                            }
+                        }
+                    }
+                    .addOnFailureListener {
+                        Log.e("WebSocket", "⚠️ Failed to check room status on disconnect", it)
+                    }
                 mainHandler.post {
                     Toast.makeText(this@GameActivity, "Disconnected from server.", Toast.LENGTH_SHORT).show()
                     finish()
