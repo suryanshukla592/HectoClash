@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,6 +46,14 @@ class Spectator : AppCompatActivity() {
 
                 recyclerView.adapter = adapter
                 setupWebSocket()
+                val onBackPressedCallback = object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        webSocketClient.close()
+                        disconnectWebSocket()
+                        finish()
+                    }
+                }
+                onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
             }
     private fun setupWebSocket() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -99,13 +108,6 @@ class Spectator : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         webSocketClient.close()
-    }
-    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
-    override fun onBackPressed() {
-        webSocketClient.close()
-        disconnectWebSocket()
-        finish()
-        super.onBackPressed()
     }
     private fun disconnectWebSocket() {
         Log.d("GameActivity", "Disconnecting WebSocket...")

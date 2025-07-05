@@ -3,18 +3,19 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
     id ("kotlin-parcelize")
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
     namespace = "com.example.hectoclash"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.hectoclash"
         minSdk = 27
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 36
+        versionCode = 2
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -30,14 +31,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        jvmToolchain(21)
     }
     buildFeatures {
         viewBinding = true
@@ -57,12 +58,13 @@ dependencies {
     implementation(libs.converter.gson)
     implementation (libs.cloudinary.android)
     implementation(libs.play.services.auth)
+    implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.compiler)
     implementation (libs.androidx.ui)
-    implementation(libs.dotlottie.android)
     implementation (libs.circleimageview)
     implementation (libs.glide)
     implementation(libs.photoview)
+    implementation(libs.lottie)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore)

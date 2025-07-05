@@ -25,12 +25,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import com.example.hectoclash.databinding.ActivityMainBinding
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.cloudinary.android.MediaManager
@@ -205,13 +205,21 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, Spectator::class.java)
             startActivity(intent)
         }
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                MusicManager.stopMusic()
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
-    fun updateSoundIcon(state: SoundState) {
+    private fun updateSoundIcon(state: SoundState) {
         when (state) {
             SoundState.ON -> binding.soundToggle.setImageResource(R.drawable.on)
             SoundState.HALF -> binding.soundToggle.setImageResource(R.drawable.down)
             SoundState.OFF -> binding.soundToggle.setImageResource(R.drawable.off)
         }
+
     }
     private fun showPopupMenu() {
         val popupMenu = PopupMenu(this, binding.options)
@@ -406,10 +414,5 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         MusicManager.pauseMusic()
-    }
-    override fun onBackPressed() {
-        super.onBackPressed()
-        MusicManager.stopMusic()
-        finish()
     }
 }

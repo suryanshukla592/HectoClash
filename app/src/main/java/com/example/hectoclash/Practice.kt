@@ -3,12 +3,9 @@ package com.example.hectoclash
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.GradientDrawable
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -21,12 +18,12 @@ import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.toColorInt
 import com.google.firebase.auth.FirebaseAuth
-import com.lottiefiles.dotlottie.core.util.toColor
 import net.objecthunter.exp4j.ExpressionBuilder
 
 class Practice : AppCompatActivity() {
@@ -82,6 +79,16 @@ class Practice : AppCompatActivity() {
         }
 
         textViewTimer.text = "Time Left: 120s"
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                countdownTimer?.cancel()
+                MusicManager.stopMusic()
+                MusicManager.startMusic(this@Practice,R.raw.home_page_music)
+                MusicManager.setMusicVolume(this@Practice)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun startTimer() {
@@ -436,13 +443,5 @@ class Practice : AppCompatActivity() {
         textViewExpression.text = "Expression: "
         nextNumberIndex = 0
         setupButtons()
-    }
-    override fun onBackPressed() {
-        countdownTimer?.cancel()
-        MusicManager.stopMusic()
-        MusicManager.startMusic(this,R.raw.home_page_music)
-        MusicManager.setMusicVolume(this)
-        finish()
-        super.onBackPressed()
     }
 }

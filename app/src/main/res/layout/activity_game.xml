@@ -31,14 +31,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <com.lottiefiles.dotlottie.core.widget.DotLottieAnimation
+            <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/lottie_view"
                 android:layout_width="160sp"
                 android:layout_height="160sp"
                 android:layout_margin="20sp"
-                app:dotLottie_speed="3"
-                app:dotLottie_src="assets/loading.json" />
-
+                app:lottie_rawRes="@raw/loading"
+                app:lottie_speed="1"
+                app:lottie_repeatMode="restart"
+                app:lottie_useCompositionFrameRate="true"
+                app:lottie_loop="true"
+                app:lottie_autoPlay="true" />
             <TextView
                 android:text="Hang tight!\nWe're pairing you with a worthy opponent."
                 android:textColor="#FFFFFF"

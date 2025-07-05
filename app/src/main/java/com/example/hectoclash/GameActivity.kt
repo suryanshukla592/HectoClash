@@ -3,14 +3,9 @@ package com.example.hectoclash
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
-import com.lottiefiles.dotlottie.core.model.Config
-import com.lottiefiles.dotlottie.core.widget.DotLottieAnimation
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.GradientDrawable
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -31,14 +26,13 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import com.dotlottie.dlplayer.Mode
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.lottiefiles.dotlottie.core.util.DotLottieSource
 import net.objecthunter.exp4j.ExpressionBuilder
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
@@ -46,7 +40,6 @@ import org.json.JSONObject
 import java.net.URI
 import androidx.core.graphics.toColorInt
 import com.bumptech.glide.Glide
-import com.lottiefiles.dotlottie.core.util.toColor
 
 class GameActivity : AppCompatActivity() {
 
@@ -58,7 +51,6 @@ class GameActivity : AppCompatActivity() {
     private lateinit var textViewFeedback: TextView
     private lateinit var gridNumbers: GridLayout
     private lateinit var gridOperators: GridLayout
-    private lateinit var dotLottieAnimationView: DotLottieAnimation
 
     private var originalPuzzle: String = ""
     private var countdownTimer: CountDownTimer? = null
@@ -87,7 +79,6 @@ class GameActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        dotLottieAnimationView = findViewById<DotLottieAnimation>(R.id.lottie_view)
 
         val profilePicture: ImageView = findViewById(R.id.imageViewPlayerProfile)
         val nameText: TextView = findViewById(R.id.textViewPlayerName)
@@ -119,7 +110,6 @@ class GameActivity : AppCompatActivity() {
                 }
             }
         }
-       dotLottieAnimationView = findViewById<DotLottieAnimation>(R.id.lottie_view)
         if (code!="default" && code!="")
         {
             gameCodeLayout.visibility=View.VISIBLE
@@ -217,29 +207,21 @@ class GameActivity : AppCompatActivity() {
                 finish()
             }
         }
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                Log.d("GameActivity", "onBackPressed() called")
+                webSocketClient?.close()
+                disconnectWebSocket()
+                MusicManager.stopMusic()
+                countdownTimer?.cancel()
+                MusicManager.startMusic(this@GameActivity,R.raw.home_page_music)
+                MusicManager.setMusicVolume(this@GameActivity)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         textViewTimer.text = "Time Left: 120s"
-        setupLottieAnimation()
     }
-    override fun onResume() {
-        super.onResume()
-        dotLottieAnimationView.play()
-    }
-    private fun setupLottieAnimation() {
-        val config = Config.Builder()
-            .autoplay(true)
-            .speed(1f)
-            .loop(true)
-            .source(DotLottieSource.Asset("loading.json"))
-            .useFrameInterpolation(true)
-            .playMode(Mode.FORWARD)
-            .build()
-
-        dotLottieAnimationView.load(config)
-        Handler(Looper.getMainLooper()).postDelayed({
-            dotLottieAnimationView.play()
-        }, 300)
-    }
-
     private fun sendExpressionUpdate(expression: String) {
         val firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser
@@ -394,18 +376,16 @@ class GameActivity : AppCompatActivity() {
                                 textViewFeedback.text = "$result"
                                 countdownTimer?.cancel() // Stop the timer when the game ends
                                 MusicManager.stopMusic()
-                                buttonSubmit.isEnabled = false // Disable submit after game over
-                                val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
-                                showPossibleSolutionsPopup(this@GameActivity, sol1, sol2, sol3)
                                 if(textViewExpression.text=="Your Answer"){
                                     textViewExpression.text = "No Answer Submitted"
                                 }
+                                buttonSubmit.isEnabled = false // Disable submit after game over
+                                val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
+                                showPossibleSolutionsPopup(this@GameActivity, sol1, sol2, sol3)
                                 Rematch.visibility=View.VISIBLE
                                 gridNumbers.visibility=View.GONE
                                 buttonSubmit.visibility = View.GONE
                                 gridOperators.visibility=View.GONE
-
-
                             }
                         }
 
@@ -442,7 +422,7 @@ class GameActivity : AppCompatActivity() {
                         Log.e("WebSocket", "⚠️ Failed to check room status on disconnect", it)
                     }
                 mainHandler.post {
-                    Toast.makeText(this@GameActivity, "Disconnected from server.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@GameActivity, "Matchmaking Cancelled", Toast.LENGTH_SHORT).show()
                     finish()
                 }
             }
@@ -738,17 +718,6 @@ class GameActivity : AppCompatActivity() {
         textViewExpression.text = "Expression: "
         nextNumberIndex = 0
         setupButtons()
-    }
-    override fun onBackPressed() {
-        Log.d("GameActivity", "onBackPressed() called")
-        webSocketClient?.close()
-        disconnectWebSocket()
-        MusicManager.stopMusic()
-        countdownTimer?.cancel()
-        MusicManager.startMusic(this,R.raw.home_page_music)
-        MusicManager.setMusicVolume(this)
-        finish()
-        super.onBackPressed()
     }
     private fun evaluate(expression: String): Double? {
         return try {
