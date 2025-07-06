@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -40,6 +41,7 @@ import org.json.JSONObject
 import java.net.URI
 import androidx.core.graphics.toColorInt
 import com.bumptech.glide.Glide
+import kotlin.math.abs
 
 class GameActivity : AppCompatActivity() {
 
@@ -51,7 +53,6 @@ class GameActivity : AppCompatActivity() {
     private lateinit var textViewFeedback: TextView
     private lateinit var gridNumbers: GridLayout
     private lateinit var gridOperators: GridLayout
-
     private var originalPuzzle: String = ""
     private var countdownTimer: CountDownTimer? = null
     private var webSocketClient: WebSocketClient? = null
@@ -71,8 +72,31 @@ class GameActivity : AppCompatActivity() {
         val db = Firebase.firestore
         val user = firebaseAuth.currentUser
         val userID = user?.uid
-        code = intent.getStringExtra("code") ?: "default"
-
+        val appLinkData: Uri? = intent?.data
+        val appLinkAction: String? = intent?.action
+        code = when {
+            appLinkAction == Intent.ACTION_VIEW && appLinkData != null &&
+                    appLinkData.scheme == "hectoclash" &&
+                    appLinkData.host == "game" &&
+                    appLinkData.pathSegments.size >= 2 &&
+                    appLinkData.pathSegments[0] == "join" -> {
+                val extractedCode = appLinkData.pathSegments[1]
+                Log.d("GameActivity", "P1: Code from Deep Link: $extractedCode")
+                extractedCode
+            }
+            intent?.hasExtra("code") == true -> {
+                val extractedCode = intent.getStringExtra("code") ?: "default"
+                Log.d("GameActivity", "P2: Code from Intent Extra: $extractedCode")
+                extractedCode
+            }
+            else -> {
+                Log.d("GameActivity", "P3: No code found, using default.")
+                "default"
+            }
+        }
+        if(code!="default") {
+            checkGame(code)
+        }
         if (user == null) {
             val intent = Intent(this, opening::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -116,15 +140,27 @@ class GameActivity : AppCompatActivity() {
             gameCodeDisplay.text = code
         }
         gameCodeShare.setOnClickListener {
-            SfxManager.playSfx(this, R.raw.button_sound)
-            code.let { roomId ->
-                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                SfxManager.playSfx(this, R.raw.button_sound)
+
+                val roomId = code
+                val link = "https://itzshuvrodip.github.io/hectoclash-redirect/redirect.html?gameCode=$roomId"
+
+                val shareText = """
+                🎮 Join me on *HectoClash*!
+                
+                🔥 Game Code: *$roomId*
+                📲 Tap to join: $link
+                
+                Let's clash it out! 💥
+            """.trimIndent()
+
+                val intent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
                     putExtra(Intent.EXTRA_SUBJECT, "Join my HectoClash game!")
-                    putExtra(Intent.EXTRA_TEXT, "Use this code to join my game: $roomId")
+                    putExtra(Intent.EXTRA_TEXT, shareText)
                 }
-                startActivity(Intent.createChooser(shareIntent, "Share via"))
-            }
+
+                startActivity(Intent.createChooser(intent, "Share via"))
         }
 
         gameCodeCopy.setOnClickListener {
@@ -170,20 +206,12 @@ class GameActivity : AppCompatActivity() {
                 roomRef.get()
                     .addOnSuccessListener { document ->
                         if (document.exists() && document.getString("status") == "waiting") {
-                            roomRef.delete()
-                                .addOnSuccessListener {
                                     val gameIntent = Intent(this, GameActivity::class.java)
                                     gameIntent.putExtra("code", code)
                                     startActivity(gameIntent)
                                     finish()
-                                }
-                                .addOnFailureListener {
-                                    Toast.makeText(this, "Failed to delete old room", Toast.LENGTH_SHORT).show()
-                                    finish()
-                                }
                         } else {
-                            val roomData = hashMapOf("createdAt" to System.currentTimeMillis(), "status" to "waiting")
-
+                            val roomData = hashMapOf("createdAt" to System.currentTimeMillis(), "status" to "created")
                             db.collection("Private").document(code)
                                 .set(roomData)
                                 .addOnSuccessListener {
@@ -212,6 +240,7 @@ class GameActivity : AppCompatActivity() {
                 Log.d("GameActivity", "onBackPressed() called")
                 webSocketClient?.close()
                 disconnectWebSocket()
+                deleteCode()
                 MusicManager.stopMusic()
                 countdownTimer?.cancel()
                 MusicManager.startMusic(this@GameActivity,R.raw.home_page_music)
@@ -794,7 +823,7 @@ class GameActivity : AppCompatActivity() {
             if (expr in seen) continue
             seen.add(expr)
             val result = evaluate(expr)
-            if (result != null && Math.abs(result - 100.0) < 1e-9) {
+            if (result != null && abs(result - 100.0) < 1e-9) {
                 solutions.add("$expr = 100")
                 if (solutions.size == 3) break
             }
@@ -805,6 +834,79 @@ class GameActivity : AppCompatActivity() {
         val string3 = solutions.getOrNull(2)
 
         return Triple(string1, string2,string3)
+    }
+    private fun checkGame(joinCode: String){
+        val db = Firebase.firestore
+        if (joinCode.isNotEmpty()) {
+            val roomRef = db.collection("Private").document(joinCode)
+            roomRef.get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val currentStatus = document.getString("status")
+
+                        when (currentStatus) {
+                            "created" -> {
+                                roomRef.update("status", "waiting")
+                                    .addOnSuccessListener {
+                                        Toast.makeText(this, "Waiting for opponent to join with code: $joinCode", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+
+                            "waiting" -> {
+                                roomRef.delete()
+                                    .addOnSuccessListener {
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(this, "Failed to delete invalid room.", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+
+                            else
+                                -> {
+                                roomRef.delete()
+                                    .addOnSuccessListener {
+                                        Toast.makeText(this, "Room Code Invalid !!", Toast.LENGTH_SHORT).show()
+                                        val intent = Intent(this, MainActivity::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                    }
+                                    .addOnFailureListener {
+                                        val intent = Intent(this, MainActivity::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                        Toast.makeText(this, "Failed to delete invalid room.", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                        }
+
+                    } else {
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                        Toast.makeText(this, "Room does not exist", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .addOnFailureListener {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    Toast.makeText(this, "Failed to check room", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+    private fun deleteCode(){
+        val db = Firebase.firestore
+        if (code != "default" && code != "") {
+            val roomRef = db.collection("Private").document(code)
+            roomRef.delete()
+                .addOnSuccessListener {
+                    Log.d("Challenge", "Room with code $code deleted successfully")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("Challenge", "Error deleting room with code $code", e)
+                }
+            code = "default"
+        }
     }
     private fun disconnectWebSocket() {
         Log.d("GameActivity", "Disconnecting WebSocket...")

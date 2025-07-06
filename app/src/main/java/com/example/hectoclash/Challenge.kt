@@ -8,8 +8,10 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -81,38 +83,13 @@ class Challenge : AppCompatActivity() {
         joinGameButton.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
             val joinCode = gameCodeEditText.text.toString().trim().uppercase()
+
             if (joinCode.isNotEmpty()) {
                 val roomRef = db.collection("Private").document(joinCode)
                 roomRef.get()
                     .addOnSuccessListener { document ->
                         if (document.exists()) {
-                            val currentStatus = document.getString("status")
-
-                            if (currentStatus == "created") {
-                                roomRef.update("status", "waiting")
-                                    .addOnSuccessListener {
-                                        Toast.makeText(this, "Waiting for opponent to join with code: $joinCode", Toast.LENGTH_SHORT).show()
-                                        startGame(joinCode)
-                                    }
-                            } else if (currentStatus == "waiting") {
-                                roomRef.delete()
-                                    .addOnSuccessListener {
-                                        startGame(joinCode)
-                                    }
-                                    .addOnFailureListener {
-                                        Toast.makeText(this, "Failed to delete invalid room.", Toast.LENGTH_SHORT).show()
-                                    }
-                            }else
-                             {
-                                roomRef.delete()
-                                    .addOnSuccessListener {
-                                        Toast.makeText(this, "Room Code Invalid !!", Toast.LENGTH_SHORT).show()
-                                    }
-                                    .addOnFailureListener {
-                                        Toast.makeText(this, "Failed to delete invalid room.", Toast.LENGTH_SHORT).show()
-                                    }
-                            }
-
+                            startGame(joinCode)
                         } else {
                             Toast.makeText(this, "Invalid Room Code", Toast.LENGTH_SHORT).show()
                         }
@@ -127,12 +104,25 @@ class Challenge : AppCompatActivity() {
 
         shareCodeButton.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
+
             generatedRoomId?.let { roomId ->
+                val link = "https://itzshuvrodip.github.io/hectoclash-redirect/redirect.html?gameCode=$roomId"
+
+                val shareText = """
+            🎮 Join me on *HectoClash*!
+            
+            🔥 Game Code: *$roomId*
+            📲 Tap to join: $link
+            
+            Let's clash it out! 💥
+        """.trimIndent()
+
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
                     putExtra(Intent.EXTRA_SUBJECT, "Join my HectoClash game!")
-                    putExtra(Intent.EXTRA_TEXT, "Use this code to join my game: $roomId")
+                    putExtra(Intent.EXTRA_TEXT, shareText)
                 }
+
                 startActivity(Intent.createChooser(shareIntent, "Share via"))
             }
         }
@@ -147,6 +137,13 @@ class Challenge : AppCompatActivity() {
                 Toast.makeText(this, "Copied code: $code", Toast.LENGTH_SHORT).show()
             }
         }
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                deleteCode()
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun startGame(code: String) {
@@ -157,5 +154,22 @@ class Challenge : AppCompatActivity() {
 
     private fun generateRoomId(): String {
         return UUID.randomUUID().toString().substring(0, 8).uppercase()
+    }
+    private fun deleteCode(){
+        if (generatedRoomId != null) {
+            val roomRef = db.collection("Private").document(generatedRoomId!!)
+            roomRef.delete()
+                .addOnSuccessListener {
+                    Log.d("Challenge", "Room with code $generatedRoomId deleted successfully")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("Challenge", "Error deleting room with code $generatedRoomId", e)
+                }
+            generatedRoomId = null
+        }
+    }
+    override fun onDestroy(){
+        deleteCode()
+        super.onDestroy()
     }
 }

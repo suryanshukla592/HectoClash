@@ -5,14 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/gradient_bg2"
-    android:gravity="top"
-    android:padding="24dp">
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_marginTop="80sp"
-    android:layout_height="wrap_content" android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:padding="24dp"
+    android:gravity="top">
 
+    <!-- Title -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,74 +16,127 @@
         android:textSize="34sp"
         android:textColor="@color/golden_yellow"
         android:fontFamily="@font/russo_one"
-        android:layout_marginBottom="80dp" />
-        <Button
-            android:id="@+id/buttonCreateGame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create Game"
-            android:textSize="20sp"
-            android:textColor="#000000"
-            android:fontFamily="@font/russo_one"
-            android:background="@drawable/ripple_button"
-            android:layout_marginBottom="24dp" android:paddingVertical="12dp"
-            app:backgroundTint="@null"/>
-
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="12dp"
+        android:shadowColor="#80FFD700"
+        android:shadowDx="0"
+        android:shadowDy="2"
+        android:shadowRadius="6" />
+    <!-- Divider -->
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp" android:background="@color/golden_yellow" android:layout_marginHorizontal="32dp" android:layout_marginBottom="24dp" /> <LinearLayout
+        android:layout_height="2dp"
+        android:background="@color/golden_yellow"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Logo Image -->
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/logo"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="Logo" />
+
+
+
+    <!-- Game Code Input + Icons -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="20dp">
+        android:padding="4dp"
+        android:background="@drawable/rounded_card_dark"
+        android:elevation="4dp"
+        android:layout_marginBottom="24dp">
 
-    <EditText
-        android:id="@+id/editTextGameCode"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:hint="Game Code"
-        android:enabled="true"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#4DFFFFFF"
-        android:fontFamily="@font/noah_bold"
-        android:textSize="18sp"
-        android:padding="12dp"
-        android:background="@drawable/rounded_corners" />
+        <EditText
+            android:id="@+id/editTextGameCode"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="48dp"
+            android:hint="Game Code"
+            android:enabled="true"
+            android:textColor="#E2FFFFFF"
+            android:textColorHint="#66FFFFFF"
+            android:fontFamily="@font/noah_bold"
+            android:textSize="18sp"
+            android:elevation="4dp"
+            android:background="@android:color/transparent"
+            android:paddingHorizontal="16dp" />
 
-    <ImageButton
-        android:id="@+id/buttonShareCode"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/share"
-        android:layout_marginStart="8dp"
-        android:contentDescription="Share Code"
-        app:tint="@color/golden_yellow" />
+        <ImageButton
+            android:id="@+id/buttonShareCode"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/share"
+            android:visibility="gone"
+            android:contentDescription="Share Code"
+            app:tint="@color/golden_yellow"
+            android:layout_marginStart="8dp" />
 
-    <ImageButton
-        android:id="@+id/buttonCopyCode"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/copy"
-        android:layout_marginStart="8dp"
-        android:contentDescription="Copy Code"
-        app:tint="@color/golden_yellow" />
-</LinearLayout>
+        <ImageButton
+            android:id="@+id/buttonCopyCode"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/copy"
+            android:visibility="gone"
+            android:contentDescription="Copy Code"
+            app:tint="@color/golden_yellow"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonJoinGame"
+    <!-- Optional thin line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/golden_yellow"
+        android:layout_marginHorizontal="24dp"
+        android:alpha="0.8"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Action Buttons -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Join Game"
-        android:enabled="false"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:fontFamily="@font/russo_one"
-        android:background="@drawable/ripple_button"
-        android:paddingVertical="12dp"
-        app:backgroundTint="@null" />
-</LinearLayout>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/buttonCreateGame"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Create Game"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:fontFamily="@font/russo_one"
+            android:background="@drawable/ripple_button"
+            android:paddingVertical="14dp"
+            android:layout_marginEnd="8dp"
+            app:backgroundTint="@null" />
+
+        <Button
+            android:id="@+id/buttonJoinGame"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Join Game"
+            android:textSize="18sp"
+            android:enabled="false"
+            android:textColor="#000000"
+            android:fontFamily="@font/russo_one"
+            android:background="@drawable/ripple_button"
+            android:paddingVertical="14dp"
+            android:layout_marginStart="8dp"
+            app:backgroundTint="@null" />
+    </LinearLayout>
 </LinearLayout>
