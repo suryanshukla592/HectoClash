@@ -403,11 +403,12 @@ class GameActivity : AppCompatActivity() {
                             // Handle the game result here
                             runOnUiThread {
                                 textViewFeedback.text = "$result"
-                                countdownTimer?.cancel() // Stop the timer when the game ends
-                                MusicManager.stopMusic()
-                                if(textViewExpression.text=="Your Answer"){
+                                val currentExpressionText = textViewExpression.text?.toString()
+                                if (currentExpressionText == "Your Answer" || currentExpressionText == "" || currentExpressionText == null) {
                                     textViewExpression.text = "No Answer Submitted"
                                 }
+                                countdownTimer?.cancel() // Stop the timer when the game ends
+                                MusicManager.stopMusic()
                                 buttonSubmit.isEnabled = false // Disable submit after game over
                                 val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
                                 showPossibleSolutionsPopup(this@GameActivity, sol1, sol2, sol3)

@@ -114,7 +114,7 @@ class Practice : AppCompatActivity() {
                 textViewTimer.setTextColor("#FF5555".toColorInt())
                 val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
                 showPossibleSolutionsPopup(this@Practice, sol1, sol2, sol3)
-                if(textViewExpression.text=="Your Answer"){
+                if(textViewExpression.text=="Your Answer"||textViewExpression.text == ""){
                     textViewExpression.text = "No Answer Submitted"
                 }
                 buttonSubmit.isEnabled = false
@@ -173,7 +173,7 @@ class Practice : AppCompatActivity() {
             countdownTimer?.cancel()
             val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
             showPossibleSolutionsPopup(this@Practice, sol1, sol2, sol3)
-            if(textViewExpression.text=="Your Answer"){
+            if(textViewExpression.text=="Your Answer"||textViewExpression.text == ""){
                 textViewExpression.text = "No Answer Submitted"
             }
             buttonSubmit.isEnabled = false
