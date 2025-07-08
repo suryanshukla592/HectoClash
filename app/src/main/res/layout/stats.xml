@@ -20,7 +20,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="30dp"
+        android:shadowColor="#80FFD700"
+        android:shadowDx="0"
+        android:shadowDy="2"
+        android:shadowRadius="6"/>
 
     <!-- Profile Picture -->
     <ImageView

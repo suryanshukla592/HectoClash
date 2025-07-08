@@ -28,6 +28,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import com.example.hectoclash.databinding.ActivityMainBinding
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -163,12 +164,12 @@ class MainActivity : AppCompatActivity() {
             showPopupMenu()
         }
 
-        val buttonStartGame: Button = findViewById(R.id.buttonStartGame)
-        val buttonLeaderboard: Button = findViewById(R.id.buttonLeaderboard)
-        val buttonPractice: Button = findViewById(R.id.buttonPractice)
-        val buttonSpectate: Button = findViewById(R.id.buttonSpectate)
-        val buttonHowToPlay: Button = findViewById(R.id.buttonHowToPlay)
-        val buttonChallenge: Button = findViewById(R.id.buttonChallenge)
+        val buttonStartGame: CardView = findViewById(R.id.buttonStartGame)
+        val buttonLeaderboard: CardView = findViewById(R.id.buttonLeaderboard)
+        val buttonPractice: CardView = findViewById(R.id.buttonPractice)
+        val buttonSpectate: CardView = findViewById(R.id.buttonSpectate)
+        val buttonHowToPlay: CardView = findViewById(R.id.buttonHowToPlay)
+        val buttonChallenge: CardView = findViewById(R.id.buttonChallenge)
 
         // Navigate to the Game Activity
         buttonStartGame.setOnClickListener {

@@ -428,32 +428,45 @@ class GameActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onClose(code: Int, reason: String?, remote: Boolean) {
-                Log.d("WebSocket", "❌ WebSocket closed. Code: $code, Reason: $reason, Remote: $remote")
-                val roomId = intent.getStringExtra("code") ?: return
-                val db = Firebase.firestore
-                val roomRef = db.collection("Private").document(roomId)
-                roomRef.get()
-                    .addOnSuccessListener { document ->
-                        if (document.exists()) {
-                            val status = document.getString("status")
-                            if (status == "waiting") {
-                                roomRef.delete()
-                                    .addOnSuccessListener {
-                                        Log.d("WebSocket", "🧹 Deleted waiting room: $roomId")
-                                    }
-                                    .addOnFailureListener {
-                                        Log.e("WebSocket", "⚠️ Failed to delete room: $roomId", it)
-                                    }
+            override fun onClose(code2: Int, reason: String?, remote: Boolean) {
+                Log.d("WebSocket", "❌ WebSocket closed. Code: $code2, Reason: $reason, Remote: $remote")
+                if (code != "default" && code != "") {
+                    val roomId = intent.getStringExtra("code") ?: return
+                    val db = Firebase.firestore
+                    val roomRef = db.collection("Private").document(roomId)
+                    roomRef.get()
+                        .addOnSuccessListener { document ->
+                            if (document.exists()) {
+                                val status = document.getString("status")
+                                if (status == "waiting") {
+                                    roomRef.delete()
+                                        .addOnSuccessListener {
+                                            Log.d("WebSocket", "🧹 Deleted waiting room: $roomId")
+                                            Toast.makeText(this@GameActivity, "Matchmaking Cancelled", Toast.LENGTH_SHORT).show()
+                                            finish()
+                                        }
+                                        .addOnFailureListener {
+                                            Log.e(
+                                                "WebSocket",
+                                                "⚠️ Failed to delete room: $roomId",
+                                                it
+                                            )
+                                            Toast.makeText(this@GameActivity, "Matchmaking Cancelled", Toast.LENGTH_SHORT).show()
+                                            finish()
+                                        }
+                                }
                             }
                         }
+                        .addOnFailureListener {
+                            Log.e("WebSocket", "⚠️ Failed to check room status on disconnect", it)
+                            Toast.makeText(this@GameActivity, "Matchmaking Cancelled", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                }else{
+                    mainHandler.post {
+                        Toast.makeText(this@GameActivity, "Matchmaking Cancelled", Toast.LENGTH_SHORT).show()
+                        finish()
                     }
-                    .addOnFailureListener {
-                        Log.e("WebSocket", "⚠️ Failed to check room status on disconnect", it)
-                    }
-                mainHandler.post {
-                    Toast.makeText(this@GameActivity, "Matchmaking Cancelled", Toast.LENGTH_SHORT).show()
-                    finish()
                 }
             }
 

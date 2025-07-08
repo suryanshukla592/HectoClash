@@ -12,7 +12,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="10sp"
+        android:layout_marginTop="15sp"
+        android:layout_marginHorizontal="4sp"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/toolbar">
 
@@ -56,6 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/gamename"
+        android:layout_marginTop="30sp"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@id/buttons">
         <TextView
@@ -69,7 +71,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="5sp"
+            android:layout_marginTop="15sp"
             android:fontFamily="@font/russo_one" />
         <ImageView
             android:layout_width="wrap_content"
@@ -96,79 +98,320 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="40dp"
+        android:padding="20dp"
         android:orientation="vertical"
-        android:id="@+id/buttons"
-        app:layout_constraintTop_toBottomOf="@id/gamename"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center"
-        android:padding="20dp">
-
-        <Button
-            android:id="@+id/buttonStartGame"
+        android:weightSum="3"
+        app:layout_constraintTop_toBottomOf="@id/gamename"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Find a Match"
-            android:textSize="20sp"
-            android:fontFamily="@font/russo_one"
-            android:backgroundTint="#FFD700"
-            android:textColor="@color/black"
-            android:layout_marginBottom="15dp"/>
-        <Button
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="2">
+        <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:id="@+id/buttonStartGame"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:cardCornerRadius="20dp"
+                android:layout_margin="10sp"
+                app:cardElevation="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:backgroundTint="#F6C318"
+                android:foreground="@drawable/ripple_effect_cardview">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <ImageView
+                    android:layout_width="37sp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/findmatch"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:layout_marginBottom="4dp"
+                    app:tint="@color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:fontFamily="@font/russo_one"
+                    android:textColor="@color/black"
+                    android:text="Find a Match"
+                    android:textSize="18sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:paddingHorizontal="6sp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="10sp"
+                    android:autoSizeMaxTextSize="18sp"
+                    android:autoSizeStepGranularity="1sp"/>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:id="@+id/buttonChallenge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Custom Match"
-            android:textSize="20sp"
-            android:fontFamily="@font/russo_one"
-            android:backgroundTint="#FFD700"
-            android:textColor="@color/black"
-            android:layout_marginBottom="15dp"/>
+            app:cardCornerRadius="20dp"
+            android:layout_margin="10sp"
+            app:cardElevation="8dp"
+            android:backgroundTint="#F6C318"
+            android:foreground="@drawable/ripple_effect_cardview"
+            android:clickable="true"
+            android:focusable="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
 
-        <Button
-            android:id="@+id/buttonPractice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Practice"
-            android:textSize="20sp"
-            android:fontFamily="@font/russo_one"
-            android:backgroundTint="#FFD700"
-            android:textColor="@color/black"
-            android:layout_marginBottom="15dp"/>
+            <ImageView
+                android:layout_width="40sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:src="@drawable/custom"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="4dp"
+                app:tint="@color/black" />
 
-        <Button
-            android:id="@+id/buttonLeaderboard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Leaderboard"
-            android:textSize="20sp"
-            android:backgroundTint="#FFD700"
-            android:fontFamily="@font/russo_one"
-            android:textColor="@color/black"
-            android:layout_marginBottom="15dp"/>
-
-        <Button
-            android:id="@+id/buttonSpectate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Hecto-Cams"
-            android:textSize="20sp"
-            android:fontFamily="@font/russo_one"
-            android:backgroundTint="#FFD700"
-            android:textColor="@color/black"
-            android:layout_marginBottom="15dp"/>
-
-        <Button
-            android:id="@+id/buttonHowToPlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="How to Play"
-            android:textSize="20sp"
-            android:backgroundTint="#FFD700"
-            android:fontFamily="@font/russo_one"
-            android:textColor="@color/black"
-            android:layout_marginBottom="15dp"/>
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="@font/russo_one"
+                android:textColor="@color/black"
+                android:text="Custom Match"
+                android:paddingHorizontal="6sp"
+                android:textSize="18sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="18sp"
+                android:autoSizeStepGranularity="1sp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="2">
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/buttonPractice"
+            app:cardCornerRadius="20dp"
+            android:layout_margin="10sp"
+            app:cardElevation="8dp"
+            android:backgroundTint="#F6C318"
+            android:foreground="@drawable/ripple_effect_cardview"
+            android:clickable="true"
+            android:focusable="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+            <ImageView
+                android:layout_width="50sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:src="@drawable/practice"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="4dp"
+                app:tint="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="@font/russo_one"
+                android:paddingHorizontal="6sp"
+                android:textColor="@color/black"
+                android:text="Practice"
+                android:textSize="18sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeMaxTextSize="18sp"
+                android:autoSizeStepGranularity="1sp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/buttonLeaderboard"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            android:layout_margin="10sp"
+            android:backgroundTint="#F6C318"
+            android:foreground="@drawable/ripple_effect_cardview"
+            android:clickable="true"
+            android:focusable="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+            <ImageView
+                android:layout_width="40sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:src="@drawable/leaderboard"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="4dp"
+                app:tint="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="@font/russo_one"
+                android:textColor="@color/black"
+                android:text="Leaderboard"
+                android:textSize="18sp"
+                android:paddingHorizontal="6sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="18sp"
+                android:autoSizeStepGranularity="1sp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="2">
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/buttonSpectate"
+            android:layout_margin="10sp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            android:backgroundTint="#F6C318"
+            android:foreground="@drawable/ripple_effect_cardview"
+            android:clickable="true"
+            android:focusable="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+            <ImageView
+                android:layout_width="40sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:src="@drawable/hectocam"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="4dp"
+                app:tint="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="@font/russo_one"
+                android:textColor="@color/black"
+                android:text="Hecto-Cams"
+                android:textSize="18sp"
+                android:maxLines="1"
+                android:paddingHorizontal="6sp"
+                android:ellipsize="end"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeMaxTextSize="18sp"
+                android:autoSizeStepGranularity="1sp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="10sp"
+            android:id="@+id/buttonHowToPlay"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            android:backgroundTint="#F6C318"
+            android:foreground="@drawable/ripple_effect_cardview"
+            android:clickable="true"
+            android:focusable="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+            <ImageView
+                android:layout_width="40sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:src="@drawable/howtoplay"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="4dp"
+                app:tint="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="@font/russo_one"
+                android:textColor="@color/black"
+                android:text="How to Play"
+                android:textSize="18sp"
+                android:maxLines="1"
+                android:paddingHorizontal="6sp"
+                android:ellipsize="end"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="18sp"
+                android:autoSizeStepGranularity="1sp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
