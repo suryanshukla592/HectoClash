@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         val userID = user?.uid
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        MusicManager.startMusic(this,R.raw.home_page_music)
+        MusicManager.startMusic(this,R.raw.home_page_music,0)
         MusicManager.setMusicVolume(this)
         db.firestoreSettings = FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build()
         profileImageUrl= intent.getStringExtra("imgu")
@@ -174,16 +174,19 @@ class MainActivity : AppCompatActivity() {
         // Navigate to the Game Activity
         buttonStartGame.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
+            MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
         }
         buttonChallenge.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
+            MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()
             val intent = Intent(this, Challenge::class.java)
             startActivity(intent)
         }
         buttonPractice.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
+            MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()
             val intent = Intent(this, Practice::class.java)
             startActivity(intent)
         }
@@ -191,11 +194,13 @@ class MainActivity : AppCompatActivity() {
         // Navigate to the Leaderboard Activity
         buttonLeaderboard.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
+            MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()
             val intent = Intent(this, LeaderboardActivity::class.java)
             startActivity(intent)
         }
         buttonHowToPlay.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
+            MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()
             val intent = Intent(this, HowToPlay::class.java)
             startActivity(intent)
         }
@@ -203,6 +208,7 @@ class MainActivity : AppCompatActivity() {
 //         Navigate to the Spectator Mode Activity
         buttonSpectate.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
+            MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()
             val intent = Intent(this, Spectator::class.java)
             startActivity(intent)
         }
@@ -410,10 +416,5 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         MusicManager.resumeMusic()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        MusicManager.pauseMusic()
     }
 }

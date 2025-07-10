@@ -41,7 +41,6 @@ class stats : AppCompatActivity() {
             SfxManager.playSfx(this, R.raw.button_sound)
             val intent = Intent(this, MatchHistoryList::class.java)
             startActivity(intent)
-            finish()
         }
         if (userID != null) {
             db.collection("Users").document(userID).get().addOnSuccessListener { document ->
@@ -70,5 +69,9 @@ class stats : AppCompatActivity() {
 
 
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        MusicManager.resumeMusic()
     }
 }

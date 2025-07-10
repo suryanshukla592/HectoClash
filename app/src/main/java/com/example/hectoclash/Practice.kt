@@ -48,6 +48,7 @@ class Practice : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         setContentView(R.layout.activity_practice)
+        MusicManager.stopMusic()
         val firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser
 
@@ -83,7 +84,7 @@ class Practice : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 countdownTimer?.cancel()
                 MusicManager.stopMusic()
-                MusicManager.startMusic(this@Practice,R.raw.home_page_music)
+                MusicManager.startMusic(this@Practice,R.raw.home_page_music,MusicState.lastSeekTime)
                 MusicManager.setMusicVolume(this@Practice)
                 finish()
             }
@@ -101,7 +102,7 @@ class Practice : AppCompatActivity() {
                 // Change color to red in last 30 seconds
                 if (secondsRemaining <= 30) {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
-                    MusicManager.startMusic(this@Practice,R.raw.clock_ticking)
+                    MusicManager.startMusic(this@Practice,R.raw.clock_ticking,0)
                     MusicManager.setMusicVolume(this@Practice)
                 } else {
                     textViewTimer.setTextColor("#D49337".toColorInt())
@@ -112,6 +113,7 @@ class Practice : AppCompatActivity() {
                 textViewTimer.text = "Time's Up!"
                 MusicManager.stopMusic()
                 textViewTimer.setTextColor("#FF5555".toColorInt())
+                SfxManager.playSfx(this@Practice, R.raw.defeat)
                 val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
                 showPossibleSolutionsPopup(this@Practice, sol1, sol2, sol3)
                 if(textViewExpression.text=="Your Answer"||textViewExpression.text == ""){
@@ -144,6 +146,7 @@ class Practice : AppCompatActivity() {
         val textSolution3 = dialog.findViewById<TextView>(R.id.textViewSolution3)
 
         buttonClose.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
             buttonSubmit.text = "Play Again"
             buttonSubmit.isEnabled = true
             dialog.dismiss()
@@ -170,18 +173,20 @@ class Practice : AppCompatActivity() {
             textViewFeedback.text = "🎉 Correct! You Won!"
             textViewFeedback.setTextColor("#4CAF50".toColorInt())
             MusicManager.stopMusic()
+            SfxManager.playSfx(this, R.raw.victory)
             countdownTimer?.cancel()
-            val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
-            showPossibleSolutionsPopup(this@Practice, sol1, sol2, sol3)
             if(textViewExpression.text=="Your Answer"||textViewExpression.text == ""){
                 textViewExpression.text = "No Answer Submitted"
             }
             buttonSubmit.isEnabled = false
             gridNumbers.visibility= View.GONE
             gridOperators.visibility= View.GONE
+            val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
+            showPossibleSolutionsPopup(this@Practice, sol1, sol2, sol3)
         } else {
             textViewFeedback.text = "❌ Wrong! Try Again."
             textViewFeedback.setTextColor("#F44336".toColorInt()) // Red
+            SfxManager.playSfx(this, R.raw.wrong)
         }
     }
     private fun evaluate(expression: String): Double? {
@@ -443,5 +448,10 @@ class Practice : AppCompatActivity() {
         textViewExpression.text = "Expression: "
         nextNumberIndex = 0
         setupButtons()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        MusicManager.pauseMusic()
     }
 }

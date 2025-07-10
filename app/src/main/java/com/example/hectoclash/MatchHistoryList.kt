@@ -35,7 +35,10 @@ class MatchHistoryList : AppCompatActivity() {
             fetchMatchHistory(currentUser.uid)
         }
     }
-
+    override fun onResume() {
+        super.onResume()
+        MusicManager.resumeMusic()
+    }
     private fun fetchMatchHistory(uid: String) {
         val matchHistoryRef = firestore.collection("Users").document(uid).collection("MatchHistory")
 

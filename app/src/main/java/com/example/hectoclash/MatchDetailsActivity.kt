@@ -56,6 +56,10 @@ class MatchDetailsActivity : AppCompatActivity() {
 
 
     }
+    override fun onResume() {
+        super.onResume()
+        MusicManager.resumeMusic()
+    }
 
     private fun loadUserData(uid: String, isPlayer: Boolean) {
         val db = FirebaseFirestore.getInstance()

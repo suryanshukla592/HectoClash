@@ -88,7 +88,7 @@ class SpectatorActivity : AppCompatActivity() {
                 // Change color to red in last 30 seconds
                 if (secondsRemaining <= 30) {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
-                    MusicManager.startMusic(this@SpectatorActivity,R.raw.clock_ticking)
+                    MusicManager.startMusic(this@SpectatorActivity,R.raw.clock_ticking,0)
                     MusicManager.setMusicVolume(this@SpectatorActivity)
                 } else {
                     textViewTimer.setTextColor("#D49337".toColorInt())
@@ -284,6 +284,10 @@ class SpectatorActivity : AppCompatActivity() {
                 handler.postDelayed(this, pingInterval)
             }
         }, pingInterval)
+    }
+    override fun onResume() {
+        super.onResume()
+        MusicManager.resumeMusic()
     }
 
     override fun onDestroy() {

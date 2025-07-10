@@ -27,4 +27,8 @@ class AboutUs : AppCompatActivity() {
             finish()
         }
     }
+    override fun onResume() {
+        super.onResume()
+        MusicManager.resumeMusic()
+    }
 }

@@ -147,6 +147,7 @@ class Challenge : AppCompatActivity() {
     }
 
     private fun startGame(code: String) {
+        MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()
         val gameIntent = Intent(this, GameActivity::class.java)
         gameIntent.putExtra("code", code)
         startActivity(gameIntent)
@@ -167,6 +168,11 @@ class Challenge : AppCompatActivity() {
                 }
             generatedRoomId = null
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        MusicManager.resumeMusic()
     }
     override fun onDestroy(){
         deleteCode()

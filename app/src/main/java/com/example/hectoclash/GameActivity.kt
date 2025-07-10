@@ -103,7 +103,8 @@ class GameActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
+        MusicManager.startMusic(this,R.raw.matchmaking_music,0)
+        MusicManager.setMusicVolume(this)
         val profilePicture: ImageView = findViewById(R.id.imageViewPlayerProfile)
         val nameText: TextView = findViewById(R.id.textViewPlayerName)
         val ratingText: TextView = findViewById(R.id.textViewPlayerRating)
@@ -243,7 +244,7 @@ class GameActivity : AppCompatActivity() {
                 deleteCode()
                 MusicManager.stopMusic()
                 countdownTimer?.cancel()
-                MusicManager.startMusic(this@GameActivity,R.raw.home_page_music)
+                MusicManager.startMusic(this@GameActivity,R.raw.home_page_music,MusicState.lastSeekTime)
                 MusicManager.setMusicVolume(this@GameActivity)
                 finish()
             }
@@ -279,7 +280,7 @@ class GameActivity : AppCompatActivity() {
                 // Change color to red in last 30 seconds
                 if (secondsRemaining <= 30) {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
-                    MusicManager.startMusic(this@GameActivity,R.raw.clock_ticking)
+                    MusicManager.startMusic(this@GameActivity,R.raw.clock_ticking,0)
                     MusicManager.setMusicVolume(this@GameActivity)
                 } else {
                     textViewTimer.setTextColor("#D49337".toColorInt())
@@ -383,6 +384,7 @@ class GameActivity : AppCompatActivity() {
                                 val matchmaking: RelativeLayout = findViewById(R.id.matchmakingLayout)
                                 match.visibility=View.VISIBLE
                                 matchmaking.visibility = View.GONE
+                                MusicManager.stopMusic()
                                 startTimer()
                             }
                         }
@@ -390,6 +392,9 @@ class GameActivity : AppCompatActivity() {
                         "feedback" -> {
                             val feedback = json.getString("content")
                             Log.d("WebSocket", "💬 Feedback from server: $feedback")
+                            if(feedback.contains("Incorrect")){
+                                SfxManager.playSfx(this@GameActivity, R.raw.wrong)
+                            }
                             runOnUiThread {
                                 textViewFeedback.text = feedback
                                 buttonSubmit.isEnabled = true // Re-enable submit button after feedback
@@ -409,6 +414,16 @@ class GameActivity : AppCompatActivity() {
                                 }
                                 countdownTimer?.cancel() // Stop the timer when the game ends
                                 MusicManager.stopMusic()
+                                if(result.contains("Won")||result.contains("Win")||result.contains("won")||result.contains("win")||result.contains("victory"))
+                                {
+                                    SfxManager.playSfx(this@GameActivity, R.raw.victory)
+                                }else if(result.contains("Lost")||result.contains("Lose")||result.contains("lost")||result.contains("lose")||result.contains("defeat")){
+                                    SfxManager.playSfx(this@GameActivity, R.raw.defeat)
+                                }else if(result.contains("Draw")||result.contains("draw")||result.contains("tie")||result.contains("Tie")){
+                                    SfxManager.playSfx(this@GameActivity, R.raw.draw)
+                                }else{
+                                    SfxManager.playSfx(this@GameActivity, R.raw.wrong)
+                                }
                                 buttonSubmit.isEnabled = false // Disable submit after game over
                                 val (sol1, sol2, sol3) = solveHectocTop3(originalPuzzle)
                                 showPossibleSolutionsPopup(this@GameActivity, sol1, sol2, sol3)
@@ -443,6 +458,9 @@ class GameActivity : AppCompatActivity() {
                                         .addOnSuccessListener {
                                             Log.d("WebSocket", "🧹 Deleted waiting room: $roomId")
                                             Toast.makeText(this@GameActivity, "Matchmaking Cancelled", Toast.LENGTH_SHORT).show()
+                                            MusicManager.stopMusic()
+                                            MusicManager.startMusic(this@GameActivity,R.raw.home_page_music,MusicState.lastSeekTime)
+                                            MusicManager.setMusicVolume(this@GameActivity)
                                             finish()
                                         }
                                         .addOnFailureListener {
@@ -452,6 +470,9 @@ class GameActivity : AppCompatActivity() {
                                                 it
                                             )
                                             Toast.makeText(this@GameActivity, "Matchmaking Cancelled", Toast.LENGTH_SHORT).show()
+                                            MusicManager.stopMusic()
+                                            MusicManager.startMusic(this@GameActivity,R.raw.home_page_music,MusicState.lastSeekTime)
+                                            MusicManager.setMusicVolume(this@GameActivity)
                                             finish()
                                         }
                                 }
@@ -460,11 +481,17 @@ class GameActivity : AppCompatActivity() {
                         .addOnFailureListener {
                             Log.e("WebSocket", "⚠️ Failed to check room status on disconnect", it)
                             Toast.makeText(this@GameActivity, "Matchmaking Cancelled", Toast.LENGTH_SHORT).show()
+                            MusicManager.stopMusic()
+                            MusicManager.startMusic(this@GameActivity,R.raw.home_page_music,0)
+                            MusicManager.setMusicVolume(this@GameActivity)
                             finish()
                         }
                 }else{
                     mainHandler.post {
                         Toast.makeText(this@GameActivity, "Matchmaking Cancelled", Toast.LENGTH_SHORT).show()
+                        MusicManager.stopMusic()
+                        MusicManager.startMusic(this@GameActivity,R.raw.home_page_music,0)
+                        MusicManager.setMusicVolume(this@GameActivity)
                         finish()
                     }
                 }
@@ -488,6 +515,7 @@ class GameActivity : AppCompatActivity() {
         val textSolution3 = dialog.findViewById<TextView>(R.id.textViewSolution3)
 
         buttonClose.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
             dialog.dismiss()
         }
 
@@ -524,6 +552,7 @@ class GameActivity : AppCompatActivity() {
 
         if (expressionToSend.isNullOrBlank()) {
             Log.e("ERROR", "Expression is empty or null!")
+            SfxManager.playSfx(this@GameActivity, R.raw.wrong)
             runOnUiThread {
                 textViewFeedback.text = "Invalid expression!"
             }
@@ -535,6 +564,7 @@ class GameActivity : AppCompatActivity() {
 
         if (result.isNaN()) {
             Log.e("ERROR", "Expression evaluation failed!")
+            SfxManager.playSfx(this@GameActivity, R.raw.wrong)
             runOnUiThread {
                 textViewFeedback.text = "Error in expression! Check operators."
             }
@@ -933,5 +963,10 @@ class GameActivity : AppCompatActivity() {
         }else{
             Log.d("GameActivity", "WebSocket is already disconnected or null.")
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        MusicManager.pauseMusic()
     }
 }

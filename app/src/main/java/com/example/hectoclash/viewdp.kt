@@ -24,8 +24,10 @@ class viewdp(private val imageUrl: String) : DialogFragment() {
 
             context?.let { Glide.with(it).load(imageUrl).placeholder(R.drawable.defaultdp).into(photoView) }
 
-            closeButton.setOnClickListener { dismiss() }
-            SfxManager.playSfx(context, R.raw.button_sound)
+            closeButton.setOnClickListener {
+                SfxManager.playSfx(context, R.raw.button_sound)
+                dismiss()
+            }
         }
     }
 

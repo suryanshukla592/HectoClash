@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,7 +40,8 @@ class LeaderboardActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
+        MusicManager.startMusic(this,R.raw.leaderboard_music,0)
+        MusicManager.setMusicVolume(this)
         leaderboardRecyclerView = findViewById(R.id.leaderboardRecyclerView)
         leaderboardRecyclerView.layoutManager = LinearLayoutManager(this)
         leaderboardAdapter = LeaderboardAdapter(playerList)
@@ -51,6 +53,15 @@ class LeaderboardActivity : AppCompatActivity() {
             SfxManager.playSfx(this, R.raw.button_sound)
             profileFirst?.let { it1 -> viewdp(it1) }?.show(supportFragmentManager, "dp_popup")
         }
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                MusicManager.stopMusic()
+                MusicManager.startMusic(this@LeaderboardActivity,R.raw.home_page_music,MusicState.lastSeekTime)
+                MusicManager.setMusicVolume(this@LeaderboardActivity)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun fetchLeaderboardData() {
@@ -107,5 +118,9 @@ class LeaderboardActivity : AppCompatActivity() {
                 Log.w("LeaderboardActivity", "Error getting documents: ", exception)
                 // Handle the error
             }
+    }
+    override fun onResume() {
+        super.onResume()
+        MusicManager.resumeMusic()
     }
 }

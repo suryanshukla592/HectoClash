@@ -34,6 +34,8 @@ class Spectator : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        MusicManager.resumeMusic()
+        MusicManager.setMusicVolume(this)
 
                 recyclerView = findViewById(R.id.roomsRecyclerView)
                 recyclerView.layoutManager = LinearLayoutManager(this)
@@ -104,7 +106,10 @@ class Spectator : AppCompatActivity() {
         }
         webSocketClient.connect()
     }
-
+    override fun onResume() {
+        super.onResume()
+        MusicManager.resumeMusic()
+    }
     override fun onDestroy() {
         super.onDestroy()
         webSocketClient.close()
