@@ -31,9 +31,11 @@
         tools:targetApi="31">
         <activity
             android:name=".Challenge"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".MatchDetailsActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".MatchHistoryList"
@@ -46,6 +48,8 @@
         <activity
             android:name=".Practice"
             android:exported="false"
+            android:supportsPictureInPicture="false"
+            android:resizeableActivity="false"  android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize" tools:targetApi="24"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SpectatorActivity"
@@ -90,6 +94,8 @@
         <activity
             android:name=".GameActivity"
             android:exported="true"
+            android:supportsPictureInPicture="false"
+            android:resizeableActivity="false"  android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize" tools:targetApi="24"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

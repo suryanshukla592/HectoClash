@@ -1,6 +1,5 @@
 package com.example.hectoclash
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Toast
