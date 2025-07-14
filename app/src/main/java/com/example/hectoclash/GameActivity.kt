@@ -43,6 +43,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import kotlin.math.abs
+import androidx.core.graphics.drawable.toDrawable
 
 class GameActivity : AppCompatActivity() {
 
@@ -527,7 +528,7 @@ class GameActivity : AppCompatActivity() {
         textSolution2.text = "Solution 2: ${solution2 ?: "N/A"}"
         textSolution3.text = "Solution 3: ${solution3 ?: "N/A"}"
 
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         val layoutParams = dialog.window?.attributes
         layoutParams?.gravity = Gravity.CENTER
         layoutParams?.width = ViewGroup.LayoutParams.MATCH_PARENT
@@ -554,7 +555,7 @@ class GameActivity : AppCompatActivity() {
         val expressionToSend = currentExpression
         Log.d("WebSocket", "Attempting to evaluate expression: '$expressionToSend'")
 
-        if (expressionToSend.isNullOrBlank()) {
+        if (expressionToSend.isBlank()) {
             Log.e("ERROR", "Expression is empty or null!")
             SfxManager.playSfx(this@GameActivity, R.raw.wrong)
             runOnUiThread {
@@ -800,7 +801,7 @@ class GameActivity : AppCompatActivity() {
         return try {
             val exp = ExpressionBuilder(expression).build()
             exp.evaluate()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

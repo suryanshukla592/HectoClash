@@ -115,13 +115,13 @@ class SignUp : AppCompatActivity() {
                         } else {
                             try {
                                 throw task.exception ?: Exception("Weak Password!")
-                            } catch (e: FirebaseAuthWeakPasswordException) {
+                            } catch (_: FirebaseAuthWeakPasswordException) {
                                 Toast.makeText(this, "Weak Password!", Toast.LENGTH_SHORT).show()
-                            } catch (e: FirebaseAuthInvalidCredentialsException) {
+                            } catch (_: FirebaseAuthInvalidCredentialsException) {
                                 Toast.makeText(this, "Invalid email format!", Toast.LENGTH_SHORT).show()
-                            } catch (e: FirebaseAuthUserCollisionException) {
+                            } catch (_: FirebaseAuthUserCollisionException) {
                                 Toast.makeText(this, "Email already in use!", Toast.LENGTH_SHORT).show()
-                            } catch (e: Exception) {
+                            } catch (_: Exception) {
                                 Toast.makeText(this, "Weak Password!", Toast.LENGTH_SHORT).show()
                             }
                         }

@@ -161,7 +161,7 @@ class Login : AppCompatActivity() {
                 if (account != null) {
                     firebaseAuthWithGoogle(account.idToken!!)
                 }
-            } catch (e: ApiException) {}
+            } catch (_: ApiException) {}
         }
     }
     private fun firebaseAuthWithGoogle(idToken: String) {

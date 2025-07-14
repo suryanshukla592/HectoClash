@@ -28,16 +28,14 @@ class RoomListAdapter(
         val room = roomList[position]
         val db = Firebase.firestore
 
-        if (room.player1Uid != null||room.player2Uid != null) {
-            val userRef = db.collection("Users")
-            userRef.document(room.player1Uid).get().addOnSuccessListener { document1 ->
-                if (document1.exists()) {
-                    holder.player1Name.text = document1.getString("Username").toString()
-                }
-                userRef.document(room.player2Uid).get().addOnSuccessListener { document2 ->
-                    if (document2.exists()) {
-                        holder.player2Name.text = document2.getString("Username").toString()
-                    }
+        val userRef = db.collection("Users")
+        userRef.document(room.player1Uid).get().addOnSuccessListener { document1 ->
+            if (document1.exists()) {
+                holder.player1Name.text = document1.getString("Username").toString()
+            }
+            userRef.document(room.player2Uid).get().addOnSuccessListener { document2 ->
+                if (document2.exists()) {
+                    holder.player2Name.text = document2.getString("Username").toString()
                 }
             }
         }

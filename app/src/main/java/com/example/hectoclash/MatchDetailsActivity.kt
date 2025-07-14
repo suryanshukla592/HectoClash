@@ -112,7 +112,7 @@ class MatchDetailsActivity : AppCompatActivity() {
         return try {
             val exp = ExpressionBuilder(expression).build()
             exp.evaluate()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

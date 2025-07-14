@@ -26,6 +26,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import net.objecthunter.exp4j.ExpressionBuilder
+import androidx.core.graphics.drawable.toDrawable
 
 class Practice : AppCompatActivity() {
 
@@ -160,7 +161,7 @@ class Practice : AppCompatActivity() {
         textSolution2.text = "Solution 2: ${solution2 ?: "N/A"}"
         textSolution3.text = "Solution 3: ${solution3 ?: "N/A"}"
 
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         val layoutParams = dialog.window?.attributes
         layoutParams?.gravity = Gravity.CENTER
         layoutParams?.width = ViewGroup.LayoutParams.MATCH_PARENT
@@ -197,7 +198,7 @@ class Practice : AppCompatActivity() {
         return try {
             val exp = ExpressionBuilder(expression).build()
             exp.evaluate()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

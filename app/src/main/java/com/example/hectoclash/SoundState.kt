@@ -8,7 +8,7 @@ enum class SoundState(val volumeMultiplier: Float) {
 
     companion object {
         fun next(state: SoundState): SoundState {
-            return values()[(state.ordinal + 1) % values().size]
+            return entries[(state.ordinal + 1) % entries.size]
         }
     }
 }
