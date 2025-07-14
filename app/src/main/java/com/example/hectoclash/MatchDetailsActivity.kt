@@ -2,8 +2,11 @@ package com.example.hectoclash
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.hectoclash.databinding.ActivityMatchDetailsBinding
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,6 +23,11 @@ class MatchDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById<ViewGroup>(android.R.id.content)) { view, insets ->
+            val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(0, sysBars.top, 0, sysBars.bottom)
+            insets
+        }
         binding = ActivityMatchDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

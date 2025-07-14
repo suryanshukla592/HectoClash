@@ -1,28 +1,33 @@
 package com.example.hectoclash
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
+import androidx.core.graphics.toColorInt
 
 class Challenge : AppCompatActivity() {
 
-    private lateinit var createGameButton: Button
-    private lateinit var joinGameButton: Button
+    private lateinit var createGameButton: CardView
+    private lateinit var joinGameButton: CardView
     private lateinit var gameCodeEditText: EditText
+    private lateinit var textViewCreateGame: TextView
+    private lateinit var textViewJoinGame: TextView
     private lateinit var shareCodeButton: ImageButton
     private lateinit var copyCodeButton: ImageButton
     private var generatedRoomId: String? = null
@@ -32,28 +37,27 @@ class Challenge : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_challenge)
+        val contentView = findViewById<ViewGroup>(android.R.id.content)
+        ViewCompat.setOnApplyWindowInsetsListener(contentView) { view, insets ->
+            val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(0, sysBars.top, 0, sysBars.bottom)
+            insets
+        }
 
         createGameButton = findViewById(R.id.buttonCreateGame)
         joinGameButton = findViewById(R.id.buttonJoinGame)
+        textViewCreateGame = findViewById(R.id.textViewCreateGame)
+        textViewJoinGame = findViewById(R.id.textViewJoinGame)
         gameCodeEditText = findViewById(R.id.editTextGameCode)
         shareCodeButton = findViewById(R.id.buttonShareCode)
         copyCodeButton = findViewById(R.id.buttonCopyCode)
-        val russoOneTypeface: Typeface? = ResourcesCompat.getFont(this, R.font.russo_one)
-        russoOneTypeface?.let {
-            createGameButton.typeface = it
-        }
-        createGameButton.textSize = 20f
-        russoOneTypeface?.let {
-            joinGameButton.typeface = it
-        }
-        joinGameButton.textSize = 20f
         shareCodeButton.visibility = View.GONE
         copyCodeButton.visibility = View.GONE
         gameCodeEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                joinGameButton.isEnabled = s.isNullOrEmpty().not()
+                setJoinCardEnabled(s.isNullOrEmpty().not(), joinGameButton, textViewJoinGame)
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -71,8 +75,8 @@ class Challenge : AppCompatActivity() {
                     gameCodeEditText.isEnabled = false
                     shareCodeButton.visibility = View.VISIBLE
                     copyCodeButton.visibility = View.VISIBLE
-                    createGameButton.isEnabled = false
-                    joinGameButton.isEnabled = true
+                    setJoinCardEnabled(true, joinGameButton, textViewJoinGame)
+                    setJoinCardEnabled(false, createGameButton, textViewCreateGame)
                     Toast.makeText(this, "Game code generated: $roomId", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener {
@@ -144,6 +148,7 @@ class Challenge : AppCompatActivity() {
             }
         }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        setJoinCardEnabled(false, joinGameButton, textViewJoinGame)
     }
 
     private fun startGame(code: String) {
@@ -169,6 +174,23 @@ class Challenge : AppCompatActivity() {
             generatedRoomId = null
         }
     }
+    fun setJoinCardEnabled(enabled: Boolean, card: CardView, textView: TextView) {
+        card.isClickable = enabled
+        card.isFocusable = enabled
+        card.foreground.alpha = if (enabled) 255 else 80
+
+        textView.isEnabled = enabled
+        textView.setTextColor(
+            if (enabled) "#000000".toColorInt()
+            else "#80000000".toColorInt()
+        )
+
+        card.setCardBackgroundColor(
+            if (enabled) "#F6C318".toColorInt()
+            else "#80F6C318".toColorInt()
+        )
+    }
+
 
     override fun onResume() {
         super.onResume()

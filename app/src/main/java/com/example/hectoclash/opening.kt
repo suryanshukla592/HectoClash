@@ -1,9 +1,9 @@
 package com.example.hectoclash
 
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Button
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -16,9 +16,11 @@ class opening : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.opening)
         MusicManager.stopMusic()
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+        val contentView = findViewById<ViewGroup>(android.R.id.content)
+        val realRoot = contentView.getChildAt(0)
+        ViewCompat.setOnApplyWindowInsetsListener(realRoot) { view, insets ->
+            val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(0, sysBars.top, 0, sysBars.bottom)
             insets
         }
         MusicManager.updateVolumeAll(this)

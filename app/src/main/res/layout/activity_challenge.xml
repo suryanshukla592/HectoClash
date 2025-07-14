@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/gradient_bg2"
-    android:padding="24dp"
+    android:padding="30sp"
     android:gravity="top">
 
     <!-- Title -->
@@ -102,41 +102,83 @@
         android:alpha="0.8"
         android:layout_marginBottom="24dp" />
 
-    <!-- Action Buttons -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:weightSum="2">
+        android:weightSum="2"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="32dp">
 
-        <Button
+        <!-- Create Game Card -->
+        <androidx.cardview.widget.CardView
             android:id="@+id/buttonCreateGame"
             android:layout_width="0dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Create Game"
-            android:textSize="18sp"
-            android:textColor="#000000"
-            android:fontFamily="@font/russo_one"
-            android:background="@drawable/ripple_button"
-            android:paddingVertical="14dp"
             android:layout_marginEnd="8dp"
-            app:backgroundTint="@null" />
+            android:clickable="true"
+            android:focusable="true"
+            android:backgroundTint="#F6C318"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            android:foreground="?attr/selectableItemBackground">
 
-        <Button
+            <TextView
+                android:id="@+id/textViewCreateGame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Create Game"
+                android:gravity="center"
+                android:fontFamily="@font/russo_one"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="18sp"
+                android:autoSizeStepGranularity="1sp"
+                android:maxLines="1"
+                android:foreground="?attr/selectableItemBackground"
+                android:ellipsize="none"
+                android:includeFontPadding="false"/>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Join Game Card -->
+        <androidx.cardview.widget.CardView
             android:id="@+id/buttonJoinGame"
             android:layout_width="0dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Join Game"
-            android:textSize="18sp"
-            android:enabled="false"
-            android:textColor="#000000"
-            android:fontFamily="@font/russo_one"
-            android:background="@drawable/ripple_button"
-            android:paddingVertical="14dp"
             android:layout_marginStart="8dp"
-            app:backgroundTint="@null" />
+            android:clickable="false"
+            android:focusable="false"
+            android:backgroundTint="#F6C318"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            android:foreground="?attr/selectableItemBackground">
+
+            <TextView
+                android:id="@+id/textViewJoinGame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Join Game"
+                android:gravity="center"
+                android:enabled="false"
+                android:fontFamily="@font/russo_one"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:foreground="?attr/selectableItemBackground"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="18sp"
+                android:autoSizeStepGranularity="1sp"
+                android:maxLines="1"
+                android:ellipsize="none"
+                android:includeFontPadding="false"/>
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
+
 </LinearLayout>
