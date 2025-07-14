@@ -42,6 +42,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import androidx.core.graphics.drawable.toDrawable
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -292,6 +293,7 @@ class MainActivity : AppCompatActivity() {
             .setView(dialogView)
             .setCancelable(true)
         val alertDialog = builder.create()
+        alertDialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         val btnYes = dialogView.findViewById<Button>(R.id.btn_yes)
         val btnNo = dialogView.findViewById<Button>(R.id.btn_no)
         btnYes.setOnClickListener {

@@ -1,6 +1,7 @@
 package com.example.hectoclash
 
 import android.content.Intent
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.hectoclash.databinding.ActivityLoginBinding
@@ -132,6 +134,7 @@ class Login : AppCompatActivity() {
             .setView(dialogView)
             .setCancelable(true)
         val alertDialog = builder.create()
+        alertDialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         val btnYes = dialogView.findViewById<Button>(R.id.btn_submit)
         btnYes.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
