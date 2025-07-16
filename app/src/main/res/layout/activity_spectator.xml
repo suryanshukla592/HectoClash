@@ -5,29 +5,31 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#000000">
+    android:background="@drawable/gradient_bg2">
 
     <!-- Live Matches Title -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="🔥 Live Matches"
-        android:textSize="24sp"
+        android:textSize="30sp"
         android:fontFamily="@font/russo_one"
         android:gravity="center"
         android:textColor="#FFD700"
         android:paddingBottom="12dp"
+        android:layout_marginTop="12sp"
         android:shadowColor="#80FFD700"
         android:shadowDx="0"
         android:shadowDy="2"
         android:shadowRadius="8"/>
 
-    <!-- RecyclerView to show live rooms -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/roomsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginTop="8sp"
+        android:paddingHorizontal="4sp"
         android:clipToPadding="false"
         android:paddingBottom="8dp" />
 </LinearLayout>

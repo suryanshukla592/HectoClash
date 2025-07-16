@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="14dp"
+    android:background="@drawable/rounded_corners_dialogue"
+    android:elevation="12dp"
+    android:minWidth="260dp"
+    android:layout_gravity="center"
+    android:maxWidth="300dp">
+    <TextView
+    android:id="@+id/tv_roomID_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Enter Room ID"
+    android:textSize="16sp"
+    android:textColor="#D4AF37"
+    android:fontFamily="@font/russo_one"
+    android:textStyle="bold"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="12dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/roomInputContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_roomID_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4sp">
+
+        <EditText
+            android:id="@+id/roomID"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:padding="8sp"
+            android:hint="Room Code"
+            android:maxLength="8"
+            android:inputType="textCapCharacters"
+            android:textSize="13sp"
+            android:textColorHint="#8CFFFFFF"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/noah_bold"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/rounded_corners"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="38sp"
+            android:text="Join"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:backgroundTint="#D4AF37"
+            android:fontFamily="@font/russo_one"
+            android:minWidth="60dp"
+            android:padding="2sp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/roomID"
+            app:layout_constraintTop_toTopOf="@id/roomID"
+            app:layout_constraintBottom_toBottomOf="@id/roomID"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,57 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:padding="12dp"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="#D4AF37"
+    android:background="@drawable/ripple_background"
+    android:clickable="true"
+    android:focusable="true"
     android:elevation="4dp">
 
+    <!-- Lock icon + Private label -->
     <LinearLayout
+        android:id="@+id/privateTag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:visibility="gone"
+        android:paddingEnd="8sp"
+        android:paddingVertical="2sp"
+        android:background="#27000000"
+        android:gravity="center_horizontal"
+        android:layout_alignParentTop="true">
 
-    <TextView
-        android:id="@+id/player1Name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Player 1"
-        android:textAlignment="textEnd"
-        android:fontFamily="@font/russo_one"
-        android:textSize="20sp"
-        android:textColor="#000" />
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@android:drawable/ic_lock_lock"
+            app:tint="#000000" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:text="VS"
-        android:fontFamily="@font/russo_one"
-        android:textSize="20sp"
-        android:textColor="#CE0808" />
-
-    <TextView
-        android:id="@+id/player2Name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Player 2"
-        android:fontFamily="@font/russo_one"
-        android:textAlignment="textStart"
-        android:textSize="20sp"
-        android:textColor="#000" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Private"
+            android:textColor="#000"
+            android:textSize="12sp"
+            android:fontFamily="@font/noah_bold"
+            android:layout_marginStart="4dp" />
     </LinearLayout>
-    <TextView
-        android:id="@+id/roomIdText"
-        android:layout_width="wrap_content"
+
+    <!-- Player names + VS -->
+    <LinearLayout
+        android:id="@+id/playersContainer"
+        android:layout_below="@id/privateTag"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Room ID: 123456"
-        android:fontFamily="@font/noah_bold"
-        android:textStyle="bold"
-        android:textSize="14sp"
-        android:textColor="#444"
-        android:layout_marginTop="8dp" />
-</LinearLayout>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginVertical="4sp">
+
+        <!-- Player 1 marquee -->
+        <TextView
+            android:id="@+id/player1Name"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:paddingEnd="4sp"
+            android:gravity="end|center_vertical"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
+            android:text="Player 1"
+            android:fontFamily="@font/russo_one"
+            android:textSize="16sp"
+            android:textColor="#000" />
+
+        <!-- VS -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VS"
+            android:fontFamily="@font/russo_one"
+            android:textSize="20sp"
+            android:textColor="#CE0808"
+            android:layout_marginHorizontal="10dp" />
+
+        <!-- Player 2 marquee -->
+        <TextView
+            android:id="@+id/player2Name"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:paddingStart="4sp"
+            android:ellipsize="marquee"
+            android:gravity="start|center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
+            android:text="Player 2"
+            android:fontFamily="@font/russo_one"
+            android:textSize="16sp"
+            android:textColor="#000" />
+    </LinearLayout>
+</RelativeLayout>

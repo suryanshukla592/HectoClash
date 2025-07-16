@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.TextView
 import android.os.Handler
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
@@ -41,8 +42,6 @@ class SpectatorActivity : AppCompatActivity() {
     private var player1UID: String = ""
     private var timerStarted = false
     private var player2UID: String = ""
-    private val handler = Handler()
-    private val pingInterval = 30000L
     private var isConnected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +62,7 @@ class SpectatorActivity : AppCompatActivity() {
             finish()
         }
 
-        // View Bindings bro
+        // View Bindings
         puzzleTextView = findViewById(R.id.textViewFinalPuzzle)
         player1ExpressionTextView = findViewById(R.id.player1ExpressionTextView)
         player2ExpressionTextView = findViewById(R.id.player2ExpressionTextView)
@@ -79,6 +78,16 @@ class SpectatorActivity : AppCompatActivity() {
         roomId = intent.getStringExtra("roomId") ?: ""
 
         setupWebSocket()
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                countdownTimer?.cancel()
+                MusicManager.stopMusic()
+                MusicManager.startMusic(this@SpectatorActivity,R.raw.home_page_music,MusicState.lastSeekTime)
+                MusicManager.setMusicVolume(this@SpectatorActivity)
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
     private fun startTimer() {
         gameStartTime = System.currentTimeMillis()
@@ -100,21 +109,41 @@ class SpectatorActivity : AppCompatActivity() {
 
             override fun onFinish() {
                 textViewTimer.text = "Time's Up!"
+                textViewTimer.setTextColor("#FF5555".toColorInt()) // Final red text
                 MusicManager.stopMusic()
+                SfxManager.playSfx(this@SpectatorActivity, R.raw.draw)
                 timerStarted = false
-                textViewTimer.setTextColor("#FF5555".toColorInt()) // Ensure final message is red
                 countdownTimer?.cancel()
+                Handler().postDelayed({
+                    var countdown = 3
+                    val countdownHandler = Handler()
+
+                    val countdownRunnable = object : Runnable {
+                        override fun run() {
+                            if (countdown > 0) {
+                                textViewTimer.text = "Spectating ends in ${countdown}s…"
+                                countdown--
+                                countdownHandler.postDelayed(this, 1000)
+                            } else {
+                                if (!isFinishing) {
+                                    webSocketClient.close()
+                                    finish()
+                                }
+                            }
+                        }
+                    }
+                    countdownHandler.post(countdownRunnable)
+                }, 3000)
             }
         }.start()
     }
 
     private fun setupWebSocket() {
         val serverUri = URI("ws://3.111.203.229:8080/ws")
-        startPing()
-
         webSocketClient = object : WebSocketClient(serverUri) {
             override fun onOpen(handshakedata: ServerHandshake?) {
                 Log.d("SpectatorActivity", "WebSocket opened")
+                isConnected = true
                 val uid = firebaseAuth.currentUser?.uid ?: ""
                 val json = JSONObject().apply {
                     put("type", "spectateRoom")
@@ -231,22 +260,17 @@ class SpectatorActivity : AppCompatActivity() {
                     }
 
                     isConnected = true
-                    startPing()
                 }
             }
 
             override fun onClose(code: Int, reason: String?, remote: Boolean) {
                 Log.d("SpectatorActivity", "WebSocket closed: $code, $reason")
                 isConnected = false
-                stopPing()
-                reconnectWebSocket()
             }
 
             override fun onError(ex: Exception?) {
                 Log.e("SpectatorActivity", "WebSocket error: ${ex?.message}")
                 isConnected = false
-                stopPing()
-                reconnectWebSocket()
             }
         }
 
@@ -268,34 +292,21 @@ class SpectatorActivity : AppCompatActivity() {
         }
     }
 
-    private fun reconnectWebSocket() {
-        handler.postDelayed({
-            setupWebSocket()
-        }, 800)
-    }
-
-    private fun stopPing() {
-        handler.removeCallbacksAndMessages(null)
-    }
-
-    private fun startPing() {
-        handler.postDelayed(object : Runnable {
-            override fun run() {
-                if (isConnected && webSocketClient.isOpen) {
-                    webSocketClient.send("ping")
-                }
-                handler.postDelayed(this, pingInterval)
-            }
-        }, pingInterval)
+    override fun onPause() {
+        super.onPause()
+        webSocketClient.close()
+        isConnected = false
     }
     override fun onResume() {
         super.onResume()
         MusicManager.resumeMusic()
+        if (!isConnected) {
+            setupWebSocket()  // Only reconnect if not connected
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        stopPing()
         webSocketClient.close()
     }
 

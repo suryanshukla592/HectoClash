@@ -424,8 +424,10 @@ class GameActivity : AppCompatActivity() {
                                     SfxManager.playSfx(this@GameActivity, R.raw.victory)
                                 }else if(result.contains("Lost")||result.contains("Lose")||result.contains("lost")||result.contains("lose")||result.contains("defeat")){
                                     SfxManager.playSfx(this@GameActivity, R.raw.defeat)
+                                    textViewTimer.text = "Time's Up!"
                                 }else if(result.contains("Draw")||result.contains("draw")||result.contains("tie")||result.contains("Tie")){
                                     SfxManager.playSfx(this@GameActivity, R.raw.draw)
+                                    textViewTimer.text = "Time's Up!"
                                 }else{
                                     SfxManager.playSfx(this@GameActivity, R.raw.wrong)
                                 }
@@ -555,26 +557,31 @@ class GameActivity : AppCompatActivity() {
         val expressionToSend = currentExpression
         Log.d("WebSocket", "Attempting to evaluate expression: '$expressionToSend'")
 
-        if (expressionToSend.isBlank()) {
-            Log.e("ERROR", "Expression is empty or null!")
-            SfxManager.playSfx(this@GameActivity, R.raw.wrong)
-            runOnUiThread {
-                textViewFeedback.text = "Invalid expression!"
-            }
-            return
-        }
-
         val result = evaluateExpression(expressionToSend)
         Log.d("WebSocket", "Evaluation Result: $result")
 
-        if (result.isNaN()) {
-            Log.e("ERROR", "Expression evaluation failed!")
+        if (expressionToSend.isBlank() || result.isNaN()) {
+            val errorMessage = if (expressionToSend.isBlank()) {
+                "Invalid expression!"
+            } else {
+                "Error in expression! Check operators."
+            }
+
+            val errorJson = JSONObject().apply {
+                put("type", "submiterror")
+                put("uid", uid)
+                put("room_id", roomId)
+                put("expression", errorMessage)
+            }
+
+            webSocketClient!!.send(errorJson.toString())
             SfxManager.playSfx(this@GameActivity, R.raw.wrong)
             runOnUiThread {
-                textViewFeedback.text = "Error in expression! Check operators."
+                textViewFeedback.text = errorMessage
             }
             return
         }
+
 
         try {
             val solutionJson = JSONObject().apply {

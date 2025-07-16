@@ -98,11 +98,10 @@
             android:id="@+id/player1FeedbackTextView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:visibility="gone"
             android:layout_weight="2"
             android:fontFamily="@font/noah_bold"
             android:gravity="center"
-            android:text="Feedback"
+            android:text=""
             android:textColor="#A0A0A0" android:textSize="22sp" />
 
     </LinearLayout>
@@ -171,11 +170,10 @@
             android:id="@+id/player2FeedbackTextView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:visibility="gone"
             android:layout_weight="2"
             android:fontFamily="@font/noah_bold"
             android:gravity="center"
-            android:text="Feedback"
+            android:text=""
             android:textColor="#A0A0A0" android:textSize="22sp" />
 
     </LinearLayout>
