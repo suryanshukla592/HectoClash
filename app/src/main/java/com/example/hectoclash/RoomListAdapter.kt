@@ -64,6 +64,10 @@ class RoomListAdapter(
                     .setCancelable(true)
                 val alertDialog = builder.create()
                 alertDialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+                alertDialog.window?.setLayout(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
                 alertDialog.window?.setGravity(Gravity.CENTER)
                 val btnJoin = dialogView.findViewById<Button>(R.id.btn_submit)
                 btnJoin.setOnClickListener {
@@ -72,6 +76,7 @@ class RoomListAdapter(
                     if (roomID.isNotEmpty()) {
                         if (room.roomId.contains("-${roomID.uppercase()}-")) {
                             alertDialog.dismiss()
+                            MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()
                             onItemClick(room)
                         } else {
                             Toast.makeText(holder.itemView.context, "Invalid Room ID", Toast.LENGTH_SHORT).show()
@@ -85,12 +90,8 @@ class RoomListAdapter(
                     }
                 }
                 alertDialog.show()
-                val window = alertDialog.window
-                window?.setLayout(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
             }else{
+                MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()
                 onItemClick(room)
             }
         }

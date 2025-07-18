@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/futuristicbg"
+    android:background="@drawable/gradient_bg2"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:paddingVertical="30sp"
+    android:paddingHorizontal="20sp"
     tools:context=".SpectatorActivity">
 
     <LinearLayout
@@ -16,166 +18,401 @@
         android:paddingBottom="16dp">
 
         <TextView
+            android:id="@+id/textViewSpectatorTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/russo_one"
             android:text="Spectator Mode"
-            android:textColor="#FFD700" android:textSize="26sp"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="10sp"
+            android:textColor="@color/my_primary"
+            android:shadowColor="#80FFD700"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="6"
+            android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/textViewFinalPuzzle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/russo_one"
-            android:text="Puzzle: 123456 = 100"
-            android:textColor="#FFFFFF" android:textSize="28sp"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp" />
 
         <TextView
             android:id="@+id/textViewTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:fontFamily="@font/russo_one"
-            android:text="⏱️ 120s"
-            android:textColor="#D49337" android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp" />
+            android:text="⏱️  120s"
+            android:textColor="#D49337"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewFinalPuzzle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12sp"
+            android:fontFamily="@font/noah_bold"
+            android:gravity="center"
+            android:text="Puzzle: 123456 = 100"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/RoomFeedbackTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12sp"
+            android:fontFamily="@font/noah_bold"
+            android:gravity="center"
+            android:text="    Game Ongoing..."
+            android:textColor="@color/my_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
-    <LinearLayout
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginHorizontal="10sp"
+        android:layout_marginBottom="20sp"
+        android:background="#40FFFFFF" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/player1Card"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:background="@drawable/spectator_player_card_bg"
+        android:padding="12dp">
+        <LinearLayout
+            android:id="@+id/player1InfoLayout"
+            android:layout_width="120sp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:paddingHorizontal="4sp"
+            android:paddingBottom="10sp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/P1Crown"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:visibility="invisible"
+                android:layout_marginBottom="-4sp"
+                android:layout_gravity="center"
+                android:src="@drawable/crown"
+                android:scaleType="fitCenter" />
 
-        <TextView
-            android:id="@+id/player1NameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/russo_one"
-            android:text="Player 1"
-            android:textColor="#EEEEEE" android:layout_gravity="center"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewPlayer1Profile"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/circle_mask"
+                android:clipToOutline="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/defaultdp" />
 
-        <TextView
-            android:id="@+id/player1ExpressionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Expression"
-            android:textSize="22sp"
-            android:layout_marginHorizontal="30sp"
-            android:fontFamily="@font/russo_one"
-            android:textColor="#FFFFFF" android:gravity="center"
-            android:padding="14dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/expression_background"
-            android:elevation="4dp" />
+            <TextView
+                android:id="@+id/textViewPlayer1Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/russo_one"
+                android:text="Player 1"
+                android:textColor="#4D9DE0"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:scrollHorizontally="true"/>
+
+            <TextView
+                android:id="@+id/textViewPlayer1Rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noah_bold"
+                android:text="Rating: 1520"
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewPlayer1AvgTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/noah_bold"
+                    android:text="⏱: 5.2s"
+                    android:textAlignment="center"
+                    android:textColor="#CCCCCC"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewPlayer1Accuracy"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/noah_bold"
+                    android:text="🎯: 95%"
+                    android:textAlignment="center"
+                    android:textColor="#CCCCCC"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp">
+            android:id="@+id/player1GameLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:paddingVertical="20sp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/player1InfoLayout"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/player1ExpressionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/expression_background"
+                android:elevation="4dp"
+                android:fontFamily="@font/russo_one"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="10dp"
+                android:text=""
+                android:hint="Expression"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/player1ResultTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:gravity="center"
-                android:text="="
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12sp"
+                android:fontFamily="@font/russo_one"
+                android:text="Live Value = 0"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
-                android:fontFamily="@font/russo_one" />
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/player1FeedbackTextView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="12sp"
+                android:layout_weight="1"
+                android:fontFamily="@font/noah_bold"
+                android:gravity="center"
+                android:text=""
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/player1FeedbackTextView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:fontFamily="@font/noah_bold"
-            android:gravity="center"
-            android:text=""
-            android:textColor="#A0A0A0" android:textSize="22sp" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textViewVs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:fontFamily="@font/russo_one"
-        android:text="⚡ VS ⚡"
-        android:layout_gravity="center"
-        android:textColor="#FFA500" android:textSize="22sp"
-        android:textStyle="bold"
-        android:paddingVertical="8dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="16dp"
+        android:layout_marginHorizontal="10sp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_weight="1"
+            android:background="#40FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:fontFamily="@font/noah_bold"
+            android:text="V S"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_weight="1"
+            android:background="#40FFFFFF" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/player2Card"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-        <TextView
-            android:id="@+id/player2NameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/russo_one"
-            android:text="Player 2"
-            android:textColor="#EEEEEE" android:layout_gravity="center"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:id="@+id/player2ExpressionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Expression"
-            android:textSize="22sp"
-            android:layout_marginHorizontal="30sp"
-            android:fontFamily="@font/russo_one"
-            android:textColor="#FFFFFF" android:gravity="center"
-            android:padding="14dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/expression_background"
-            android:elevation="4dp" />
+        android:background="@drawable/spectator_player_card_bg"
+        android:padding="12dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp">
+            android:id="@+id/player2InfoLayout"
+            android:layout_width="120sp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:paddingHorizontal="4sp"
+            android:paddingBottom="10sp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/P2Crown"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:visibility="invisible"
+                android:layout_marginBottom="-4sp"
+                android:layout_gravity="center"
+                android:src="@drawable/crown"
+                android:scaleType="fitCenter" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewPlayer2Profile"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/circle_mask"
+                android:clipToOutline="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/defaultdp" />
+
+            <TextView
+                android:id="@+id/textViewPlayer2Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/russo_one"
+                android:text="Player 2"
+                android:textColor="#4D9DE0"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:scrollHorizontally="true"/>
+
+            <TextView
+                android:id="@+id/textViewPlayer2Rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noah_bold"
+                android:text="Rating: 1520"
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewPlayer2AvgTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/noah_bold"
+                    android:text="⏱: 5.2s"
+                    android:textAlignment="center"
+                    android:textColor="#CCCCCC"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewPlayer2Accuracy"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/noah_bold"
+                    android:text="🎯: 95%"
+                    android:textAlignment="center"
+                    android:textColor="#CCCCCC"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/player2GameLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:paddingVertical="20sp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/player2InfoLayout"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/player2ExpressionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/expression_background"
+                android:elevation="4dp"
+                android:fontFamily="@font/russo_one"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="10dp"
+                android:text=""
+                android:hint="Expression"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/player2ResultTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12sp"
+                android:fontFamily="@font/russo_one"
+                android:text="Live Value = 0"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/player2FeedbackTextView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="12sp"
+                android:layout_weight="1"
+                android:fontFamily="@font/noah_bold"
                 android:gravity="center"
-                android:text="="
-                android:textColor="#FFFFFF" android:textSize="18sp"
-                android:fontFamily="@font/russo_one"/>
+                android:text=""
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/player2FeedbackTextView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:fontFamily="@font/noah_bold"
-            android:gravity="center"
-            android:text=""
-            android:textColor="#A0A0A0" android:textSize="22sp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
+
 
 </LinearLayout>

@@ -206,8 +206,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, HowToPlay::class.java)
             startActivity(intent)
         }
-
-//         Navigate to the Spectator Mode Activity
         buttonSpectate.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
             MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()

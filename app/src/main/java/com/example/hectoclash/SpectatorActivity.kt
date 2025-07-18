@@ -6,12 +6,16 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.widget.TextView
 import android.os.Handler
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import net.objecthunter.exp4j.ExpressionBuilder
@@ -31,6 +35,17 @@ class SpectatorActivity : AppCompatActivity() {
     private lateinit var player1NameTextView: TextView
     private lateinit var player2NameTextView: TextView
     private lateinit var textViewTimer: TextView
+    private lateinit var gameFeed: TextView
+    private lateinit var player1Crown: ImageView
+    private lateinit var player2Crown: ImageView
+    private lateinit var player1Rating: TextView
+    private lateinit var player2Rating: TextView
+    private lateinit var player1AvgTime: TextView
+    private lateinit var player2AvgTime: TextView
+    private lateinit var player1Accuracy: TextView
+    private lateinit var player2Accuracy: TextView
+    private lateinit var player1Profile: de.hdodenhof.circleimageview.CircleImageView
+    private lateinit var player2Profile: de.hdodenhof.circleimageview.CircleImageView
     private var countdownTimer: CountDownTimer? = null
     private var gameStartTime: Long = 0
     private var gameDurationSeconds: Long = 120
@@ -43,6 +58,8 @@ class SpectatorActivity : AppCompatActivity() {
     private var timerStarted = false
     private var player2UID: String = ""
     private var isConnected = false
+    private var p1dp: String = ""
+    private var p2dp: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,15 +84,40 @@ class SpectatorActivity : AppCompatActivity() {
         player1ExpressionTextView = findViewById(R.id.player1ExpressionTextView)
         player2ExpressionTextView = findViewById(R.id.player2ExpressionTextView)
         textViewTimer = findViewById(R.id.textViewTimer)
-
+        player1Crown = findViewById(R.id.P1Crown)
+        player2Crown = findViewById(R.id.P2Crown)
+        player1Rating = findViewById(R.id.textViewPlayer1Rating)
+        player2Rating = findViewById(R.id.textViewPlayer2Rating)
+        player1AvgTime = findViewById(R.id.textViewPlayer1AvgTime)
+        player2AvgTime = findViewById(R.id.textViewPlayer2AvgTime)
+        player1Accuracy = findViewById(R.id.textViewPlayer1Accuracy)
+        player2Accuracy = findViewById(R.id.textViewPlayer2Accuracy)
+        player1Profile = findViewById(R.id.imageViewPlayer1Profile)
+        player2Profile = findViewById(R.id.imageViewPlayer2Profile)
         player1FeedbackTextView = findViewById(R.id.player1FeedbackTextView)
         player2FeedbackTextView = findViewById(R.id.player2FeedbackTextView)
-        player1NameTextView = findViewById(R.id.player1NameTextView)
-        player2NameTextView = findViewById(R.id.player2NameTextView)
+        player1NameTextView = findViewById(R.id.textViewPlayer1Name)
+        player2NameTextView = findViewById(R.id.textViewPlayer2Name)
         player2ResultTextView = findViewById(R.id.player2ResultTextView)
         player1ResultTextView = findViewById(R.id.player1ResultTextView)
+        gameFeed = findViewById(R.id.RoomFeedbackTextView)
+        MusicManager.stopMusic()
 
         roomId = intent.getStringExtra("roomId") ?: ""
+        player1Profile.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
+            if (p1dp != "") {
+                val viewdp = viewdp(p1dp)
+                viewdp.show(supportFragmentManager, "dp_popup")
+            }
+        }
+        player2Profile.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
+            if (p2dp != "") {
+                val viewdp = viewdp(p1dp)
+                viewdp.show(supportFragmentManager, "dp_popup")
+            }
+        }
 
         setupWebSocket()
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -108,32 +150,7 @@ class SpectatorActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                textViewTimer.text = "Time's Up!"
-                textViewTimer.setTextColor("#FF5555".toColorInt()) // Final red text
-                MusicManager.stopMusic()
-                SfxManager.playSfx(this@SpectatorActivity, R.raw.draw)
-                timerStarted = false
-                countdownTimer?.cancel()
-                Handler().postDelayed({
-                    var countdown = 3
-                    val countdownHandler = Handler()
-
-                    val countdownRunnable = object : Runnable {
-                        override fun run() {
-                            if (countdown > 0) {
-                                textViewTimer.text = "Spectating ends in ${countdown}s…"
-                                countdown--
-                                countdownHandler.postDelayed(this, 1000)
-                            } else {
-                                if (!isFinishing) {
-                                    webSocketClient.close()
-                                    finish()
-                                }
-                            }
-                        }
-                    }
-                    countdownHandler.post(countdownRunnable)
-                }, 3000)
+                endSpectating()
             }
         }.start()
     }
@@ -166,16 +183,14 @@ class SpectatorActivity : AppCompatActivity() {
                                     if (playerUID == player1UID) {
                                         player1ExpressionTextView.text = expression
                                         val e1 = evaluateExpression(expression)
-                                        Log.d("DEBUG",e1.toString())
-                                        if (!e1.isNaN() && e1 != 0.0) {
-                                            player1ResultTextView.text = " = "+e1.toInt().toString()
+                                        if (!e1.isNaN()) {
+                                            player1ResultTextView.text = "Live Value = "+e1.toInt().toString()
                                         }
                                     } else if (playerUID == player2UID) {
                                         player2ExpressionTextView.text = expression
                                         val e2 = evaluateExpression(expression)
-                                        Log.d("DEBUG",e2.toString())
-                                        if (!e2.isNaN() && e2 != 0.0) {
-                                            player2ResultTextView.text = " = "+e2.toInt().toString()
+                                        if (!e2.isNaN()) {
+                                            player2ResultTextView.text = "Live Value = "+e2.toInt().toString()
                                         }
                                     }
                                 }
@@ -188,7 +203,6 @@ class SpectatorActivity : AppCompatActivity() {
                                 runOnUiThread {
                                     if (role == "Time") {
                                         gameDurationSeconds = uid.toLong()
-                                        Log.d("Game", "Game Duration: $gameDurationSeconds")
                                         if (!timerStarted) {
                                             startTimer()
                                         }
@@ -200,13 +214,37 @@ class SpectatorActivity : AppCompatActivity() {
                                             .addOnSuccessListener { document ->
                                                 val name =
                                                     document.getString("Username") ?: "Anonymous"
+                                                val rating = document.getLong("Rating") ?: 0
+                                                val avgTime = document.getLong("Time") ?: 0
+                                                val accuracy = document.getLong("Accuracy") ?: 0
+                                                val profile = document.getString("Profile Picture URL") ?: ""
                                                 runOnUiThread {
                                                     if (role == "Player1") {
                                                         player1UID = uid
-                                                        player1NameTextView.text = "Player 1: $name"
+                                                        p1dp = profile
+                                                        player1NameTextView.text = "$name"
+                                                        player1Rating.text = "Rating: $rating"
+                                                        player1AvgTime.text = "⏱: ${avgTime}s"
+                                                        player1Accuracy.text = "🎯: ${accuracy}%"
+                                                        Glide.with(this@SpectatorActivity)
+                                                            .load(profile)
+                                                            .placeholder(R.drawable.defaultdp)
+                                                            .centerCrop()
+                                                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                            .into(player1Profile)
                                                     } else if (role == "Player2") {
                                                         player2UID = uid
-                                                        player2NameTextView.text = "Player 2: $name"
+                                                        p2dp = profile
+                                                        player2NameTextView.text = "$name"
+                                                        player2Rating.text = "Rating: $rating"
+                                                        player2AvgTime.text = "⏱: ${avgTime}s"
+                                                        player2Accuracy.text = "🎯: ${accuracy}%"
+                                                        Glide.with(this@SpectatorActivity)
+                                                            .load(profile)
+                                                            .placeholder(R.drawable.defaultdp)
+                                                            .centerCrop()
+                                                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                            .into(player2Profile)
                                                     }
                                                 }
                                             }
@@ -214,10 +252,10 @@ class SpectatorActivity : AppCompatActivity() {
                                                 runOnUiThread {
                                                     if (role == "Player1") {
                                                         player1NameTextView.text =
-                                                            "Player 1: (Error)"
+                                                            "(Error)"
                                                     } else if (role == "Player2") {
                                                         player2NameTextView.text =
-                                                            "Player 2: (Error)"
+                                                            "(Error)"
                                                     }
                                                 }
                                             }
@@ -236,17 +274,112 @@ class SpectatorActivity : AppCompatActivity() {
                             "feedbackUpdate" -> {
                                 val uid = json.getString("opponent")
                                 val feedback = json.getString("expression")
-                                Log.d("Spectator", "Feedback update received for UID: $uid -> Feedback: $feedback")
 
                                 runOnUiThread {
-                                    if (uid == player1UID) {
-                                        Log.d("Spectator", "Setting feedback for Player 1")
-                                        player1FeedbackTextView.text = feedback
-                                    } else if (uid == player2UID) {
-                                        Log.d("Spectator", "Setting feedback for Player 2")
-                                        player2FeedbackTextView.text = feedback
-                                    } else {
-                                        Log.w("Spectator", "Unknown UID in feedback update: $uid")
+                                    when (uid) {
+                                        player1UID -> {
+                                            if (feedback == "Win") {
+                                                player1FeedbackTextView.text = "Winner !!"
+                                                player1FeedbackTextView.setTextColor("#4CAF50".toColorInt())
+                                                player1Crown.visibility = View.VISIBLE
+                                                player2FeedbackTextView.text = "Loser :("
+                                                player2FeedbackTextView.setTextColor("#F44336".toColorInt())
+                                                gameFeed.text = "Winner Declared"
+                                                MusicManager.stopMusic()
+                                                countdownTimer?.cancel()
+                                                endSpectating()
+                                            } else if (feedback == "Left"){
+                                                player2FeedbackTextView.text = "Winner !!"
+                                                player2FeedbackTextView.setTextColor("#4CAF50".toColorInt())
+                                                player2Crown.visibility = View.VISIBLE
+                                                player1FeedbackTextView.text = "Left The Game :("
+                                                player1FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
+                                                gameFeed.text = "Opponent Left The Game"
+                                                MusicManager.stopMusic()
+                                                countdownTimer?.cancel()
+                                                endSpectating()
+                                            } else if (feedback == "Draw"){
+                                                player1FeedbackTextView.text = "Draw"
+                                                player1FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
+                                                player2FeedbackTextView.text = "Draw"
+                                                player2FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
+                                                endSpectating()
+                                            } else if (feedback.contains("Incorrect")){
+                                                player1FeedbackTextView.text = "❌ Incorrect Answer (${evaluateExpression(player1ExpressionTextView.text.toString())})}) Submitted"
+                                                player1FeedbackTextView.setTextColor("#F44336".toColorInt())
+                                                SfxManager.playSfx(this@SpectatorActivity, R.raw.wrong)
+                                                Handler().postDelayed({
+                                                    player1FeedbackTextView.text = ""
+                                                }, 2000)
+                                            } else if (feedback.contains("Invalid")){
+                                                player1FeedbackTextView.text = "❌ Blank Answer Submitted"
+                                                player1FeedbackTextView.setTextColor("#F44336".toColorInt())
+                                                SfxManager.playSfx(this@SpectatorActivity, R.raw.wrong)
+                                                Handler().postDelayed({
+                                                    player1FeedbackTextView.text = ""
+                                                }, 2000)
+                                            } else if (feedback.contains("Error")){
+                                                player1FeedbackTextView.text = "❌ Illegal Expression Submitted"
+                                                player1FeedbackTextView.setTextColor("#F44336".toColorInt())
+                                                SfxManager.playSfx(this@SpectatorActivity, R.raw.wrong)
+                                                Handler().postDelayed({
+                                                    player1FeedbackTextView.text = ""
+                                                }, 2000)
+                                            }
+                                        }
+                                        player2UID -> {
+                                            if (feedback == "Win") {
+                                                player2FeedbackTextView.text = "Winner !!"
+                                                player2FeedbackTextView.setTextColor("#4CAF50".toColorInt())
+                                                player2Crown.visibility = View.VISIBLE
+                                                player1FeedbackTextView.text = "Loser :("
+                                                player1FeedbackTextView.setTextColor("#F44336".toColorInt())
+                                                gameFeed.text = "Winner Declared"
+                                                MusicManager.stopMusic()
+                                                countdownTimer?.cancel()
+                                                endSpectating()
+                                            } else if (feedback == "Left"){
+                                                player1FeedbackTextView.text = "Winner !!"
+                                                player1FeedbackTextView.setTextColor("#4CAF50".toColorInt())
+                                                player1Crown.visibility = View.VISIBLE
+                                                player2FeedbackTextView.text = "Left The Game :("
+                                                player2FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
+                                                gameFeed.text = "Opponent Left The Game"
+                                                MusicManager.stopMusic()
+                                                countdownTimer?.cancel()
+                                                endSpectating()
+                                            } else if (feedback == "Draw"){
+                                                player1FeedbackTextView.text = "Draw"
+                                                player1FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
+                                                player2FeedbackTextView.text = "Draw"
+                                                player2FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
+                                                endSpectating()
+                                            } else if (feedback.contains("Incorrect")){
+                                                player2FeedbackTextView.text = "❌ Incorrect Answer (${evaluateExpression(player2ExpressionTextView.text.toString())})}) Submitted"
+                                                player2FeedbackTextView.setTextColor("#F44336".toColorInt())
+                                                SfxManager.playSfx(this@SpectatorActivity, R.raw.wrong)
+                                                Handler().postDelayed({
+                                                    player2FeedbackTextView.text = ""
+                                                }, 2000)
+                                            } else if (feedback.contains("Invalid")){
+                                                player2FeedbackTextView.text = "❌ Blank Answer Submitted"
+                                                player2FeedbackTextView.setTextColor("#F44336".toColorInt())
+                                                SfxManager.playSfx(this@SpectatorActivity, R.raw.wrong)
+                                                Handler().postDelayed({
+                                                    player2FeedbackTextView.text = ""
+                                                }, 2000)
+                                            } else if (feedback.contains("Error")){
+                                                player2FeedbackTextView.text = "❌ Illegal Expression Submitted"
+                                                player2FeedbackTextView.setTextColor("#F44336".toColorInt())
+                                                SfxManager.playSfx(this@SpectatorActivity, R.raw.wrong)
+                                                Handler().postDelayed({
+                                                    player2FeedbackTextView.text = ""
+                                                }, 2000)
+                                            }
+                                        }
+                                        else -> {
+                                            Log.w("Spectator", "Unknown UID in feedback update: $uid")
+                                        }
                                     }
                                 }
                             }
@@ -308,6 +441,39 @@ class SpectatorActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         webSocketClient.close()
+    }
+    private fun endSpectating(){
+        textViewTimer.text = "Game Over"
+        if (gameFeed.text=="    Game Ongoing...")
+        {
+            gameFeed.text = "Time's Up! Match Drawn."
+            gameFeed.setTextColor("#FFFFFF".toColorInt())
+        }
+        textViewTimer.setTextColor("#FF5555".toColorInt()) // Final red text
+        MusicManager.stopMusic()
+        SfxManager.playSfx(this@SpectatorActivity, R.raw.draw)
+        timerStarted = false
+        countdownTimer?.cancel()
+        Handler().postDelayed({
+            var countdown = 3
+            val countdownHandler = Handler()
+
+            val countdownRunnable = object : Runnable {
+                override fun run() {
+                    if (countdown > 0) {
+                        gameFeed.text = "Spectating ends in ${countdown}s…"
+                        countdown--
+                        countdownHandler.postDelayed(this, 1000)
+                    } else {
+                        if (!isFinishing) {
+                            webSocketClient.close()
+                            finish()
+                        }
+                    }
+                }
+            }
+            countdownHandler.post(countdownRunnable)
+        }, 3000)
     }
 
     private fun sendWebSocketMessage(message: String) {

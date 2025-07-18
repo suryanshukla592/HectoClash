@@ -142,7 +142,6 @@ class Spectator : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         MusicManager.resumeMusic()
-        MusicManager.setMusicVolume(this)
         if (!webSocketClient.isOpen) setupWebSocket()
     }
 
