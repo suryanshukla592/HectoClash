@@ -64,6 +64,7 @@ class GameActivity : AppCompatActivity() {
     private var gameDurationSeconds: Long = 120
     private var roomId: String = ""
     private var code: String = "default"
+    private var isTimer: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -196,7 +197,9 @@ class GameActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 val expression = s.toString()
-                sendExpressionUpdate(expression)
+                if (expression!="Your Answer") {
+                    sendExpressionUpdate(expression)
+                }
             }
         })
         buttonSubmit.setOnClickListener {
@@ -280,13 +283,22 @@ class GameActivity : AppCompatActivity() {
         countdownTimer = object : CountDownTimer(gameDurationSeconds * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = millisUntilFinished / 1000
-                textViewTimer.text = "Time Left: ${secondsRemaining}s"
+                if (secondsRemaining<10) {
+                    textViewTimer.text = "⏱\uFE0F   ${secondsRemaining}s"
+                } else if (secondsRemaining<100) {
+                    textViewTimer.text = "⏱\uFE0F  ${secondsRemaining}s"
+                } else {
+                    textViewTimer.text = "⏱\uFE0F ${secondsRemaining}s"
+                }
 
                 // Change color to red in last 30 seconds
                 if (secondsRemaining <= 30) {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
-                    MusicManager.startMusic(this@GameActivity,R.raw.clock_ticking,0)
-                    MusicManager.setMusicVolume(this@GameActivity)
+                    if(!isTimer) {
+                        isTimer=true
+                        MusicManager.startMusic(this@GameActivity, R.raw.clock_ticking, 0)
+                        MusicManager.setMusicVolume(this@GameActivity)
+                    }
                 } else {
                     textViewTimer.setTextColor("#D49337".toColorInt())
                 }
@@ -979,6 +991,12 @@ class GameActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        isTimer=true
         MusicManager.pauseMusic()
+    }
+    override fun onResume(){
+        super.onResume()
+
+        isTimer=false
     }
 }

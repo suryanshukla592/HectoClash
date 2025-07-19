@@ -1,5 +1,6 @@
 package com.example.hectoclash
 
+import android.app.Dialog
 import android.graphics.Color
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -10,7 +11,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -58,38 +58,36 @@ class RoomListAdapter(
         holder.itemView.setOnClickListener {
             SfxManager.playSfx(holder.itemView.context, R.raw.button_sound)
             if (room.roomId.contains("private")) {
-                val dialogView = LayoutInflater.from(holder.itemView.context).inflate(R.layout.room_privacy, null)
-                val builder = AlertDialog.Builder(holder.itemView.context)
-                    .setView(dialogView)
-                    .setCancelable(true)
-                val alertDialog = builder.create()
-                alertDialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-                alertDialog.window?.setLayout(
+                val dialog = Dialog(holder.itemView.context)
+                dialog.setContentView(R.layout.room_privacy)
+                dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+                dialog.window?.setLayout(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
-                alertDialog.window?.setGravity(Gravity.CENTER)
-                val btnJoin = dialogView.findViewById<Button>(R.id.btn_submit)
+                dialog.window?.setGravity(Gravity.CENTER)
+
+                val btnJoin = dialog.findViewById<Button>(R.id.btn_submit)
+                val roomIdInput = dialog.findViewById<EditText>(R.id.roomID)
+
                 btnJoin.setOnClickListener {
                     SfxManager.playSfx(holder.itemView.context, R.raw.button_sound)
-                    val roomID = dialogView.findViewById<EditText>(R.id.roomID).text.toString().trim()
+                    val roomID = roomIdInput.text.toString().trim()
+
                     if (roomID.isNotEmpty()) {
                         if (room.roomId.contains("-${roomID.uppercase()}-")) {
-                            alertDialog.dismiss()
+                            dialog.dismiss()
                             MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()
                             onItemClick(room)
                         } else {
                             Toast.makeText(holder.itemView.context, "Invalid Room ID", Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        Toast.makeText(
-                            holder.itemView.context,
-                            "Please enter the Room ID",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(holder.itemView.context, "Please enter the Room ID", Toast.LENGTH_SHORT).show()
                     }
                 }
-                alertDialog.show()
+
+                dialog.show()
             }else{
                 MusicState.lastSeekTime = MusicManager.getCurrentSeekTime()
                 onItemClick(room)

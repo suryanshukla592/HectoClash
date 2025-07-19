@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.widget.PopupMenu
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -123,7 +122,7 @@ class MainActivity : AppCompatActivity() {
                         .withEndAction {
                             val dialog = Dialog(this)
                             dialog.setContentView(R.layout.dppopup)
-                            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                            dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
                             dialog.window?.setLayout(
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT

@@ -6,9 +6,12 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.widget.TextView
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
@@ -46,6 +49,10 @@ class SpectatorActivity : AppCompatActivity() {
     private lateinit var player2Accuracy: TextView
     private lateinit var player1Profile: de.hdodenhof.circleimageview.CircleImageView
     private lateinit var player2Profile: de.hdodenhof.circleimageview.CircleImageView
+    private lateinit var notFoundView: RelativeLayout
+    private lateinit var loadingLayout: LinearLayout
+    private lateinit var errorLayout: LinearLayout
+    private lateinit var spectate: LinearLayout
     private var countdownTimer: CountDownTimer? = null
     private var gameStartTime: Long = 0
     private var gameDurationSeconds: Long = 120
@@ -60,6 +67,10 @@ class SpectatorActivity : AppCompatActivity() {
     private var isConnected = false
     private var p1dp: String = ""
     private var p2dp: String = ""
+    private lateinit var roomCheckRunnable: Runnable
+    private val roomCheckHandler = Handler(Looper.getMainLooper())
+    private val playerExpressions = mutableMapOf<String, String>()
+    private var isTimer: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +111,10 @@ class SpectatorActivity : AppCompatActivity() {
         player2NameTextView = findViewById(R.id.textViewPlayer2Name)
         player2ResultTextView = findViewById(R.id.player2ResultTextView)
         player1ResultTextView = findViewById(R.id.player1ResultTextView)
+        notFoundView = findViewById(R.id.notFoundView)
+        loadingLayout = findViewById(R.id.loadingLayout)
+        errorLayout = findViewById(R.id.errorLayout)
+        spectate = findViewById(R.id.spectate)
         gameFeed = findViewById(R.id.RoomFeedbackTextView)
         MusicManager.stopMusic()
 
@@ -114,12 +129,13 @@ class SpectatorActivity : AppCompatActivity() {
         player2Profile.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
             if (p2dp != "") {
-                val viewdp = viewdp(p1dp)
+                val viewdp = viewdp(p2dp)
                 viewdp.show(supportFragmentManager, "dp_popup")
             }
         }
 
         setupWebSocket()
+        setupRoomNotFoundTimer()
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 countdownTimer?.cancel()
@@ -137,20 +153,29 @@ class SpectatorActivity : AppCompatActivity() {
         countdownTimer = object : CountDownTimer(gameDurationSeconds * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = millisUntilFinished / 1000
-                textViewTimer.text = "⏱\uFE0F ${secondsRemaining}s"
+                if (secondsRemaining<10) {
+                    textViewTimer.text = "⏱\uFE0F   ${secondsRemaining}s"
+                } else if (secondsRemaining<100) {
+                    textViewTimer.text = "⏱\uFE0F  ${secondsRemaining}s"
+                } else {
+                    textViewTimer.text = "⏱\uFE0F ${secondsRemaining}s"
+                }
 
                 // Change color to red in last 30 seconds
                 if (secondsRemaining <= 30) {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
-                    MusicManager.startMusic(this@SpectatorActivity,R.raw.clock_ticking,0)
-                    MusicManager.setMusicVolume(this@SpectatorActivity)
+                    if(!isTimer) {
+                        isTimer=true
+                        MusicManager.startMusic(this@SpectatorActivity, R.raw.clock_ticking, 0)
+                        MusicManager.setMusicVolume(this@SpectatorActivity)
+                    }
                 } else {
                     textViewTimer.setTextColor("#D49337".toColorInt())
                 }
             }
 
             override fun onFinish() {
-                endSpectating()
+                MusicManager.stopMusic()
             }
         }.start()
     }
@@ -178,18 +203,43 @@ class SpectatorActivity : AppCompatActivity() {
                             "expressionUpdate" -> {
                                 val expression = json.getString("expression")
                                 val playerUID = json.getString("opponent")
+                                playerExpressions[playerUID] = expression
                                 if (expression!="Your Answer"){
                                 runOnUiThread {
                                     if (playerUID == player1UID) {
-                                        player1ExpressionTextView.text = expression
+                                        if(expression=="Expression: "||expression==null||expression==""){
+                                            player1ExpressionTextView.text=""
+                                            player1ResultTextView.text = "Live Value = 0"
+                                        }else{
+                                            player1ExpressionTextView.text = expression
+                                        }
+                                        if(expression=="No Answer Submitted"){
+                                            player1ExpressionTextView.textSize=16f
+                                            player1ExpressionTextView.text="No Submission"
+                                        }else{
+                                            player1ExpressionTextView.textSize=20f
+                                        }
                                         val e1 = evaluateExpression(expression)
                                         if (!e1.isNaN()) {
                                             player1ResultTextView.text = "Live Value = "+e1.toInt().toString()
                                         }
                                     } else if (playerUID == player2UID) {
-                                        player2ExpressionTextView.text = expression
+                                        if(expression=="Expression: "||expression==null||expression==""){
+                                            player2ExpressionTextView.text=""
+                                            player2ResultTextView.text = "Live Value = 0"
+                                        }else{
+                                            player2ExpressionTextView.text = expression
+                                        }
                                         val e2 = evaluateExpression(expression)
-                                        if (!e2.isNaN()) {
+                                        if(expression=="No Answer Submitted"){
+                                            player2ExpressionTextView.textSize=16f
+                                            player2ExpressionTextView.text="No Submission"
+                                        }else{
+                                            player2ExpressionTextView.textSize=20f
+                                        }
+                                        if(expression=="") {
+                                            player2ResultTextView.text = "Live Value = 0"
+                                        }else if (!e2.isNaN()) {
                                             player2ResultTextView.text = "Live Value = "+e2.toInt().toString()
                                         }
                                     }
@@ -219,10 +269,18 @@ class SpectatorActivity : AppCompatActivity() {
                                                 val accuracy = document.getLong("Accuracy") ?: 0
                                                 val profile = document.getString("Profile Picture URL") ?: ""
                                                 runOnUiThread {
+
                                                     if (role == "Player1") {
                                                         player1UID = uid
                                                         p1dp = profile
+                                                        val p1ex = playerExpressions[player1UID] ?: ""
+                                                        player1ExpressionTextView.text = p1ex
+                                                        val e1 = evaluateExpression(p1ex)
+                                                        if (!e1.isNaN()&&p1ex!="Expression: "&&p1ex!="") {
+                                                            player1ResultTextView.text = "Live Value = "+e1.toInt().toString()
+                                                        }
                                                         player1NameTextView.text = "$name"
+                                                        player1NameTextView.isSelected = true
                                                         player1Rating.text = "Rating: $rating"
                                                         player1AvgTime.text = "⏱: ${avgTime}s"
                                                         player1Accuracy.text = "🎯: ${accuracy}%"
@@ -235,7 +293,14 @@ class SpectatorActivity : AppCompatActivity() {
                                                     } else if (role == "Player2") {
                                                         player2UID = uid
                                                         p2dp = profile
+                                                        val p2ex = playerExpressions[player2UID] ?: ""
+                                                        player2ExpressionTextView.text = p2ex
+                                                        val e2 = evaluateExpression(p2ex)
+                                                        if(p2ex!="Expression: "&&p2ex!=""&&!e2.isNaN()) {
+                                                            player2ResultTextView.text = "Live Value = "+e2.toInt().toString()
+                                                        }
                                                         player2NameTextView.text = "$name"
+                                                        player2NameTextView.isSelected = true
                                                         player2Rating.text = "Rating: $rating"
                                                         player2AvgTime.text = "⏱: ${avgTime}s"
                                                         player2Accuracy.text = "🎯: ${accuracy}%"
@@ -268,6 +333,8 @@ class SpectatorActivity : AppCompatActivity() {
                                 val puzzle = json.getString("content")
                                 runOnUiThread {
                                     puzzleTextView.text = "Puzzle: $puzzle"
+                                    notFoundView.visibility = View.GONE
+                                    spectate.visibility = View.VISIBLE
                                 }
                             }
 
@@ -281,9 +348,11 @@ class SpectatorActivity : AppCompatActivity() {
                                             if (feedback == "Win") {
                                                 player1FeedbackTextView.text = "Winner !!"
                                                 player1FeedbackTextView.setTextColor("#4CAF50".toColorInt())
+                                                player1FeedbackTextView.textSize=22f
                                                 player1Crown.visibility = View.VISIBLE
                                                 player2FeedbackTextView.text = "Loser :("
                                                 player2FeedbackTextView.setTextColor("#F44336".toColorInt())
+                                                player2FeedbackTextView.textSize=22f
                                                 gameFeed.text = "Winner Declared"
                                                 MusicManager.stopMusic()
                                                 countdownTimer?.cancel()
@@ -291,21 +360,25 @@ class SpectatorActivity : AppCompatActivity() {
                                             } else if (feedback == "Left"){
                                                 player2FeedbackTextView.text = "Winner !!"
                                                 player2FeedbackTextView.setTextColor("#4CAF50".toColorInt())
+                                                player2FeedbackTextView.textSize=22f
                                                 player2Crown.visibility = View.VISIBLE
                                                 player1FeedbackTextView.text = "Left The Game :("
                                                 player1FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
+                                                player1FeedbackTextView.textSize=22f
                                                 gameFeed.text = "Opponent Left The Game"
                                                 MusicManager.stopMusic()
                                                 countdownTimer?.cancel()
                                                 endSpectating()
                                             } else if (feedback == "Draw"){
                                                 player1FeedbackTextView.text = "Draw"
+                                                player1FeedbackTextView.textSize=22f
                                                 player1FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
                                                 player2FeedbackTextView.text = "Draw"
+                                                player2FeedbackTextView.textSize=22f
                                                 player2FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
                                                 endSpectating()
                                             } else if (feedback.contains("Incorrect")){
-                                                player1FeedbackTextView.text = "❌ Incorrect Answer (${evaluateExpression(player1ExpressionTextView.text.toString())})}) Submitted"
+                                                player1FeedbackTextView.text = "❌ Incorrect Answer (${evaluateExpression(player1ExpressionTextView.text.toString())}) Submitted"
                                                 player1FeedbackTextView.setTextColor("#F44336".toColorInt())
                                                 SfxManager.playSfx(this@SpectatorActivity, R.raw.wrong)
                                                 Handler().postDelayed({
@@ -319,7 +392,7 @@ class SpectatorActivity : AppCompatActivity() {
                                                     player1FeedbackTextView.text = ""
                                                 }, 2000)
                                             } else if (feedback.contains("Error")){
-                                                player1FeedbackTextView.text = "❌ Illegal Expression Submitted"
+                                                player1FeedbackTextView.text = "❌ Invalid Expression Submitted"
                                                 player1FeedbackTextView.setTextColor("#F44336".toColorInt())
                                                 SfxManager.playSfx(this@SpectatorActivity, R.raw.wrong)
                                                 Handler().postDelayed({
@@ -331,31 +404,37 @@ class SpectatorActivity : AppCompatActivity() {
                                             if (feedback == "Win") {
                                                 player2FeedbackTextView.text = "Winner !!"
                                                 player2FeedbackTextView.setTextColor("#4CAF50".toColorInt())
+                                                player2FeedbackTextView.textSize=22f
                                                 player2Crown.visibility = View.VISIBLE
                                                 player1FeedbackTextView.text = "Loser :("
                                                 player1FeedbackTextView.setTextColor("#F44336".toColorInt())
+                                                player1FeedbackTextView.textSize=22f
                                                 gameFeed.text = "Winner Declared"
-                                                MusicManager.stopMusic()
-                                                countdownTimer?.cancel()
-                                                endSpectating()
-                                            } else if (feedback == "Left"){
-                                                player1FeedbackTextView.text = "Winner !!"
-                                                player1FeedbackTextView.setTextColor("#4CAF50".toColorInt())
-                                                player1Crown.visibility = View.VISIBLE
-                                                player2FeedbackTextView.text = "Left The Game :("
-                                                player2FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
-                                                gameFeed.text = "Opponent Left The Game"
                                                 MusicManager.stopMusic()
                                                 countdownTimer?.cancel()
                                                 endSpectating()
                                             } else if (feedback == "Draw"){
                                                 player1FeedbackTextView.text = "Draw"
+                                                player1FeedbackTextView.textSize=22f
                                                 player1FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
                                                 player2FeedbackTextView.text = "Draw"
+                                                player2FeedbackTextView.textSize=22f
                                                 player2FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
                                                 endSpectating()
+                                            } else if (feedback == "Left"){
+                                                player1FeedbackTextView.text = "Winner !!"
+                                                player1FeedbackTextView.setTextColor("#4CAF50".toColorInt())
+                                                player1FeedbackTextView.textSize=22f
+                                                player1Crown.visibility = View.VISIBLE
+                                                player2FeedbackTextView.text = "Left The Game :("
+                                                player2FeedbackTextView.setTextColor("#FFFFFF".toColorInt())
+                                                player2FeedbackTextView.textSize=22f
+                                                gameFeed.text = "Opponent Left The Game"
+                                                MusicManager.stopMusic()
+                                                countdownTimer?.cancel()
+                                                endSpectating()
                                             } else if (feedback.contains("Incorrect")){
-                                                player2FeedbackTextView.text = "❌ Incorrect Answer (${evaluateExpression(player2ExpressionTextView.text.toString())})}) Submitted"
+                                                player2FeedbackTextView.text = "❌ Incorrect Answer (${evaluateExpression(player2ExpressionTextView.text.toString())}) Submitted"
                                                 player2FeedbackTextView.setTextColor("#F44336".toColorInt())
                                                 SfxManager.playSfx(this@SpectatorActivity, R.raw.wrong)
                                                 Handler().postDelayed({
@@ -369,7 +448,7 @@ class SpectatorActivity : AppCompatActivity() {
                                                     player2FeedbackTextView.text = ""
                                                 }, 2000)
                                             } else if (feedback.contains("Error")){
-                                                player2FeedbackTextView.text = "❌ Illegal Expression Submitted"
+                                                player2FeedbackTextView.text = "❌ Invalid Expression Submitted"
                                                 player2FeedbackTextView.setTextColor("#F44336".toColorInt())
                                                 SfxManager.playSfx(this@SpectatorActivity, R.raw.wrong)
                                                 Handler().postDelayed({
@@ -427,11 +506,14 @@ class SpectatorActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        isTimer=true
+        MusicManager.pauseMusic()
         webSocketClient.close()
         isConnected = false
     }
     override fun onResume() {
         super.onResume()
+        isTimer=false
         MusicManager.resumeMusic()
         if (!isConnected) {
             setupWebSocket()  // Only reconnect if not connected
@@ -444,6 +526,16 @@ class SpectatorActivity : AppCompatActivity() {
     }
     private fun endSpectating(){
         textViewTimer.text = "Game Over"
+        if(player1ExpressionTextView.text==""||player1ExpressionTextView.text=="No Answer Submitted")
+        {
+            player1ExpressionTextView.text="No Submission"
+            player1ExpressionTextView.textSize=16f
+        }
+        if(player2ExpressionTextView.text==""||player2ExpressionTextView.text=="No Answer Submitted")
+        {
+            player2ExpressionTextView.text="No Submission"
+            player2ExpressionTextView.textSize=16f
+        }
         if (gameFeed.text=="    Game Ongoing...")
         {
             gameFeed.text = "Time's Up! Match Drawn."
@@ -451,15 +543,15 @@ class SpectatorActivity : AppCompatActivity() {
         }
         textViewTimer.setTextColor("#FF5555".toColorInt()) // Final red text
         MusicManager.stopMusic()
-        SfxManager.playSfx(this@SpectatorActivity, R.raw.draw)
         timerStarted = false
         countdownTimer?.cancel()
+        SfxManager.playSfx(this@SpectatorActivity, R.raw.draw)
         Handler().postDelayed({
-            var countdown = 3
+            var countdown = 5
             val countdownHandler = Handler()
-
             val countdownRunnable = object : Runnable {
                 override fun run() {
+                    gameFeed.setTextColor("#E6A50C".toColorInt())
                     if (countdown > 0) {
                         gameFeed.text = "Spectating ends in ${countdown}s…"
                         countdown--
@@ -473,7 +565,17 @@ class SpectatorActivity : AppCompatActivity() {
                 }
             }
             countdownHandler.post(countdownRunnable)
-        }, 3000)
+        }, 5000)
+    }
+    private fun setupRoomNotFoundTimer() {
+            roomCheckRunnable = Runnable {
+                if (player1NameTextView.text == "Player 1" && player2NameTextView.text == "Player 2") {
+                    loadingLayout.visibility = View.GONE
+                    errorLayout.visibility = View.VISIBLE
+                    webSocketClient.close()
+                }
+            }
+            roomCheckHandler.postDelayed(roomCheckRunnable, 5000)
     }
 
     private fun sendWebSocketMessage(message: String) {

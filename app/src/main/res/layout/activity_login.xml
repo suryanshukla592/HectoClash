@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="12sp"
     android:background="@drawable/gradient_bg2"
     tools:context=".Login">
 
@@ -74,29 +75,38 @@
         app:layout_constraintBottom_toTopOf="@id/Password2"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
+    <FrameLayout
         android:id="@+id/Password2"
+        android:layout_width="match_parent"
+        android:layout_height="48sp"
+        android:layout_marginHorizontal="20sp"
         android:layout_marginTop="6sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:hint="Password"
-        android:textColorHint="#8CFFFFFF"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/Passwordtxt"
-        app:endIconMode="password_toggle">
-
-        <com.google.android.material.textfield.TextInputEditText
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <EditText
             android:id="@+id/Password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/rounded_corners"
-            android:textColor="@color/white"
+            android:hint="Password"
             android:inputType="textPassword"
-            android:padding="8sp"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:paddingStart="8sp"
+            android:paddingEnd="48sp"
+            android:textColor="@color/white"
+            android:textColorHint="#8CFFFFFF" />
+        <ImageView
+            android:id="@+id/passwordToggleIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:padding="12sp"
+            android:clickable="true"
+            android:background="@drawable/small_circular_ripple"
+            android:src="@drawable/invisible"
+            app:tint="#8CFFFFFF" />
+
+    </FrameLayout>
 
 
     <TextView

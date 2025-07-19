@@ -3,6 +3,7 @@ package com.example.hectoclash
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
@@ -29,6 +30,7 @@ class Login : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
+    private var isPasswordVisible = false
     private val RC_SIGN_IN = 9001
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +125,19 @@ class Login : AppCompatActivity() {
         binding.forgotpassword.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
             showResetEmailDialog()
+        }
+        binding.passwordToggleIcon.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
+            isPasswordVisible = !isPasswordVisible
+
+            if (isPasswordVisible) {
+                binding.passwordToggleIcon.setImageResource(R.drawable.visible)
+                binding.Password.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            } else {
+                binding.passwordToggleIcon.setImageResource(R.drawable.invisible)
+                binding.Password.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+            binding.Password.setSelection(binding.Password.text.length)
         }
 
 
