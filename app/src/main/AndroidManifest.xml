@@ -52,7 +52,7 @@
             android:name=".Practice"
             android:exported="false"
             android:supportsPictureInPicture="false"
-            android:resizeableActivity="false"  android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize" tools:targetApi="24"
+            android:resizeableActivity="false"  android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SpectatorActivity"
@@ -98,7 +98,7 @@
             android:name=".GameActivity"
             android:exported="true"
             android:supportsPictureInPicture="false"
-            android:resizeableActivity="false"  android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize" tools:targetApi="24"
+            android:resizeableActivity="false"  android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

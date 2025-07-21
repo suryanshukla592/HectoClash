@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -14,6 +15,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class stats : AppCompatActivity() {
+    private var profilePic: String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.stats)
@@ -37,15 +39,15 @@ class stats : AppCompatActivity() {
         val profilePicture: ImageView = findViewById(R.id.profile_picture)
         val nameText: TextView = findViewById(R.id.name)
         val ratingText: TextView = findViewById(R.id.rating)
-        val avgTimeText: TextView = findViewById(R.id.avg_time)
-        val accuracyText: TextView = findViewById(R.id.accuracy)
-        val matchesPlayedText: TextView = findViewById(R.id.matches_played)
-        val matchesWonText: TextView = findViewById(R.id.matches_won)
         val button:TextView = findViewById(R.id.btn_match_history)
         button.setOnClickListener{
             SfxManager.playSfx(this, R.raw.button_sound)
             val intent = Intent(this, MatchHistoryList::class.java)
             startActivity(intent)
+        }
+        profilePicture.setOnClickListener {
+            SfxManager.playSfx(this, R.raw.button_sound)
+            profilePic?.let { it1 -> viewdp(it1) }?.show(supportFragmentManager, "dp_popup")
         }
         if (userID != null) {
             db.collection("Users").document(userID).get().addOnSuccessListener { document ->
@@ -60,20 +62,27 @@ class stats : AppCompatActivity() {
 
                     nameText.text = name
                     ratingText.text = "⭐ Rating: $rating"
-                    avgTimeText.text = "⏱ Average Time: ${avgTime}s"
-                    accuracyText.text = "🎯 Accuracy: ${accuracy}%"
-                    matchesPlayedText.text = "🎮 Matches Played: $matchesPlayed"
-                    matchesWonText.text = "🏆 Matches Won: $matchesWon"
+                    setupStatCard(R.id.avg_time_card, "⏱️", "Average Time", "${avgTime}s")
+                    setupStatCard(R.id.accuracy_card, "🎯", "Accuracy", "${accuracy}%")
+                    setupStatCard(R.id.matches_played_card, "🎮", "Matches Played", "$matchesPlayed")
+                    setupStatCard(R.id.matches_won_card, "🏆", "Matches Won", "$matchesWon")
 
                     if (!url.isNullOrEmpty()) {
                         Glide.with(this).load(url).placeholder(R.drawable.defaultdp)
                             .centerCrop().into(profilePicture)
+                        profilePic = url
                     }
                 }
             }
 
 
         }
+    }
+    private fun setupStatCard(cardId: Int, icon: String, label: String, value: String) {
+        val cardView = findViewById<View>(cardId)
+        cardView.findViewById<TextView>(R.id.stat_icon).text = icon
+        cardView.findViewById<TextView>(R.id.stat_label).text = label
+        cardView.findViewById<TextView>(R.id.stat_value).text = value
     }
     override fun onResume() {
         super.onResume()

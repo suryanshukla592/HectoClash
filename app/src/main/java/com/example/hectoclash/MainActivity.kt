@@ -1,6 +1,5 @@
 package com.example.hectoclash
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ContentResolver
@@ -49,12 +48,11 @@ class MainActivity : AppCompatActivity() {
     private var selectedImageUri: Uri? = null
     private val IMAGE_PICK_CODE = 104
     private val PERMISSION_CODE = 105
-    private var nameint=""
-    private var emailint=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
             val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, sysBars.top, 0, sysBars.bottom)
@@ -64,20 +62,17 @@ class MainActivity : AppCompatActivity() {
         val db = Firebase.firestore
         val user = firebaseAuth.currentUser
         val userID = user?.uid
-        setContentView(binding.root)
         MusicManager.startMusic(this,R.raw.home_page_music,0)
         MusicManager.setMusicVolume(this)
         db.firestoreSettings = FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build()
         profileImageUrl= intent.getStringExtra("imgu")
-        nameint = intent.getStringExtra("name") ?: ""
-        emailint = intent.getStringExtra("email") ?: ""
         if (user == null) {
             val intent = Intent(this, opening::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
             finish()
         }
-        if (profileImageUrl != null||profileImageUrl!=""){
+        if (profileImageUrl != null&&profileImageUrl!=""){
             Glide.with(this).load(profileImageUrl).placeholder(R.drawable.defaultdp).centerCrop().diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding.profile)
             binding.profile.visibility = View.VISIBLE
@@ -87,7 +82,6 @@ class MainActivity : AppCompatActivity() {
                 if (document.exists()) {
                     val name = document.getString("Username")
                     val url = document.getString("Profile Picture URL")
-                    nameint=name.toString()
                     if(profileImageUrl==null||profileImageUrl=="") {
                         profileImageUrl = url
                         Glide.with(this).load(url).placeholder(R.drawable.defaultdp).centerCrop().diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -137,9 +131,7 @@ class MainActivity : AppCompatActivity() {
                                 SfxManager.playSfx(this, R.raw.button_sound)
                                 dialog.dismiss()
                                 val viewdp = profileImageUrl?.let { it1 -> viewdp(it1) }
-                                if (viewdp != null) {
-                                    viewdp.show(supportFragmentManager, "dp_popup")
-                                }
+                                viewdp?.show(supportFragmentManager, "dp_popup")
                             }
                             changeProfilePicture.setOnClickListener {
                                 SfxManager.playSfx(this, R.raw.button_sound)
@@ -361,7 +353,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
+        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             val firebaseAuth = FirebaseAuth.getInstance()
             val db = Firebase.firestore
             val user = firebaseAuth.currentUser

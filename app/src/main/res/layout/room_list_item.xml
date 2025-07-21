@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:padding="12dp"
+    android:layout_margin="8sp"
+    android:padding="12sp"
     android:background="@drawable/ripple_background"
     android:clickable="true"
     android:focusable="true"
@@ -24,8 +24,8 @@
         android:layout_alignParentTop="true">
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="16sp"
+            android:layout_height="16sp"
             android:src="@android:drawable/ic_lock_lock"
             app:tint="#000000" />
 
@@ -36,7 +36,7 @@
             android:textColor="#000"
             android:textSize="12sp"
             android:fontFamily="@font/noah_bold"
-            android:layout_marginStart="4dp" />
+            android:layout_marginStart="4sp" />
     </LinearLayout>
 
     <!-- Player names + VS -->
@@ -76,7 +76,7 @@
             android:fontFamily="@font/russo_one"
             android:textSize="20sp"
             android:textColor="#CE0808"
-            android:layout_marginHorizontal="10dp" />
+            android:layout_marginHorizontal="10sp" />
 
         <!-- Player 2 marquee -->
         <TextView

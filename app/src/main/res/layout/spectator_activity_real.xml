@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16sp">
 
         <TextView
             android:id="@+id/textViewSpectatorTitle"
@@ -99,7 +99,7 @@
             android:id="@+id/textViewTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="12sp"
             android:fontFamily="@font/russo_one"
             android:text="⏱️  120s"
             android:textColor="#D49337"
@@ -133,7 +133,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="2sp"
         android:layout_marginHorizontal="10sp"
         android:layout_marginBottom="20sp"
         android:background="#40FFFFFF" />
@@ -144,7 +144,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@drawable/spectator_player_card_bg"
-        android:paddingHorizontal="12dp"
+        android:paddingHorizontal="12sp"
         android:paddingBottom="12sp">
         <LinearLayout
             android:id="@+id/player1InfoLayout"
@@ -169,8 +169,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageViewPlayer1Profile"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="60sp"
+                android:layout_height="60sp"
                 android:background="@drawable/circle_mask"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
@@ -181,7 +181,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="8sp"
                 android:fontFamily="@font/russo_one"
                 android:text="Player 1"
                 android:textColor="#4D9DE0"
@@ -206,7 +206,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="4sp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -241,7 +241,7 @@
             android:id="@+id/player1GameLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="16sp"
             android:gravity="center"
             android:layout_marginTop="12sp"
             android:paddingVertical="20sp"
@@ -259,8 +259,8 @@
                 android:elevation="4dp"
                 android:fontFamily="@font/russo_one"
                 android:gravity="center"
-                android:minHeight="48dp"
-                android:padding="10dp"
+                android:minHeight="48sp"
+                android:padding="10sp"
                 android:text=""
                 android:hint="Expression"
                 android:textColor="#FFFFFF"
@@ -296,7 +296,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="16dp"
+        android:layout_marginVertical="16sp"
         android:layout_marginHorizontal="10sp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -310,7 +310,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
+            android:layout_marginHorizontal="16sp"
             android:fontFamily="@font/noah_bold"
             android:text="V S"
             android:textColor="#FFFFFF"
@@ -331,7 +331,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@drawable/spectator_player_card_bg"
-        android:paddingHorizontal="12dp"
+        android:paddingHorizontal="12sp"
         android:paddingBottom="12sp">
 
         <LinearLayout
@@ -356,8 +356,8 @@
                 android:scaleType="fitCenter" />
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageViewPlayer2Profile"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="60sp"
+                android:layout_height="60sp"
                 android:background="@drawable/circle_mask"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop"
@@ -368,7 +368,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="8sp"
                 android:fontFamily="@font/russo_one"
                 android:text="Player 2"
                 android:textColor="#4D9DE0"
@@ -393,7 +393,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="4sp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -429,7 +429,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="12sp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="16sp"
             android:gravity="center"
             android:paddingVertical="20sp"
             android:orientation="vertical"
@@ -443,11 +443,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/expression_background"
-                android:elevation="4dp"
+                android:elevation="4sp"
                 android:fontFamily="@font/russo_one"
                 android:gravity="center"
-                android:minHeight="48dp"
-                android:padding="10dp"
+                android:minHeight="48sp"
+                android:padding="10sp"
                 android:text=""
                 android:hint="Expression"
                 android:textColor="#FFFFFF"

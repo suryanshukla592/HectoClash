@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -60,7 +59,6 @@ class GameActivity : AppCompatActivity() {
     private var webSocketClient: WebSocketClient? = null
     private var currentExpression = ""
     private var nextNumberIndex = 0
-    private var gameStartTime: Long = 0
     private var gameDurationSeconds: Long = 120
     private var roomId: String = ""
     private var code: String = "default"
@@ -68,12 +66,12 @@ class GameActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_game)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById<ViewGroup>(android.R.id.content)) { view, insets ->
             val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, sysBars.top, 0, sysBars.bottom)
             insets
         }
-        setContentView(R.layout.activity_game)
         val firebaseAuth = FirebaseAuth.getInstance()
         val db = Firebase.firestore
         val user = firebaseAuth.currentUser
@@ -279,16 +277,15 @@ class GameActivity : AppCompatActivity() {
         webSocketClient?.send(json.toString())
     }
     private fun startTimer() {
-        gameStartTime = System.currentTimeMillis()
         countdownTimer = object : CountDownTimer(gameDurationSeconds * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = millisUntilFinished / 1000
                 if (secondsRemaining<10) {
-                    textViewTimer.text = "⏱\uFE0F   ${secondsRemaining}s"
+                    textViewTimer.text = "Time Left:   ${secondsRemaining}s"
                 } else if (secondsRemaining<100) {
-                    textViewTimer.text = "⏱\uFE0F  ${secondsRemaining}s"
+                    textViewTimer.text = "Time Left:  ${secondsRemaining}s"
                 } else {
-                    textViewTimer.text = "⏱\uFE0F ${secondsRemaining}s"
+                    textViewTimer.text = "Time Left: ${secondsRemaining}s"
                 }
 
                 // Change color to red in last 30 seconds
@@ -309,7 +306,7 @@ class GameActivity : AppCompatActivity() {
                 MusicManager.stopMusic()
                 textViewTimer.setTextColor("#FF5555".toColorInt()) // Ensure final message is red
                 buttonSubmit.isEnabled = false
-                sendResultToServer("Timeout") // Inform server about timeout
+                sendTimeout() // Inform server about timeout
             }
         }.start()
     }
@@ -618,30 +615,30 @@ class GameActivity : AppCompatActivity() {
             }
         }
     }
-    private fun sendResultToServer(result: String) { // For sending timeout
+    private fun sendTimeout() { // For sending timeout
         val firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser
         val uid = user?.uid
 
         if (uid == null) {
-            Log.e("WebSocket", "UID is null. Cannot send result: $result")
+            Log.e("WebSocket", "UID is null. Cannot send result: Timeout")
             return
         }
 
         if (webSocketClient == null || !webSocketClient!!.isOpen) {
-            Log.e("WebSocket", "WebSocket is not connected. Cannot send result: $result")
+            Log.e("WebSocket", "WebSocket is not connected. Cannot send result: Timeout")
             return
         }
 
         try {
             val resultJson = JSONObject().apply {
                 put("type", "result")
-                put("content", result)
+                put("content", "Timeout")
                 put("uid", uid)
                 put("room_id", roomId)
             }
             webSocketClient!!.send(resultJson.toString())
-            Log.d("WebSocket", "Sent result '$result' to server with UID: $uid, Room ID: $roomId")
+            Log.d("WebSocket", "Sent result 'Timeout' to server with UID: $uid, Room ID: $roomId")
         } catch (e: Exception) {
             Log.e("WebSocket", "Failed to send result: ${e.message}", e)
         }
@@ -744,6 +741,10 @@ class GameActivity : AppCompatActivity() {
                     SfxManager.playSfx(context, R.raw.button_sound)
                     if(text=="(")
                     {
+                        val lastChar = currentExpression.lastOrNull()
+                        if (lastChar != null && (lastChar.isDigit() || lastChar == ')')) {
+                            disableOperatorsExceptBrackets()
+                        }
                         enableMinus()
                     }
                     if(text=="⬅\uFE0F")
@@ -793,20 +794,30 @@ class GameActivity : AppCompatActivity() {
             currentExpression = currentExpression.dropLast(1)
             textViewExpression.text = currentExpression
 
-            // If last character was a digit, re-enable the previous number
             if (lastChar.isDigit() && nextNumberIndex > 0) {
                 nextNumberIndex--
                 gridNumbers.getChildAt(nextNumberIndex)?.isEnabled = true
-
-                // 🚀 Disable the next number to maintain sequence
                 if (nextNumberIndex + 1 < gridNumbers.childCount) {
                     gridNumbers.getChildAt(nextNumberIndex + 1)?.isEnabled = false
                 }
             }
-            if ((lastChar.isDigit()||lastChar=='('||lastChar==')')) {
-                disableOperatorsExceptBrackets()
-            } else {
-                enableOperators()
+            val newLastChar = currentExpression.lastOrNull()
+
+            when {
+                newLastChar == null -> {
+                    disableOperatorsExceptBrackets()
+                    enableMinus()
+                }
+                newLastChar.isDigit() || newLastChar == ')' -> {
+                    enableOperators()
+                }
+                newLastChar in listOf('+', '-', '*', '/', '^') -> {
+                    disableOperatorsExceptBrackets()
+                }
+                newLastChar == '(' -> {
+                    disableOperatorsExceptBrackets()
+                    enableMinus()
+                }
             }
         }
     }
@@ -988,7 +999,6 @@ class GameActivity : AppCompatActivity() {
             Log.d("GameActivity", "WebSocket is already disconnected or null.")
         }
     }
-
     override fun onPause() {
         super.onPause()
         isTimer=true
@@ -996,7 +1006,6 @@ class GameActivity : AppCompatActivity() {
     }
     override fun onResume(){
         super.onResume()
-
         isTimer=false
     }
 }

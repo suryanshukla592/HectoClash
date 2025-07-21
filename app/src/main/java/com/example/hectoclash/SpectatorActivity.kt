@@ -54,7 +54,6 @@ class SpectatorActivity : AppCompatActivity() {
     private lateinit var errorLayout: LinearLayout
     private lateinit var spectate: LinearLayout
     private var countdownTimer: CountDownTimer? = null
-    private var gameStartTime: Long = 0
     private var gameDurationSeconds: Long = 120
     private lateinit var puzzleTextView: TextView
 
@@ -148,7 +147,6 @@ class SpectatorActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
     private fun startTimer() {
-        gameStartTime = System.currentTimeMillis()
         timerStarted=true
         countdownTimer = object : CountDownTimer(gameDurationSeconds * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -279,7 +277,7 @@ class SpectatorActivity : AppCompatActivity() {
                                                         if (!e1.isNaN()&&p1ex!="Expression: "&&p1ex!="") {
                                                             player1ResultTextView.text = "Live Value = "+e1.toInt().toString()
                                                         }
-                                                        player1NameTextView.text = "$name"
+                                                        player1NameTextView.text = name
                                                         player1NameTextView.isSelected = true
                                                         player1Rating.text = "Rating: $rating"
                                                         player1AvgTime.text = "⏱: ${avgTime}s"
@@ -299,7 +297,7 @@ class SpectatorActivity : AppCompatActivity() {
                                                         if(p2ex!="Expression: "&&p2ex!=""&&!e2.isNaN()) {
                                                             player2ResultTextView.text = "Live Value = "+e2.toInt().toString()
                                                         }
-                                                        player2NameTextView.text = "$name"
+                                                        player2NameTextView.text = name
                                                         player2NameTextView.isSelected = true
                                                         player2Rating.text = "Rating: $rating"
                                                         player2AvgTime.text = "⏱: ${avgTime}s"

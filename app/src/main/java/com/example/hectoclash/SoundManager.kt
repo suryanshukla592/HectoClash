@@ -15,7 +15,7 @@ object SoundManager {
 
     fun setSoundState(context: Context, state: SoundState) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit() { putInt(KEY_SOUND_STATE, state.ordinal) }
+        prefs.edit { putInt(KEY_SOUND_STATE, state.ordinal) }
         MusicManager.updateVolumeAll(context)
     }
 

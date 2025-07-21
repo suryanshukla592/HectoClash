@@ -29,12 +29,12 @@ class LeaderboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_leaderboard)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById<ViewGroup>(android.R.id.content)) { view, insets ->
             val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, sysBars.top, 0, sysBars.bottom)
             insets
         }
-        setContentView(R.layout.activity_leaderboard)
         val firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser
         if (user == null) {

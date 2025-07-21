@@ -1,15 +1,16 @@
 package com.example.hectoclash
 
 import android.content.Intent
-import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.concurrent.TimeUnit
+import androidx.core.graphics.toColorInt
 
 class MatchHistoryAdapter(private val matchHistoryList: List<MatchHistoryEntry>) :
     RecyclerView.Adapter<MatchHistoryAdapter.MatchHistoryViewHolder>() {
@@ -21,6 +22,8 @@ class MatchHistoryAdapter(private val matchHistoryList: List<MatchHistoryEntry>)
         val opponentName: TextView = itemView.findViewById(R.id.opponentName)
         val timestamp: TextView = itemView.findViewById(R.id.timestamp)
         val puzzleText: TextView = itemView.findViewById(R.id.puzzleText)
+        val statusIndicator: View = itemView.findViewById(R.id.statusIndicator)
+        val resultIcon: ImageView = itemView.findViewById(R.id.result_icon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MatchHistoryViewHolder {
@@ -38,11 +41,15 @@ class MatchHistoryAdapter(private val matchHistoryList: List<MatchHistoryEntry>)
         // Time formatting
         holder.timestamp.text = getTimeAgo(match.timestamp)
 
-        // Background color by result
-        when (match.result.lowercase()) {
-            "won" -> holder.itemView.setBackgroundColor(Color.parseColor("#2ECC71")) // Bright Green
-            "lose" -> holder.itemView.setBackgroundColor(Color.parseColor("#FF3B3B")) // Bright Red
-            "draw" -> holder.itemView.setBackgroundColor(Color.parseColor("#B0B0B0")) // Bright Grey
+        if (match.feedback.contains("Won", ignoreCase = true) || match.feedback.contains("Opponent Left", ignoreCase = true)) {
+            holder.statusIndicator.setBackgroundColor("#2ECC71".toColorInt())
+            holder.resultIcon.setImageResource(R.drawable.win)
+        } else if (match.feedback.contains("Lose", ignoreCase = true) || match.feedback.contains("You Left", ignoreCase = true)) {
+            holder.statusIndicator.setBackgroundColor("#FF3B3B".toColorInt())
+            holder.resultIcon.setImageResource(R.drawable.lose)
+        } else {
+            holder.statusIndicator.setBackgroundColor("#B0B0B0".toColorInt())
+            holder.resultIcon.setImageResource(R.drawable.tied)
         }
 
         // Show opponent name using cache or fetch
@@ -56,7 +63,7 @@ class MatchHistoryAdapter(private val matchHistoryList: List<MatchHistoryEntry>)
         }
 
         if (usernameCache.containsKey(opponentUID)) {
-            holder.opponentName.text = "Opponent: ${usernameCache[opponentUID]}"
+            holder.opponentName.text = "vs. ${usernameCache[opponentUID]}"
         } else {
             // Temporary placeholder
             holder.opponentName.text = "Opponent: ..."
@@ -68,11 +75,11 @@ class MatchHistoryAdapter(private val matchHistoryList: List<MatchHistoryEntry>)
                 .addOnSuccessListener { doc ->
                     val username = doc.getString("Username") ?: "Unknown"
                     usernameCache[opponentUID] = username
-                    holder.opponentName.text = "Opponent: $username"
+                    holder.opponentName.text = "vs. $username"
                 }
                 .addOnFailureListener { e ->
                     Log.e("MatchHistoryAdapter", "Failed to fetch username: ${e.message}")
-                    holder.opponentName.text = "Opponent: Unknown"
+                    holder.opponentName.text = "vs. Unknown"
                 }
         }
     }

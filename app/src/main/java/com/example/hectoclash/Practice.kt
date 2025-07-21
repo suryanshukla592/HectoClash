@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -27,6 +26,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import net.objecthunter.exp4j.ExpressionBuilder
 import androidx.core.graphics.drawable.toDrawable
+import kotlin.math.abs
 
 class Practice : AppCompatActivity() {
 
@@ -42,17 +42,17 @@ class Practice : AppCompatActivity() {
     private var countdownTimer: CountDownTimer? = null
     private var currentExpression = ""
     private var nextNumberIndex = 0
-    private var gameStartTime: Long = 0
     private var gameDurationSeconds: Long = 120
+    private var isTimer: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_practice)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById<ViewGroup>(android.R.id.content)) { view, insets ->
             val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, sysBars.top, 0, sysBars.bottom)
             insets
         }
-        setContentView(R.layout.activity_practice)
         MusicManager.stopMusic()
         val firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser
@@ -98,17 +98,25 @@ class Practice : AppCompatActivity() {
     }
 
     private fun startTimer() {
-        gameStartTime = System.currentTimeMillis()
         countdownTimer = object : CountDownTimer(gameDurationSeconds * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = millisUntilFinished / 1000
-                textViewTimer.text = "Time Left: ${secondsRemaining}s"
+                if (secondsRemaining<10) {
+                    textViewTimer.text = "Time Left:   ${secondsRemaining}s"
+                } else if (secondsRemaining<100) {
+                    textViewTimer.text = "Time Left:  ${secondsRemaining}s"
+                } else {
+                    textViewTimer.text = "Time Left: ${secondsRemaining}s"
+                }
 
                 // Change color to red in last 30 seconds
                 if (secondsRemaining <= 30) {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
-                    MusicManager.startMusic(this@Practice,R.raw.clock_ticking,0)
-                    MusicManager.setMusicVolume(this@Practice)
+                    if(!isTimer) {
+                        isTimer = true
+                        MusicManager.startMusic(this@Practice, R.raw.clock_ticking, 0)
+                        MusicManager.setMusicVolume(this@Practice)
+                    }
                 } else {
                     textViewTimer.setTextColor("#D49337".toColorInt())
                 }
@@ -269,7 +277,7 @@ class Practice : AppCompatActivity() {
             if (expr in seen) continue
             seen.add(expr)
             val result = evaluate(expr)
-            if (result != null && Math.abs(result - 100.0) < 1e-9) {
+            if (result != null && abs(result - 100.0) < 1e-9) {
                 solutions.add("$expr = 100")
                 if (solutions.size == 3) break
             }
@@ -281,7 +289,6 @@ class Practice : AppCompatActivity() {
 
         return Triple(string1, string2,string3)
     }
-
     private fun evaluateExpression(expression: String): Double {
         return try {
             if (expression.isBlank()) {
@@ -307,7 +314,6 @@ class Practice : AppCompatActivity() {
             Double.NaN  // Return NaN if there's an error
         }
     }
-
     private fun setupButtons() {
         gridNumbers.removeAllViews()
         gridOperators.removeAllViews()
@@ -317,7 +323,6 @@ class Practice : AppCompatActivity() {
         addNumberButtons()
         addOperatorButtons()
     }
-
     private fun addNumberButtons() {
         gridNumbers.columnCount = 3
         for (i in originalPuzzle.indices) {
@@ -344,7 +349,6 @@ class Practice : AppCompatActivity() {
             gridNumbers.addView(button)
         }
     }
-
     private fun addOperatorButtons() {
         val operators = listOf("+", "-", "*", "/", "(", ")", "^", "⬅\uFE0F", "❌")
         gridOperators.columnCount = 3
@@ -383,6 +387,10 @@ class Practice : AppCompatActivity() {
                 setOnClickListener {
                     SfxManager.playSfx(context, R.raw.button_sound)
                     if (text == "(") {
+                        val lastChar = currentExpression.lastOrNull()
+                        if (lastChar != null && (lastChar.isDigit() || lastChar == ')')) {
+                            disableOperatorsExceptBrackets()
+                        }
                         enableMinus()
                     }
                     if (text == "⬅\uFE0F") {
@@ -431,20 +439,30 @@ class Practice : AppCompatActivity() {
             currentExpression = currentExpression.dropLast(1)
             textViewExpression.text = currentExpression
 
-            // If last character was a digit, re-enable the previous number
             if (lastChar.isDigit() && nextNumberIndex > 0) {
                 nextNumberIndex--
                 gridNumbers.getChildAt(nextNumberIndex)?.isEnabled = true
-
-                // 🚀 Disable the next number to maintain sequence
                 if (nextNumberIndex + 1 < gridNumbers.childCount) {
                     gridNumbers.getChildAt(nextNumberIndex + 1)?.isEnabled = false
                 }
             }
-            if ((lastChar.isDigit()||lastChar=='('||lastChar==')')) {
-                disableOperatorsExceptBrackets()
-            } else {
-                enableOperators()
+            val newLastChar = currentExpression.lastOrNull()
+
+            when {
+                newLastChar == null -> {
+                    disableOperatorsExceptBrackets()
+                    enableMinus()
+                }
+                newLastChar.isDigit() || newLastChar == ')' -> {
+                    enableOperators()
+                }
+                newLastChar in listOf('+', '-', '*', '/', '^') -> {
+                    disableOperatorsExceptBrackets()
+                }
+                newLastChar == '(' -> {
+                    disableOperatorsExceptBrackets()
+                    enableMinus()
+                }
             }
         }
     }
@@ -457,6 +475,11 @@ class Practice : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        isTimer=true
         MusicManager.pauseMusic()
+    }
+    override fun onResume(){
+        super.onResume()
+        isTimer=false
     }
 }

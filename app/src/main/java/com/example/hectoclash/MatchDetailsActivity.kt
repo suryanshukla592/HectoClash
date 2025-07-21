@@ -11,39 +11,50 @@ import com.example.hectoclash.databinding.ActivityMatchDetailsBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import net.objecthunter.exp4j.ExpressionBuilder
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 class MatchDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMatchDetailsBinding
     private lateinit var matchData: MatchHistoryEntry
-    private lateinit var database: FirebaseFirestore
     var opponentImage :String = ""
     var playerImage :String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMatchDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById<ViewGroup>(android.R.id.content)) { view, insets ->
             val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, sysBars.top, 0, sysBars.bottom)
             insets
         }
-        binding = ActivityMatchDetailsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         matchData = intent.getParcelableExtra("match_data")!!
-        database = FirebaseFirestore.getInstance()
 
         loadUserData(matchData.selfUID, isPlayer = true)
         loadUserData(matchData.opponentUID, isPlayer = false)
 
         val timeAgo = getTimeAgo(matchData.timestamp)
         binding.textViewMatchTimestamp.text = "Played: $timeAgo ago"
-        binding.textViewPuzzle.text = "Solve: ${matchData.puzzle}"
-        binding.textViewFeedback.text = "${matchData.feedback}"
+        binding.textViewPuzzle.text = "Solve: ${matchData.puzzle} = 100"
+        binding.textViewFeedback.text = matchData.feedback.replace("Possible ", "")
+        if (matchData.feedback.contains("Won", ignoreCase = true) || matchData.feedback.contains("Opponent Left", ignoreCase = true)) {
+            binding.textViewMatchResult.text = "VICTORY"
+             binding.textViewMatchResult.setBackgroundResource(R.drawable.victory_banner_background)
+        } else if (matchData.feedback.contains("Lose", ignoreCase = true) || matchData.feedback.contains("You Left", ignoreCase = true)) {
+            binding.textViewMatchResult.text = "DEFEAT"
+             binding.textViewMatchResult.setBackgroundResource(R.drawable.defeat_banner_background)
+        } else {
+            binding.textViewMatchResult.text = "DRAW"
+             binding.textViewMatchResult.setBackgroundResource(R.drawable.draw_banner_background)
+        }
+        binding.ratingRow.statLabel.text = "⭐ Rating"
+        binding.avgTimeRow.statLabel.text = "⏱️ Avg Time"
+        binding.accuracyRow.statLabel.text = "🎯 Accuracy"
         val (sol1, sol2, sol3) = solveHectocTop3(matchData.puzzle)
-        binding.textViewSolution1.text=sol1
-        binding.textViewSolution2.text=sol2
-        binding.textViewSolution3.text=sol3
+        binding.textViewSolution1.text = sol1
+        binding.textViewSolution2.text = sol2
+        binding.textViewSolution3.text = sol3
         binding.imageViewPlayerProfile.setOnClickListener { it ->
             SfxManager.playSfx(this, R.raw.button_sound)
             val context = it.context
@@ -81,9 +92,10 @@ class MatchDetailsActivity : AppCompatActivity() {
 
                     if (isPlayer) {
                         binding.textViewPlayerName.text = name
-                        binding.textViewPlayerRating.text = "Rating: $rating"
-                        binding.textViewPlayerAccuracy.text = "🎯 : $accuracy%"
-                        binding.textViewPlayerAvgTime.text = "⏱ : $avgTime s"
+                        binding.textViewPlayerName.isSelected = true
+                        binding.ratingRow.playerStatValue.text = rating
+                        binding.avgTimeRow.playerStatValue.text = "${avgTime}s"
+                        binding.accuracyRow.playerStatValue.text = "$accuracy%"
                         playerImage=profileImage
                         profileImage.let {
                             Glide.with(this).load(it).placeholder(R.drawable.defaultdp)
@@ -91,9 +103,10 @@ class MatchDetailsActivity : AppCompatActivity() {
                         }
                     } else {
                         binding.textViewOpponentName.text = name
-                        binding.textViewOpponentRating.text = "Rating: $rating"
-                        binding.textViewOpponentAccuracy.text = "🎯 : $accuracy%"
-                        binding.textViewOpponentAvgTime.text = "⏱ : $avgTime s"
+                        binding.textViewOpponentName.isSelected = true
+                        binding.ratingRow.opponentStatValue.text = rating
+                        binding.avgTimeRow.opponentStatValue.text = "${avgTime}s"
+                        binding.accuracyRow.opponentStatValue.text = "$accuracy%"
                         opponentImage=profileImage
                         profileImage.let {
                             Glide.with(this).load(it).placeholder(R.drawable.defaultdp)
@@ -183,7 +196,7 @@ class MatchDetailsActivity : AppCompatActivity() {
             if (expr in seen) continue
             seen.add(expr)
             val result = evaluate(expr)
-            if (result != null && Math.abs(result - 100.0) < 1e-9) {
+            if (result != null && abs(result - 100.0) < 1e-9) {
                 solutions.add("$expr = 100")
                 if (solutions.size == 3) break
             }

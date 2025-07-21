@@ -14,12 +14,12 @@ class AboutUs : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = AboutusBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
             val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, sysBars.top, 0, sysBars.bottom)
             insets
         }
-        setContentView(binding.root)
         firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser
         val userID = user?.uid

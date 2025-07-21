@@ -5,29 +5,73 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#000000">
+    android:background="@drawable/gradient_bg2">
 
-    <!-- Match History Title -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="📜 Match History"
-        android:textSize="24sp"
+        android:textSize="30sp"
         android:fontFamily="@font/russo_one"
         android:gravity="center"
+        android:textColor="#FFD700"
+        android:paddingBottom="12dp"
+        android:layout_marginTop="12sp"
         android:shadowColor="#80FFD700"
         android:shadowDx="0"
         android:shadowDy="2"
-        android:shadowRadius="6"
-        android:textColor="@color/golden_yellow"
-        android:paddingBottom="12dp" />
+        android:shadowRadius="8" />
 
-    <!-- RecyclerView to show match history -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/historyRecyclerView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp" />
+        android:layout_marginTop="8sp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historyRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="4sp"
+            android:clipToPadding="false"
+            android:paddingBottom="8sp" />
+
+        <LinearLayout
+            android:id="@+id/emptyHistoryView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="20sp"
+            android:visibility="gone">
+            <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/error"
+            android:alpha="0.7" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Matches Played Yet"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:fontFamily="@font/noah_bold"
+                android:layout_marginTop="16dp"
+                android:alpha="0.8"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Play a game to see your results!"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:fontFamily="@font/noah_bold"
+                android:layout_marginTop="4dp"
+                android:alpha="0.6"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
 </LinearLayout>

@@ -7,7 +7,6 @@
     android:padding="16dp"
     android:background="@drawable/gradient_bg2">
 
-    <!-- Live Matches Title -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,13 +22,56 @@
         android:shadowDy="2"
         android:shadowRadius="8"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/roomsRecyclerView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="8sp"
-        android:paddingHorizontal="4sp"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp" />
+        android:layout_marginTop="8sp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/roomsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="4sp"
+            android:clipToPadding="false"
+            android:paddingBottom="8sp" />
+
+        <LinearLayout
+            android:id="@+id/emptyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="20sp"
+            android:visibility="gone">
+            <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/error"
+            android:alpha="0.9" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Matches Are Live"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:fontFamily="@font/noah_bold"
+                android:layout_marginTop="16dp"
+                android:alpha="0.8"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check back later!"
+                android:fontFamily="@font/noah_bold"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:alpha="0.6"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
 </LinearLayout>

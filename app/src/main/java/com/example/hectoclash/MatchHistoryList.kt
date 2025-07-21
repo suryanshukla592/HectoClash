@@ -3,6 +3,7 @@ package com.example.hectoclash
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,20 +17,22 @@ class MatchHistoryList : AppCompatActivity() {
     private lateinit var matchHistoryRecyclerView: RecyclerView
     private lateinit var matchHistoryAdapter: MatchHistoryAdapter
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var emptyHistoryView: View
     private val matchHistoryList = mutableListOf<MatchHistoryEntry>()
     private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.history_list)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById<ViewGroup>(android.R.id.content)) { view, insets ->
             val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, sysBars.top, 0, sysBars.bottom)
             insets
         }
-        setContentView(R.layout.history_list)
 
         matchHistoryRecyclerView = findViewById(R.id.historyRecyclerView)
         matchHistoryRecyclerView.layoutManager = LinearLayoutManager(this)
+        emptyHistoryView = findViewById(R.id.emptyHistoryView)
         matchHistoryAdapter = MatchHistoryAdapter(matchHistoryList)
         matchHistoryRecyclerView.adapter = matchHistoryAdapter
 
@@ -61,9 +64,18 @@ class MatchHistoryList : AppCompatActivity() {
                 matchHistoryList.sortByDescending { it.timestamp }
 
                 matchHistoryAdapter.notifyDataSetChanged()
+                if (matchHistoryList.isEmpty()) {
+                    matchHistoryRecyclerView.visibility = View.GONE
+                    emptyHistoryView.visibility = View.VISIBLE
+                } else {
+                    matchHistoryRecyclerView.visibility = View.VISIBLE
+                    emptyHistoryView.visibility = View.GONE
+                }
             }
             .addOnFailureListener { e ->
                 Log.e("MainActivity", "Failed to fetch match history", e)
+                matchHistoryRecyclerView.visibility = View.GONE
+                emptyHistoryView.visibility = View.VISIBLE
             }
     }
 }

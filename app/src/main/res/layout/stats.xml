@@ -8,129 +8,169 @@
     android:background="@drawable/gradient_bg2"
     tools:context=".stats">
 
-    <!-- Heading -->
     <TextView
         android:id="@+id/tv_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your Statistics"
-        android:textSize="30sp"
+        android:layout_marginTop="44sp"
         android:fontFamily="@font/russo_one"
-        android:textColor="@color/my_primary"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="30dp"
         android:shadowColor="#80FFD700"
         android:shadowDx="0"
         android:shadowDy="2"
-        android:shadowRadius="6"/>
-
-    <!-- Profile Picture -->
-    <ImageView
-        android:id="@+id/profile_picture"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/defaultdp"
-        android:scaleType="centerCrop"
-        android:background="@drawable/circle_mask"
+        android:shadowRadius="6"
+        android:text="Your Statistics"
+        android:textColor="@color/my_primary"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="34sp"
         app:layout_constraintTop_toBottomOf="@id/tv_heading"
-        app:layout_constraintStart_toStartOf="parent"
-        android:clipToOutline="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp" />
+        app:layout_constraintBottom_toTopOf="@id/profile_card"
+        android:background="#40FFFFFF" />
 
-    <!-- Stats -->
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/profile_card"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Name"
-        android:textSize="24sp"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/profile_picture"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="24sp"
+        android:layout_marginTop="34sp"
+        app:cardBackgroundColor="#D02C2C2C"
+        app:cardCornerRadius="16sp"
+        app:cardElevation="8sp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_heading">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20sp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_picture"
+                android:layout_width="80sp"
+                android:layout_height="80sp"
+                android:src="@drawable/defaultdp"
+                app:civ_border_color="#FFD700"
+                app:civ_border_width="2sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_marginTop="2sp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16sp"
+                android:fontFamily="@font/russo_one"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/profile_picture"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/rating"
+                tools:text="Username" />
+
+            <TextView
+                android:id="@+id/rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/russo_one"
+                android:textColor="#FFD700"
+                android:layout_marginBottom="2sp"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@id/name"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="⭐ Rating: 1250" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10sp"
+        android:layout_marginHorizontal="30sp"
+        app:layout_constraintTop_toBottomOf="@id/profile_card"
+        app:layout_constraintBottom_toTopOf="@id/stats_grid"
+        android:background="#40FFFFFF" />
+
+
+    <GridLayout
+        android:id="@+id/stats_grid"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30sp"
+        android:columnCount="2"
+        android:rowCount="2"
+        app:layout_constraintEnd_toEndOf="@id/profile_card"
+        app:layout_constraintStart_toStartOf="@id/profile_card"
+        app:layout_constraintTop_toBottomOf="@id/profile_card">
+
+        <include layout="@layout/stat_item_card"
+            android:id="@+id/avg_time_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="8sp"/>
+
+        <include layout="@layout/stat_item_card"
+            android:id="@+id/accuracy_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="8sp"/>
+
+        <include layout="@layout/stat_item_card"
+            android:id="@+id/matches_played_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="8sp"/>
+
+        <include layout="@layout/stat_item_card"
+            android:id="@+id/matches_won_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="8sp"/>
+    </GridLayout>
+
 
     <TextView
-        android:id="@+id/rating"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_match_history"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="⭐ Rating: 0"
-        android:textSize="24sp"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginHorizontal="36sp"
+        android:layout_marginTop="26sp"
+        android:background="@drawable/custom_button3"
+        android:clickable="true"
+        android:elevation="4dp"
+        android:focusable="true"
+        android:fontFamily="@font/russo_one"
+        android:gravity="center"
+        android:padding="16sp"
+        android:text="⏳  Match History  ⏳"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:shadowColor="#40000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="16sp"
+        android:autoSizeMaxTextSize="22sp"
+        android:autoSizeStepGranularity="1sp"
+        app:layout_constraintEnd_toEndOf="@id/profile_card"
+        app:layout_constraintStart_toStartOf="@id/profile_card"
+        app:layout_constraintTop_toBottomOf="@id/stats_grid" />
 
-    <TextView
-        android:id="@+id/avg_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="⏱ Average Time: "
-        android:textSize="22sp"
-        android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/rating"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
-
-    <TextView
-        android:id="@+id/accuracy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🎯 Accuracy: %"
-        android:textSize="22sp"
-        android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/avg_time"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
-
-    <TextView
-        android:id="@+id/matches_played"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🎮 Matches Played: "
-        android:textSize="22sp"
-        android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/accuracy"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
-
-    <TextView
-        android:id="@+id/matches_won"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🏆 Matches Won:"
-        android:textSize="22sp"
-        android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/matches_played"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
-    <TextView
-    android:id="@+id/btn_match_history"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="📜   Match History"
-    android:textSize="18sp"
-    android:fontFamily="@font/russo_one"
-    android:textColor="@android:color/black"
-    android:backgroundTint="@null"
-    android:paddingLeft="30dp"
-    android:paddingRight="30dp"
-    android:clickable="true"
-    android:paddingTop="15dp"
-    android:paddingBottom="15dp"
-    android:background="@drawable/ripple_button"
-    app:layout_constraintTop_toBottomOf="@id/matches_won"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    android:layout_marginTop="40dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

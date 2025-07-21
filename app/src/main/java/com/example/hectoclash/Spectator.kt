@@ -3,6 +3,7 @@ package com.example.hectoclash
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -21,16 +22,16 @@ class Spectator : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RoomListAdapter
     private lateinit var webSocketClient: WebSocketClient
-    private val roomList = mutableListOf<RoomInfo>()
+    private lateinit var emptyView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_spectator)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById<ViewGroup>(android.R.id.content)) { view, insets ->
             val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, sysBars.top, 0, sysBars.bottom)
             insets
         }
-        setContentView(R.layout.activity_spectator)
 
         val firebaseAuth = FirebaseAuth.getInstance()
         val user = firebaseAuth.currentUser
@@ -45,6 +46,7 @@ class Spectator : AppCompatActivity() {
         MusicManager.setMusicVolume(this)
 
         recyclerView = findViewById(R.id.roomsRecyclerView)
+        emptyView = findViewById(R.id.emptyView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         adapter = RoomListAdapter{ room ->
@@ -63,6 +65,16 @@ class Spectator : AppCompatActivity() {
             }
         }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    }
+    private fun updateUi(roomList: List<RoomInfo>) {
+        adapter.submitList(roomList)
+        if (roomList.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            emptyView.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            emptyView.visibility = View.GONE
+        }
     }
 
     private fun setupWebSocket() {
@@ -111,7 +123,7 @@ class Spectator : AppCompatActivity() {
                             }
 
                             runOnUiThread {
-                                adapter.submitList(newRoomList)
+                                updateUi(newRoomList)
                             }
                         }
                     } catch (e: JSONException) {
@@ -122,10 +134,18 @@ class Spectator : AppCompatActivity() {
 
             override fun onClose(code: Int, reason: String?, remote: Boolean) {
                 Log.d("WebSocket", "Connection closed: $reason")
+                runOnUiThread {
+                    recyclerView.visibility = View.GONE
+                    emptyView.visibility = View.VISIBLE
+                }
             }
 
             override fun onError(ex: Exception?) {
                 Log.e("WebSocket", "WebSocket error: ${ex?.message}")
+                runOnUiThread {
+                    recyclerView.visibility = View.GONE
+                    emptyView.visibility = View.VISIBLE
+                }
             }
         }
 
