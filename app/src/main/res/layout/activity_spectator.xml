@@ -54,6 +54,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/firstHeader"
                 android:text="No Matches Are Live"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
@@ -64,6 +65,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/secondHeader"
                 android:text="Check back later!"
                 android:fontFamily="@font/noah_bold"
                 android:textColor="@android:color/white"

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -23,6 +24,8 @@ class Spectator : AppCompatActivity() {
     private lateinit var adapter: RoomListAdapter
     private lateinit var webSocketClient: WebSocketClient
     private lateinit var emptyView: View
+    private lateinit var headerFirst: TextView
+    private lateinit var headerSecond: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +50,8 @@ class Spectator : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.roomsRecyclerView)
         emptyView = findViewById(R.id.emptyView)
+        headerFirst = findViewById(R.id.firstHeader)
+        headerSecond = findViewById(R.id.secondHeader)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         adapter = RoomListAdapter{ room ->
@@ -134,10 +139,6 @@ class Spectator : AppCompatActivity() {
 
             override fun onClose(code: Int, reason: String?, remote: Boolean) {
                 Log.d("WebSocket", "Connection closed: $reason")
-                runOnUiThread {
-                    recyclerView.visibility = View.GONE
-                    emptyView.visibility = View.VISIBLE
-                }
             }
 
             override fun onError(ex: Exception?) {
@@ -145,6 +146,8 @@ class Spectator : AppCompatActivity() {
                 runOnUiThread {
                     recyclerView.visibility = View.GONE
                     emptyView.visibility = View.VISIBLE
+                    headerFirst.text = "Server Offline"
+                    headerSecond.text = "Try again after sometime!"
                 }
             }
         }

@@ -116,7 +116,8 @@ class SpectatorActivity : AppCompatActivity() {
         spectate = findViewById(R.id.spectate)
         gameFeed = findViewById(R.id.RoomFeedbackTextView)
         MusicManager.stopMusic()
-
+        MusicManager.startMusic(this,R.raw.spectator_page_music,0)
+        MusicManager.setMusicVolume(this)
         roomId = intent.getStringExtra("roomId") ?: ""
         player1Profile.setOnClickListener {
             SfxManager.playSfx(this, R.raw.button_sound)
@@ -164,6 +165,7 @@ class SpectatorActivity : AppCompatActivity() {
                     textViewTimer.setTextColor("#FF5555".toColorInt())
                     if(!isTimer) {
                         isTimer=true
+                        MusicManager.stopMusic()
                         MusicManager.startMusic(this@SpectatorActivity, R.raw.clock_ticking, 0)
                         MusicManager.setMusicVolume(this@SpectatorActivity)
                     }
