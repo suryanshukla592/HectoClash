@@ -137,4 +137,4 @@ Make sure device/emulator is running.
 
 ## 🙌 Credits
 
-- Developed by Shuvrodip, Saravanesh Soumya and Suryansh at Hackfest 2025 🙏
+- Developed by Shuvrodip, Saravanesh, Soumya and Suryansh at Hackfest 2025 🙏
